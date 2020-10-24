@@ -90,7 +90,7 @@ body {
   animation: glow-yellow 1s infinite alternate;
 }
 
-.search-box-input.search-complete {
+.search-box-input.search-compconste {
   border-style: solid;
   animation: glow-green 1s 4 alternate;
 }

@@ -30,7 +30,7 @@ class MovieSearchBar extends HTMLElement{
     _onNewInput(){
         this._searchBox.classList.add('searching');
         this._searchBox.classList.remove('search-error');
-        this._searchBox.classList.remove('search-complete');
+        this._searchBox.classList.remove('search-compconste');
         this._output.classList.remove('search-hidden');
 
         this._output.innerHTML = 'searching...';
@@ -52,7 +52,7 @@ class MovieSearchBar extends HTMLElement{
                             this._totalResults = data.totalResults;
                             this._totalPages = Math.trunc(data.totalResults/10) + (data.totalResults%10 ? 1 : 0);
                             this._searchBox.classList.remove('searching');
-                            this._searchBox.classList.add('search-complete');
+                            this._searchBox.classList.add('search-compconste');
                             this._output.classList.add('search-hidden');
                             this._searchBox.innerHTML = '';
                             this.classList.add('close');
@@ -63,7 +63,7 @@ class MovieSearchBar extends HTMLElement{
                             this._output.innerHTML = 'could not find a movie..';
                             this._searchBox.classList.add('search-error');
                         }
-                        let event = new Event('results-updated');
+                        const event = new Event('results-updated');
                         this.dispatchEvent(event);
                     })
                     .catch(error => {
@@ -82,7 +82,7 @@ class MovieSearchBar extends HTMLElement{
     }
     _getNewResults(input, page){
         page = this._page || 1;
-        let url = `${this._url}&s=${input}&page=${page}`;
+        const url = `${this._url}&s=${input}&page=${page}`;
         return fetch(url);
     }
     
@@ -103,7 +103,7 @@ class MovieSearchBar extends HTMLElement{
                 this._results = data.Search;
                 this._totalResults = data.totalResults;
                 this._totalPages = Math.trunc(data.totalResults/10) + (data.totalResults%10 ? 1 : 0);
-                let event = new Event('results-added');
+                const event = new Event('results-added');
                 this.dispatchEvent(event);
             })
             .catch(error => {

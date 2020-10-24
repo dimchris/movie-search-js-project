@@ -1,21 +1,21 @@
-let searchBar = document.getElementById('search-bar');
-let resultsItems = document.getElementById('results');
-let movieDetails = document.getElementById('movie-details');
-let totalResults = document.getElementById('total-results');
-let next = document.querySelector('.next');
-let prev = document.querySelector('.prev');
+const searchBar = document.getElementById('search-bar');
+const resultsItems = document.getElementById('results');
+const movieDetails = document.getElementById('movie-details');
+const totalResults = document.getElementById('total-results');
+const next = document.querySelector('.next');
+const prev = document.querySelector('.prev');
 
 searchBar.addEventListener('results-updated', () => {
-  let results = searchBar._results;
-  let total = searchBar._totalResults;
-  let input = searchBar._input;
+  const results = searchBar._results;
+  const total = searchBar._totalResults;
+  const input = searchBar._input;
   if (!results) {
     return;
   }
   totalResults.textContent = `${total} Found for "${input}"`;
   resultsItems.innerHTML = ''; // clear the children
-  for (let [index, result] of results.entries()) {
-    let child = document.createElement('cd-movie-result-item');
+  for (const [index, result] of results.entries()) {
+    const child = document.createElement('cd-movie-result-item');
     child.setAttribute('title', result.Title);
     child.setAttribute('year', result.Year);
     child.setAttribute('imdbId', result.imdbID);
@@ -31,12 +31,12 @@ searchBar.addEventListener('results-updated', () => {
 });
 
 searchBar.addEventListener('results-added', () => {
-  let results = searchBar._results;
+  const results = searchBar._results;
   if (!results) {
     return;
   }
   for (result of results) {
-    let child = document.createElement('cd-movie-result-item');
+    const child = document.createElement('cd-movie-result-item');
     child.setAttribute('title', result.Title);
     child.setAttribute('year', result.Year);
     child.setAttribute('imdbId', result.imdbID);
@@ -46,7 +46,7 @@ searchBar.addEventListener('results-added', () => {
 });
 
 resultsItems.addEventListener('result-clicked', (event) => {
-  let imdbId = event.target.getAttribute('imdbid');
+  const imdbId = event.target.getAttribute('imdbid');
   movieDetails.setAttribute('imdbid', imdbId);
 });
 
@@ -56,9 +56,9 @@ resultsItems.addEventListener('wheel', (event) => {
 });
 
 resultsItems.addEventListener('scroll', (event) => {
-  let scrollWith = resultsItems.scrollWidth;
-  let scrollLeft = resultsItems.scrollLeft;
-  let clientWidth = resultsItems.clientWidth;
+  const scrollWith = resultsItems.scrollWidth;
+  const scrollLeft = resultsItems.scrollLeft;
+  const clientWidth = resultsItems.clientWidth;
   console.log((scrollLeft + clientWidth) / scrollWith);
   if ((scrollLeft + clientWidth) / scrollWith > 0.5) {
     searchBar.changePage();

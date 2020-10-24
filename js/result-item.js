@@ -11,7 +11,7 @@ class MovieResultItem extends HTMLElement{
                 item.classList.remove('selected');
             })
             this.classList.add('selected');
-            let event = new Event('result-clicked', {bubbles: true});
+            const event = new Event('result-clicked', {bubbles: true});
             this.dispatchEvent(event);
         })
     }
