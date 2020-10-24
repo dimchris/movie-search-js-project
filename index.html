@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div id="main">
+      <div id="total-results-block">
+        <p class="label">Search</p>
+        <p class="field" id="total-results">0</p>
+      </div>
+      <div class="carrousel">
+        <a class="prev">&#10094;</a>
+        <div id="results"></div>
+        <a class="next">&#10095;</a>
+      </div>
+      <cd-movie-details id="movie-details"></cd-movie-details>
+      <cd-movie-search-bar
+        id="search-bar"
+        placeholder="type a movie title..."
+      ></cd-movie-search-bar>
+    </div>
+
+    <!-- Scripts -->
+
+    <script src="js/main.js"></script>
+    <script src="js/search-bar.js"></script>
+    <script src="js/result-item.js"></script>
+    <script src="js/details.js"></script>
+  </body>
+</html>

@@ -1,0 +1,267 @@
+:root {
+  --primary-color: rgb(36, 36, 36);
+}
+
+@keyframes glow-green {
+  from {
+    box-shadow: 0 0 5px -5px #aef4af;
+  }
+  to {
+    box-shadow: 0 0 5px 5px #aef4af;
+  }
+}
+
+@keyframes glow-yellow {
+  from {
+    box-shadow: 0 0 5px -5px #e7f33cbb;
+  }
+  to {
+    box-shadow: 0 0 5px 5px #e7f33cbb;
+  }
+}
+
+@keyframes glow-red {
+  from {
+    box-shadow: 0 0 5px -5px #be5252;
+  }
+  to {
+    box-shadow: 0 0 5px 5px #be5252;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+}
+body {
+  height: 100vh;
+  width: 100vw;
+  background: url('../assets/imgs/background.png');
+  margin: 0px;
+  padding: 0px;
+}
+#main {
+  position: relative;
+  height: 100%;
+}
+#search-bar {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  bottom: 0px;
+  left: 0px;
+  display: flex;
+  flex-direction: column;
+  background: var(--primary-color);
+  justify-content: center;
+  align-items: center;
+  transition: height 1s ease, background 1s ease;
+  z-index: 20;
+}
+
+#search-bar.close {
+  height: 100px;
+  transition: height 1s ease, background 2s ease;
+  background: none;
+}
+
+.search-box-input {
+  font-size: 1.5rem;
+  /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+  color: var(--primary-color);
+  text-align: center;
+  font-style: italic;
+  height: fit-content;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 20px;
+  border-style: solid;
+  outline: none;
+  margin: 10px;
+}
+
+.search-box-input.searching {
+  border-style: solid;
+  animation: glow-yellow 1s infinite alternate;
+}
+
+.search-box-input.search-complete {
+  border-style: solid;
+  animation: glow-green 1s 4 alternate;
+}
+
+.search-box-input.search-error {
+  border-style: solid;
+  animation: glow-red 1s infinite alternate;
+}
+
+.search-box-input::placeholder {
+  border-color: var(--primary-color);
+}
+
+#results {
+  position: relative;
+  white-space: nowrap; /*Prevents Wrapping*/
+  padding: 30px;
+  margin-right: auto;
+  margin-left: auto;
+  /* max-width: 1920px; */
+  overflow-y: hidden;
+  overflow-x: hidden;
+  text-overflow: clip;
+  align-items: stretch;
+  background-color: rgba(255, 255, 255, 0.055);
+  height: 100%;
+}
+
+/* Scroll 3 */
+#results::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+#results::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 10px;
+}
+
+#results::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+}
+
+.result-item-box {
+  display: inline;
+  height: 100%;
+  margin: 10px;
+}
+
+.result-item-image {
+  display: inline-block;
+  height: 100%;
+}
+
+cd-movie-result-item {
+  display: inline;
+}
+
+cd-movie-result-item.selected .result-item-image {
+  box-shadow: 0px 0px 20px 8px rgba(255, 255, 255, 0.55);
+}
+
+#movie-details {
+  display: flex;
+  display: block;
+  flex-direction: column;
+  flex-wrap: wrap;
+  color: white;
+  height: 33%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: auto;
+}
+
+#movie-details > * {
+  margin: 10px;
+}
+
+.search-output {
+  height: 30px;
+  display: block;
+  color: white;
+  transition: color 1s ease;
+  margin: 5px;
+}
+
+.search-output.search-hidden {
+  display: none;
+}
+
+.carrousel {
+  position: relative;
+  height: 40%;
+}
+
+.prev,
+.next {
+  z-index: 10;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+#total-results-block {
+  padding: 15px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+}
+
+#total-results-block > * {
+  margin: 0;
+  padding: 0;
+}
+
+#total-results-block .field {
+  color: grey;
+  font-size: 1rem;
+}
+
+.details-title {
+  font-size: 1.9rem;
+}
+
+.details-subtitle {
+  font-size: 1rem;
+  color: lightgrey;
+}
+
+.details-subtitle > span {
+  padding-right: 1rem;
+}
+
+.details-more .label{
+  display: inline-block;
+  font-weight: bold;
+  width: 6rem;
+  font-size: 1.1rem;
+  color: lightgrey;
+}
+
+.details-more .details-description{
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+img {
+  width: auto;
+  height: 100%;
+}
