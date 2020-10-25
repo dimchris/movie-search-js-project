@@ -265,3 +265,12 @@ img {
   width: auto;
   height: 100%;
 }
+
+::-webkit-search-cancel-button{
+  position:relative;
+  right:20px;  
+
+  height: 20px;
+  width: 20px;
+  border-radius:10px;
+}

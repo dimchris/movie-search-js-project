@@ -21,9 +21,10 @@ class MovieSearchBar extends HTMLElement{
         // add the input element
         this._searchBox = document.createElement('input');
         this._searchBox.classList = ['search-box-input'];
-        this._searchBox.type = 'text';
+        this._searchBox.type = 'search';
         this._searchBox.placeholder = this._placeholder;
         this._searchBox.addEventListener('keyup', this._onNewInput.bind(this));
+        this._searchBox.addEventListener('search', this._onNewInput.bind(this));
         this._output = document.createElement('div');
         this._output.innerHTML = '';
         this._output.classList.add('search-output');
@@ -89,6 +90,8 @@ class MovieSearchBar extends HTMLElement{
         }else{
             this.classList.remove('close');
             this._searchBox.classList.remove('searching');
+            // remove searching label
+            this._output.innerHTML = '';
             clearTimeout(this._timeout);
             this._results = [];
         }
@@ -100,22 +103,28 @@ class MovieSearchBar extends HTMLElement{
     }
     
     _errorHandler(error){
+        // log the error for now
         console.log(error);
     }
 
+    // this will change the page and get the new results
     changePage(page){
+        // if not page is passed the it will move to the next page
         this._page = page || this._page + 1;
        
+        // if page is out of limits return
         if(this._totalPages && this._page > this._totalPages){
             return;
         }
 
+        // get the new results
         this._getNewResults(this._input, page)
             .then(response => response.json())
             .then(data => {
                 this._results = data.Search;
                 this._totalResults = data.totalResults;
                 this._totalPages = Math.trunc(data.totalResults/10) + (data.totalResults%10 ? 1 : 0);
+                // emit results added event to refresh the results component
                 const event = new Event('results-added');
                 this.dispatchEvent(event);
             })

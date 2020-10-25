@@ -65,7 +65,6 @@ resultsItems.addEventListener('scroll', (event) => {
   const scrollWith = resultsItems.scrollWidth;
   const scrollLeft = resultsItems.scrollLeft;
   const clientWidth = resultsItems.clientWidth;
-  console.log((scrollLeft + clientWidth) / scrollWith);
   if ((scrollLeft + clientWidth) / scrollWith > 0.5) {
     searchBar.changePage();
   }
@@ -73,11 +72,9 @@ resultsItems.addEventListener('scroll', (event) => {
 
 // scroll by using the next & back button
 next.addEventListener('click', (event) => {
-  console.log(resultsItems.scrollLeft);
   resultsItems.scrollLeft += 0.8 * resultsItems.offsetWidth;
 });
 
 prev.addEventListener('click', (event) => {
-  console.log(resultsItems.scrollLeft);
   resultsItems.scrollLeft -= 0.8 * resultsItems.offsetWidth;
 });

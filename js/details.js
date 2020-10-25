@@ -25,6 +25,7 @@ class MovieDetails extends HTMLElement {
           this._renderResult(data);
         })
         .catch((error) => {
+          // only log the error for now
           console.log(error);
         });
     }
