@@ -261,6 +261,10 @@ cd-movie-result-item.selected .result-item-image {
   font-size: 1.2rem;
 }
 
+.loading{
+  filter:blur(5px);
+}
+
 img {
   width: auto;
   height: 100%;

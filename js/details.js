@@ -2,6 +2,7 @@
 class MovieDetails extends HTMLElement {
   constructor() {
     super();
+    this._loading = false || this.getAttribute('loading');
     this._apiKey = this.getAttribute('api-key')
     this._url = `http://www.omdbapi.com/?apikey=${this._apiKey}`;
     this._imdbId = this.getAttribute('imdbId');
@@ -23,6 +24,7 @@ class MovieDetails extends HTMLElement {
         .then((response) => response.json())
         .then((data) => {
           this._renderResult(data);
+          this.setAttribute('loading', false)
         })
         .catch((error) => {
           // only log the error for now
@@ -32,19 +34,28 @@ class MovieDetails extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['imdbid'];
+    return ['imdbid', 'loading'];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case 'imdbid':
         this._imdbId = newValue;
+        this.render();
+        break;
+      case 'loading':
+        this._loading = newValue;
+        if(newValue === "true"){
+          this.classList.add('loading');
+        }else{
+          this.classList.remove('loading');
+        }
       default:
     }
-    this.render();
   }
 
   _getResults(imdbId) {
+    this.setAttribute('loading', true)
     return fetch(`${this._url}&i=${imdbId}`);
   }
 
