@@ -1,3 +1,4 @@
+// Result item component
 class MovieResultItem extends HTMLElement{
 
     constructor(){
@@ -6,11 +7,18 @@ class MovieResultItem extends HTMLElement{
         this._year = this.getAttribute('year');
         this._imdbId = this.getAttribute('imdbId');
         this._poster = this.getAttribute('poster');
+        
+        // on click update the item details
         this.addEventListener('click', (e) => {
+            // remove select class from all items
             document.querySelectorAll('cd-movie-result-item').forEach(item => {
                 item.classList.remove('selected');
             })
+            
+            // add select class to the selected item
             this.classList.add('selected');
+            
+            //  emit clicked event
             const event = new Event('result-clicked', {bubbles: true});
             this.dispatchEvent(event);
         })

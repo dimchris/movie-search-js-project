@@ -1,15 +1,24 @@
+// Search bar component
 class MovieSearchBar extends HTMLElement{
     constructor(){
         super();
-        this._url = 'http://www.omdbapi.com/?apikey=15fb3faa&type=movie';
+        this._apiKey = this.getAttribute('api-key');
+        this._url = `http://www.omdbapi.com/?apikey=${this._apiKey}&type=movie`;
         this._timeout = null;
+        // get the time after stop typing to start searching for results
+        // default value 1500ms
+        this._timeoutTime = this.getAttribute('timeout') || 1500;
+        this._searchLabel = this.getAttribute('seach-label') || 'searching...';
+        this._canNotFindResultsLabel = this.getAttribute('can-not-find-result-label') || 'could not find a movie..';
+        this._errorLabel = this.getAttribute('error-label') || 'unexpected error occured.. plz try again.';
         this._results = [];
         this._input = '';
         this._page = 1;
-        this._totalResults = 0;
-        this._totalPages = 1;
-        this._placeholder = 'placeholder...';
-        this._placeholder = this.getAttribute('placeholder') || this._placeholder;
+        this._totalResults = 0; // total results returned from query after fetch
+        this._totalPages = 1; // total pages returned from query, each page of 10 items
+        this._placeholder = 'placeholder...'; // default value of the place holder
+        this._placeholder = this.getAttribute('placeholder') || this._placeholder; // default value if none is set
+        // add the input element
         this._searchBox = document.createElement('input');
         this._searchBox.classList = ['search-box-input'];
         this._searchBox.type = 'text';
@@ -33,7 +42,7 @@ class MovieSearchBar extends HTMLElement{
         this._searchBox.classList.remove('search-compconste');
         this._output.classList.remove('search-hidden');
 
-        this._output.innerHTML = 'searching...';
+        this._output.innerHTML = this._searchLabel;
         this.classList.remove('close');
         // get the input
         let input = this._searchBox.value;
@@ -42,14 +51,18 @@ class MovieSearchBar extends HTMLElement{
         this._page = 1;
         if(input){
             this._input = input;
+            // while typing clear the timeout
             clearTimeout(this._timeout);
+            // set new timeout wait &  for timeout time until fetch or reset timeout
             this._timeout = setTimeout(() => {
                 this._getNewResults(this._input, this._page)
                     .then(response => response.json())
                     .then(data => {
+                        // according to the api the response should be se to true if results
                         if(data.Response === 'True'){
                             this._results = data.Search;
                             this._totalResults = data.totalResults;
+                            // calc the pages
                             this._totalPages = Math.trunc(data.totalResults/10) + (data.totalResults%10 ? 1 : 0);
                             this._searchBox.classList.remove('searching');
                             this._searchBox.classList.add('search-compconste');
@@ -59,8 +72,9 @@ class MovieSearchBar extends HTMLElement{
                         }else{
                             this._results = [];
                             this._totalResults = 0;
+                            this._totalPages = 1;
                             this.classList.remove('close');
-                            this._output.innerHTML = 'could not find a movie..';
+                            this._output.innerHTML = this._canNotFindResultsLabel;
                             this._searchBox.classList.add('search-error');
                         }
                         const event = new Event('results-updated');
@@ -68,14 +82,13 @@ class MovieSearchBar extends HTMLElement{
                     })
                     .catch(error => {
                         this._searchBox.classList.add('search-error');
-                        this._output.innerHTML = 'unexpected error occured.. plz try again.';
+                        this._output.innerHTML = this._errorLabel;
                         this._errorHandler(error);
                     });
-                }, 1500);
+                }, this._timeoutTime);
         }else{
             this.classList.remove('close');
             this._searchBox.classList.remove('searching');
-            this._output.innerHTML = ' ';
             clearTimeout(this._timeout);
             this._results = [];
         }

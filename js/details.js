@@ -1,7 +1,9 @@
+// Movie details component 
 class MovieDetails extends HTMLElement {
   constructor() {
     super();
-    this._url = 'http://www.omdbapi.com/?apikey=15fb3faa';
+    this._apiKey = this.getAttribute('api-key')
+    this._url = `http://www.omdbapi.com/?apikey=${this._apiKey}`;
     this._imdbId = this.getAttribute('imdbId');
   }
 
@@ -10,6 +12,7 @@ class MovieDetails extends HTMLElement {
   }
 
   render() {
+    // if no results
     if (!this._imdbId) {
       this.innerHTML = `
                 <p>no results</p>
