@@ -61,7 +61,10 @@ class MovieDetails extends HTMLElement {
 
   _renderResult(result) {
     this.innerHTML = `
-            <div class="details-title">${result.Title}</div>
+            <div class="details-title">
+            ${result.Title}
+            <cd-rating score="${result.imdbRating}"></cd-rating>
+            </div>
             <div class="details-subtitle">
                 <span><b>IMDb</b> ${result.imdbRating}(${result.imdbVotes})</span><span>${result.Runtime}</span><span>${result.Year}</span>
             </div>

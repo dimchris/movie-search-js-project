@@ -40,7 +40,6 @@ class MovieSearchBar extends HTMLElement{
     _onNewInput(e){
         // if not alphanumeric return
         // do not escape delete and back
-        console.log(e.which);
         if (
                 e.which != 8 
                 && e.which != 46
