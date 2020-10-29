@@ -112,11 +112,15 @@ body {
   margin-left: auto;
   /* max-width: 1920px; */
   overflow-y: hidden;
-  overflow-x: hidden;
   text-overflow: clip;
   align-items: stretch;
   background-color: rgba(255, 255, 255, 0.055);
   height: 100%;
+}
+
+#results::-webkit-scrollbar {
+  width: 0px; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
 }
 
 #movie-details::-webkit-scrollbar {
@@ -142,7 +146,7 @@ body {
   margin: 10px;
 }
 
-.result-item-details{
+.result-item-details {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -155,13 +159,13 @@ body {
   transition: 1s ease;
 }
 
-.result-item-details:hover{
+.result-item-details:hover {
   background-color: rgba(255, 255, 255, 0.37);
   backdrop-filter: blur(5px);
   transition: 1s ease;
 }
 
-.result-item-details > *{
+.result-item-details > * {
   width: 100%;
   white-space: normal;
   text-align: center;
@@ -170,7 +174,7 @@ body {
   transition: 1s ease;
 }
 
-.result-item-details:hover  * {
+.result-item-details:hover * {
   color: white;
   text-shadow: 2px 2px 5px #000000;
   cursor: default;
@@ -290,7 +294,7 @@ cd-movie-result-item.selected .result-item-image {
   padding-right: 1rem;
 }
 
-.details-more .label{
+.details-more .label {
   display: inline-block;
   font-weight: bold;
   width: 6rem;
@@ -298,14 +302,14 @@ cd-movie-result-item.selected .result-item-image {
   color: lightgrey;
 }
 
-.details-more .details-description{
+.details-more .details-description {
   margin-top: 1rem;
   margin-bottom: 1rem;
   font-size: 1.2rem;
 }
 
-.loading{
-  filter:blur(5px);
+.loading {
+  filter: blur(5px);
 }
 
 img {
@@ -313,11 +317,11 @@ img {
   height: 100%;
 }
 
-::-webkit-search-cancel-button{
-  position:relative;
-  right:20px;  
+::-webkit-search-cancel-button {
+  position: relative;
+  right: 20px;
 
   height: 20px;
   width: 20px;
-  border-radius:10px;
+  border-radius: 10px;
 }
