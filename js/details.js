@@ -38,6 +38,9 @@ class MovieDetails extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
+    if(oldValue == newValue){
+      return;
+    }
     switch (name) {
       case 'imdbid':
         this._imdbId = newValue;

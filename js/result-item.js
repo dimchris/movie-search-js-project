@@ -33,6 +33,9 @@ class MovieResultItem extends HTMLElement{
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
+        if(oldValue == newValue){
+            return;
+        }
         switch(name){
             case 'title':
                 this._title = newValue;

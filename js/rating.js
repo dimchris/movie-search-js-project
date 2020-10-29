@@ -31,6 +31,23 @@ class Rating extends HTMLElement {
         }
         this.appendChild(rating);
     }
+  
+    static get observedAttributes() {
+      return ['score'];
+    }
+  
+    attributeChangedCallback(name, oldValue, newValue) {
+      if(oldValue == newValue){
+        return;
+      }
+      switch (name) {
+        case 'score':
+          this._score = newValue || 0;
+          this.render();
+          break;
+        default:
+      }
+    }
 }
 
 customElements.define('cd-rating', Rating);
