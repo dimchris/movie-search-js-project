@@ -4,7 +4,7 @@ class MovieDetails extends HTMLElement {
     super();
     this._loading = false || this.getAttribute('loading');
     this._apiKey = this.getAttribute('api-key')
-    this._url = `http://www.omdbapi.com/?apikey=${this._apiKey}`;
+    this._url = `http://www.omdbapi.com/?plot=full&apikey=${this._apiKey}`;
     this._imdbId = this.getAttribute('imdbId');
   }
 
@@ -73,7 +73,6 @@ class MovieDetails extends HTMLElement {
             <div class="details-language"><span class="label">Language</span> ${result.Language}</div>
             </div>
         `;
-
   }
 }
 
