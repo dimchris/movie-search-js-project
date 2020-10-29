@@ -37,7 +37,11 @@ class MovieSearchBar extends HTMLElement{
         
     }
 
-    _onNewInput(){
+    _onNewInput(e){
+        // if not alphanumeric return
+        if (e.which > 90 || e.which < 48){
+            return;
+        }   
         this._searchBox.classList.add('searching');
         this._searchBox.classList.remove('search-error');
         this._searchBox.classList.remove('search-compconste');
