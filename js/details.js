@@ -66,11 +66,11 @@ class MovieDetails extends HTMLElement {
                 <span><b>IMDb</b> ${result.imdbRating}(${result.imdbVotes})</span><span>${result.Runtime}</span><span>${result.Year}</span>
             </div>
             <div class="details-more">
-            <div class="details-description">${result.Plot}</div>
-            <div class="details-directors"><span class="label">Directors</span> ${result.Director}</div>
-            <div class="details-actors"><span class="label">Starring</span> ${result.Actors}</div>
-            <div class="details-genres"><span class="label">Genres</span> ${result.Genre}</div>
-            <div class="details-language"><span class="label">Language</span> ${result.Language}</div>
+              <div class="details-description">${result.Plot}</div>
+              <div class="details-directors"><span class="label">Directors</span> ${result.Director}</div>
+              <div class="details-actors"><span class="label">Starring</span> ${result.Actors}</div>
+              <div class="details-genres"><span class="label">Genres</span> ${result.Genre}</div>
+              <div class="details-language"><span class="label">Language</span> ${result.Language}</div>
             </div>
         `;
   }

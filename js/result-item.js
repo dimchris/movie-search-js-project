@@ -56,6 +56,10 @@ class MovieResultItem extends HTMLElement{
         <div class = 'result-item-box'>
             <div class = 'result-item-image'>
                 <image src=${this._poster} onerror="this.src='assets/imgs/imagenotfound.jpg';">
+                <div class='result-item-details'>
+                    <div>${this._title}</div>
+                    <div>${this._year}</div>
+                </div>
             </div>
         </div>
     `;
