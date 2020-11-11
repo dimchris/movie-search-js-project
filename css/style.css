@@ -144,7 +144,6 @@ body {
   position: relative;
   display: inline-block;
   height: 100%;
-  margin: 10px;
 }
 
 .result-item-details {
@@ -190,6 +189,8 @@ body {
 cd-movie-result-item {
   display: inline-block;
   height: 100%;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 cd-movie-result-item.selected .result-item-image {
