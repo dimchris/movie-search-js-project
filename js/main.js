@@ -72,9 +72,9 @@ resultsItems.addEventListener('scroll', (event) => {
 
 // scroll by using the next & back button
 next.addEventListener('click', (event) => {
-  resultsItems.scrollLeft += 0.8 * resultsItems.offsetWidth;
+  resultsItems.scrollTo({left: resultsItems.scrollLeft + 0.8 * resultsItems.offsetWidth, behavior:'smooth'})
 });
 
 prev.addEventListener('click', (event) => {
-  resultsItems.scrollLeft -= 0.8 * resultsItems.offsetWidth;
+  resultsItems.scrollTo({left: resultsItems.scrollLeft - 0.8 * resultsItems.offsetWidth, behavior:'smooth'})
 });
