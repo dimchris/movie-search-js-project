@@ -6,6 +6,7 @@ class MovieDetails extends HTMLElement {
     this._apiKey = this.getAttribute('api-key')
     this._url = `http://www.omdbapi.com/?plot=full&apikey=${this._apiKey}`;
     this._imdbId = this.getAttribute('imdbId');
+    this._movie;
   }
 
   connectedCallback() {
@@ -22,8 +23,9 @@ class MovieDetails extends HTMLElement {
       // fetch results
       this._getResults(this._imdbId)
         .then((response) => response.json())
-        .then((data) => {
-          this._renderResult(data);
+        .then((result) => {
+          this._movie = new Movie(result.imdbId, result.Title, result.imdbRating, result.imdbVotes, result.Runtime, result.Year, result.Plot, result.Director, result.Actors, result.Genre, result.Language);
+          this._renderResult();
           this.setAttribute('loading', false)
         })
         .catch((error) => {
@@ -38,7 +40,7 @@ class MovieDetails extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if(oldValue == newValue){
+    if (oldValue == newValue) {
       return;
     }
     switch (name) {
@@ -48,12 +50,12 @@ class MovieDetails extends HTMLElement {
         break;
       case 'loading':
         this._loading = newValue;
-        if(newValue === "true"){
+        if (newValue === "true") {
           this.classList.add('loading');
-        }else{
+        } else {
           this.classList.remove('loading');
         }
-      default:
+        default:
     }
   }
 
@@ -62,23 +64,8 @@ class MovieDetails extends HTMLElement {
     return fetch(`${this._url}&i=${imdbId}`);
   }
 
-  _renderResult(result) {
-    this.innerHTML = `
-            <div class="details-title">
-            ${result.Title}
-            <cd-rating score="${result.imdbRating}"></cd-rating>
-            </div>
-            <div class="details-subtitle">
-                <span><b>IMDb</b> ${result.imdbRating}(${result.imdbVotes})</span><span>${result.Runtime}</span><span>${result.Year}</span>
-            </div>
-            <div class="details-more">
-              <div class="details-description">${result.Plot}</div>
-              <div class="details-directors"><span class="label">Directors</span> ${result.Director}</div>
-              <div class="details-actors"><span class="label">Starring</span> ${result.Actors}</div>
-              <div class="details-genres"><span class="label">Genres</span> ${result.Genre}</div>
-              <div class="details-language"><span class="label">Language</span> ${result.Language}</div>
-            </div>
-        `;
+  _renderResult() {
+    this._movie.render(this);
   }
 }
 
