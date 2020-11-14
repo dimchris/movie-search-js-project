@@ -11,7 +11,7 @@ class MovieSearchBar extends HTMLElement{
         this._searchLabel = this.getAttribute('seach-label') || 'searching...';
         this._canNotFindResultsLabel = this.getAttribute('can-not-find-result-label') || 'could not find a movie..';
         this._errorLabel = this.getAttribute('error-label') || 'unexpected error occured.. plz try again.';
-        this._results = [];
+        this._results = null;
         this._input = '';
         this._page = 1;
         this._totalResults = 0; // total results returned from query after fetch
@@ -70,7 +70,7 @@ class MovieSearchBar extends HTMLElement{
                     .then(data => {
                         // according to the api the response should be se to true if results
                         if(data.Response === 'True'){
-                            this._results = data.Search;
+                            this._results = data.Search.map( movie => new MovieItem(movie.imdbID, movie.Title, movie.Year, movie.Poster));
                             this._totalResults = data.totalResults;
                             // calc the pages
                             this._totalPages = Math.trunc(data.totalResults/10) + (data.totalResults%10 ? 1 : 0);
@@ -130,7 +130,7 @@ class MovieSearchBar extends HTMLElement{
         this._getNewResults(this._input, page)
             .then(response => response.json())
             .then(data => {
-                this._results = data.Search;
+                this._results = data.Search.map( movie => new MovieItem(movie.imdbID, movie.Title, movie.Year, movie.Poster));
                 this._totalResults = data.totalResults;
                 this._totalPages = Math.trunc(data.totalResults/10) + (data.totalResults%10 ? 1 : 0);
                 // emit results added event to refresh the results component

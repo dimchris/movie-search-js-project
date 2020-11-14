@@ -5,6 +5,7 @@ const movieDetails = document.getElementById('movie-details');
 const totalResults = document.getElementById('total-results');
 const next = document.querySelector('.next');
 const prev = document.querySelector('.prev');
+let movies;
 
 // update results if new search is triggered
 searchBar.addEventListener('results-updated', () => {
@@ -15,19 +16,8 @@ searchBar.addEventListener('results-updated', () => {
     return;
   }
   totalResults.textContent = `${total} Found for "${input}"`;
-  resultsItems.innerHTML = ''; // clear the children
-  for (const [index, result] of results.entries()) {
-    const child = document.createElement('cd-movie-result-item');
-    child.setAttribute('title', result.Title);
-    child.setAttribute('year', result.Year);
-    child.setAttribute('imdbId', result.imdbID);
-    child.setAttribute('poster', result.Poster);
-    resultsItems.appendChild(child);
-    if (index == 0) {
-      child.classList.add('selected');
-      child.dispatchEvent(new Event('result-clicked', { bubbles: true }));
-    }
-  }
+  movies = new MovieList(results)
+  movies.render(resultsItems)
 
   searchBar.changePage();
 });
@@ -38,14 +28,7 @@ searchBar.addEventListener('results-added', () => {
   if (!results) {
     return;
   }
-  for (result of results) {
-    const child = document.createElement('cd-movie-result-item');
-    child.setAttribute('title', result.Title);
-    child.setAttribute('year', result.Year);
-    child.setAttribute('imdbId', result.imdbID);
-    child.setAttribute('poster', result.Poster);
-    resultsItems.appendChild(child);
-  }
+  movies.addMovies(results, resultsItems);
 });
 
 // update details components when movie is selected
