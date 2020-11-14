@@ -5,6 +5,8 @@ const movieDetails = document.getElementById('movie-details');
 const totalResults = document.getElementById('total-results');
 const next = document.querySelector('.next');
 const prev = document.querySelector('.prev');
+const zoomArea = document.querySelector('#zoom-area');
+const zoomCloseButton = document.querySelector('#zoom-area__close-button');
 const movies = new MovieList();
 
 // update results if new search is triggered
@@ -59,3 +61,7 @@ next.addEventListener('click', (event) => {
 prev.addEventListener('click', (event) => {
   resultsItems.scrollTo({left: resultsItems.scrollLeft - 0.8 * resultsItems.offsetWidth, behavior:'smooth'})
 });
+
+zoomCloseButton.addEventListener('click', (e) => {
+  zoomArea.style.display = 'none';
+})
