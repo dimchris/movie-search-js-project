@@ -1,10 +1,14 @@
 class MovieList {
   constructor(movies) {
-    this.movies = movies;
+    this._movies = movies;
   }
 
   render(el) {
+    this._el = el;
     el.innerHTML = ''; // clear the children
+    if(this.movies == null){
+        return;
+    }
     for (const [index, movie] of this.movies.entries()) {
       const child = document.createElement('cd-movie-result-item');
       child.setAttribute('title', movie.title);
@@ -33,5 +37,14 @@ class MovieList {
       movies.forEach(movie => {
           this.addMovie(movie, el)
       });
+  }
+
+  set movies(movies){
+      this._movies = movies;
+      this.render(this._el);
+  }
+
+  get movies(){
+      return this._movies;
   }
 }

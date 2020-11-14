@@ -5,20 +5,18 @@ const movieDetails = document.getElementById('movie-details');
 const totalResults = document.getElementById('total-results');
 const next = document.querySelector('.next');
 const prev = document.querySelector('.prev');
-let movies;
+const movies = new MovieList();
 
 // update results if new search is triggered
 searchBar.addEventListener('results-updated', () => {
   const results = searchBar._results;
   const total = searchBar._totalResults;
   const input = searchBar._input;
-  if (!results) {
-    return;
-  }
   totalResults.textContent = `${total} Found for "${input}"`;
-  movies = new MovieList(results)
-  movies.render(resultsItems)
+  movies.render(resultsItems);
+  movies.movies = results;
 
+  // buffer more results
   searchBar.changePage();
 });
 
