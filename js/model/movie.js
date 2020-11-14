@@ -20,7 +20,7 @@ class Movie {
         <cd-rating score="${this.rating}"></cd-rating>
         </div>
         <div class="details-subtitle">
-            <span><b>IMDb</b> ${this.imdbRating}(${this.votes})</span><span>${this.runtime}</span><span>${this.year}</span>
+            <span><b>IMDb</b> ${this.rating}(${this.votes})</span><span>${this.runtime}</span><span>${this.year}</span>
         </div>
         <div class="details-more">
           <div class="details-description">${this.plot}</div>
