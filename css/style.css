@@ -208,6 +208,7 @@ cd-movie-result-item.selected .result-item-image {
   flex-wrap: wrap;
   color: white;
   height: 100%;
+  width: 100%;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
