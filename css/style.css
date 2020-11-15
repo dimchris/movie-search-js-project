@@ -353,7 +353,8 @@ img {
   color: white;
   z-index: 100;
   position: absolute;
-  overflow-y: scroll;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 #zoom-area__close-button{
