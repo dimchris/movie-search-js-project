@@ -74,11 +74,14 @@ class MovieSearchBar extends HTMLElement{
                             this._totalResults = data.totalResults;
                             // calc the pages
                             this._totalPages = Math.trunc(data.totalResults/10) + (data.totalResults%10 ? 1 : 0);
-                            this._searchBox.classList.remove('searching');
-                            this._searchBox.classList.add('search-compconste');
-                            this._output.classList.add('search-hidden');
-                            this._searchBox.innerHTML = '';
-                            this.classList.add('close');
+                            // introduce some latency to wait for the images to load properly
+                            setTimeout(() => {
+                                this._searchBox.classList.remove('searching');
+                                this._searchBox.classList.add('search-compconste');
+                                this._output.classList.add('search-hidden');
+                                this._searchBox.innerHTML = '';
+                                this.classList.add('close');
+                            }, 2000);
                         }else{
                             this._results = [];
                             this._totalResults = 0;
