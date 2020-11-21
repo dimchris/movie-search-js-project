@@ -45,7 +45,7 @@ body {
   margin: 0px;
   padding: 0px;
 }
-#main {
+.page {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -108,7 +108,7 @@ body {
   border-color: var(--primary-color);
 }
 
-#results {
+.carrousel-items {
   position: relative;
   white-space: nowrap; /*Prevents Wrapping*/
   padding: 30px;
@@ -169,7 +169,7 @@ body {
   transition: 1s ease;
 }
 
-.result-item-details > * {
+.result-item-details > div {
   width: 100%;
   white-space: normal;
   text-align: center;
@@ -178,7 +178,7 @@ body {
   transition: 1s ease;
 }
 
-.result-item-details:hover * {
+.result-item-details:hover > div {
   color: white;
   text-shadow: 2px 2px 5px #000000;
   cursor: default;
@@ -242,7 +242,6 @@ cd-movie-result-item.selected .result-item-image {
   }
 }
 
-
 .prev,
 .next {
   z-index: 10;
@@ -272,19 +271,21 @@ cd-movie-result-item.selected .result-item-image {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-#total-results-block {
+#total-results-block, #total-bookmarks-block {
+  height: 80px;
   padding: 15px;
   font-size: 2rem;
   font-weight: bold;
   color: white;
+  margin-top: 40px;
 }
 
-#total-results-block > * {
+#total-results-block > * , #total-bookmarks-block > *{
   margin: 0;
   padding: 0;
 }
 
-#total-results-block .field {
+#total-results-block .field, #total-bookmarks-block .field {
   color: grey;
   font-size: 1rem;
 }
@@ -320,7 +321,7 @@ cd-movie-result-item.selected .result-item-image {
   filter: blur(5px);
 }
 
-#empty-space{
+.empty-space{
   min-height: 90px;
   width: 100%;
 }
@@ -361,3 +362,32 @@ img {
   margin: 10px;
   cursor: pointer;
 }
+
+.add-to-list-button{
+  margin: 0px 10px;
+  padding: 5px;
+  width: fit-content;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.055);
+  border-style: none;
+  border-radius: 20px;
+  transition: 1s ease;
+}
+.add-to-list-button:focus{
+  outline: none;
+}
+
+.add-to-list-button:hover{
+  background-color:  rgb(103, 202, 103);
+  transition: 1s ease;
+}
+
+.add-to-list-button.selected{
+  background-color: rgb(103, 202, 103);
+  transition: 1s ease;
+}
+/* .add-to-list-button.selected:hover{
+  background-color: rgb(202, 104, 104);
+  transition: 1s ease;
+  transition-delay: 1s;
+} */

@@ -25,13 +25,13 @@ class MovieItem{
                 </div>
             </div>
         </div>
-    `;
-    if(this.poster && this.poster != 'N/A'){
-        el.querySelector('.zoom').addEventListener('click', (event) => {
-            const zoomArea = document.querySelector('#zoom-area');
-            zoomArea.style.display = 'flex';
-            zoomArea.querySelector('img').setAttribute('src', this.poster);
-        })
-    }
+        `;
+        if(this.poster && this.poster != 'N/A'){
+            el.querySelector('.zoom').addEventListener('click', (event) => {
+                const zoomArea = document.querySelector('#zoom-area');
+                zoomArea.style.display = 'flex';
+                zoomArea.querySelector('img').setAttribute('src', this.poster);
+            })
+        }
     }
 }

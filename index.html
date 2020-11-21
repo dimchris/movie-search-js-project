@@ -4,44 +4,63 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/menu-bar.css" />
     <title>Document</title>
   </head>
 
   <body>
-    <div id="main">
-      <div id="zoom-area">
-        <div id="zoom-area__close-button">Close (x)</div>
-        <img src="assets/imgs/imagenotfound.jpg">
-      </div>
+    <cd-menubar></cd-menubar>
+    <div id="zoom-area">
+      <div id="zoom-area__close-button">Close (x)</div>
+      <img src="assets/imgs/imagenotfound.jpg">
+    </div>
+    <div id="main" class="page">
       <div id="total-results-block">
         <p class="label">Search</p>
-        <p class="field" id="total-results">0</p>
+        <p class="field" id="search-total-results"></p>
       </div>
       <div class="carrousel">
         <a class="prev">&#10094;</a>
-        <div id="results"></div>
+        <div id="results" class="carrousel-items"></div>
         <a class="next">&#10095;</a>
       </div>
       <cd-movie-details 
         id="movie-details" 
         api-key="15fb3faa"></cd-movie-details>
-      <div id="empty-space"></div>
+      <div class="empty-space"></div>
       <cd-movie-search-bar
         id="search-bar"
         placeholder="enter a movie title..."
         api-key="15fb3faa"
       ></cd-movie-search-bar>
     </div>
+    <div id="watchlist" class="page">
+      <div id="total-bookmarks-block">
+        <p class="label">BookMarks</p>
+        <p class="field" id="book-mark-total-results"></p>
+      </div>
+      <div class="carrousel">
+        <a class="prev">&#10094;</a>
+        <div id="bookmarks" class="carrousel-items"></div>
+        <a class="next">&#10095;</a>
+      </div>
+    </div>
+    <div id="account" class="page"></div>
 
     <!-- Scripts -->
 
     <script src="js/model/movie-list.js"></script>
+    <script src="js/model/user.js"></script>
     <script src="js/model/movie.js"></script>
     <script src="js/model/movie-item.js"></script>
+    <script src="js/model/bookmark.js"></script>
+    <script src="js/custom-elements/menubar.js"></script>
     <script src="js/custom-elements/search-bar.js"></script>
     <script src="js/custom-elements/result-item.js"></script>
     <script src="js/custom-elements/rating.js"></script>
     <script src="js/custom-elements/details.js"></script>
+    <script src="js/services/datasources/bookmarkMockDS.js"></script>
+    <script src="js/services/bookmarkService.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>
