@@ -8,21 +8,6 @@ class MovieResultItem extends HTMLElement{
         const imdbId = this.getAttribute('imdbId');
         const poster = this.getAttribute('poster');
         this._movieItem = new MovieItem(imdbId, title, year, poster);
-        
-        // on click update the item details
-        this.addEventListener('click', (e) => {
-            // remove select class from all items
-            document.querySelectorAll('cd-movie-result-item').forEach(item => {
-                item.classList.remove('selected');
-            })
-            
-            // add select class to the selected item
-            this.classList.add('selected');
-            
-            //  emit clicked event
-            const event = new Event('result-clicked', {bubbles: true});
-            this.dispatchEvent(event);
-        })
     }
 
     connectedCallback(){
