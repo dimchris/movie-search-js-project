@@ -81,7 +81,7 @@ class MovieSearchBar extends HTMLElement{
                                 this._output.classList.add('search-hidden');
                                 this._searchBox.innerHTML = '';
                                 this.classList.add('close');
-                            }, 2000);
+                            }, 1000);
                         }else{
                             this._results = [];
                             this._totalResults = 0;
