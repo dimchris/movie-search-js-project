@@ -5,8 +5,7 @@ class MovieDetails extends HTMLElement {
     this._loading = false || this.getAttribute('loading');
     this._apiKey = this.getAttribute('api-key')
     this._url = `http://www.omdbapi.com/?plot=full&apikey=${this._apiKey}`;
-    this._imdbId = this.getAttribute('imdbId');
-    this._movie;
+    this._movie = new Movie();
   }
 
   connectedCallback() {
@@ -15,16 +14,27 @@ class MovieDetails extends HTMLElement {
 
   render() {
     // if no results
-    if (!this._imdbId) {
+    if (!this._movie.imdbId) {
       this.innerHTML = `
                 <p>no results</p>
             `;
     } else {
       // fetch results
-      this._getResults(this._imdbId)
+      this._getResults(this._movie.imdbId)
         .then((response) => response.json())
         .then((result) => {
-          this._movie = new Movie(result.imdbId, result.Title, result.imdbRating, result.imdbVotes, result.Runtime, result.Year, result.Plot, result.Director, result.Actors, result.Genre, result.Language);
+          this._movie.imdbId = result.imdbID;
+          this._movie.title = result.Title;
+          this._movie.rating = result.imdbRating;
+          this._movie.votes = result.imdbVotes;
+          this._movie.runtime = result.Runtime;
+          this._movie.year = result.Year;
+          this._movie.plot = result.Plot;
+          this._movie.director = result.Director;
+          this._movie.actors = result.Actors;
+          this._movie.genre = result.Genre;
+          this._movie.language = result.Language;
+          this._movie.poster = result.Poster;
           this._renderResult();
           this.setAttribute('loading', false)
         })
@@ -45,7 +55,7 @@ class MovieDetails extends HTMLElement {
     }
     switch (name) {
       case 'imdbid':
-        this._imdbId = newValue;
+        this._movie.imdbId = newValue;
         this.render();
         break;
       case 'loading':
