@@ -18,17 +18,15 @@
   </div>
   <cd-pop-up hide="true"></cd-pop-up>
   <cd-confirm hide="true"></cd-confirm>
-  <cd-input hide="false"></cd-input>
+  <cd-input hide="true"></cd-input>
   <div id="main" class="page">
     <div id="total-results-block">
       <p class="label">Search</p>
       <p class="field" id="search-total-results"></p>
     </div>
-    <div class="carrousel">
-      <a class="prev">&#10094;</a>
+    <cd-carrousel>
       <div id="results" class="carrousel-items"></div>
-      <a class="next">&#10095;</a>
-    </div>
+    </cd-carrousel>
     <cd-movie-details id="movie-details" class="details" api-key="15fb3faa"></cd-movie-details>
     <div class="empty-space"></div>
     <cd-movie-search-bar id="search-bar" placeholder="enter a movie title..." api-key="15fb3faa"></cd-movie-search-bar>
@@ -38,11 +36,9 @@
       <p class="label">BookMarks</p>
       <p class="field" id="book-mark-total-results"></p>
     </div>
-    <div class="carrousel">
-      <a class="prev">&#10094;</a>
+    <cd-carrousel>
       <div id="bookmarks" class="carrousel-items"></div>
-      <a class="next">&#10095;</a>
-    </div>
+    </cd-carrousel>
     <cd-movie-details id="bookmark-details" class="details" api-key="15fb3faa"></cd-movie-details>
     <div class="empty-space"></div>
   </div>

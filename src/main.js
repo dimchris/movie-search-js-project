@@ -11,6 +11,7 @@ import { MovieList } from "./model/movie-list";
 import { bookmarkService } from "./services/services";
 import ConfirmComponent from "./custom-elements/confirm-dialog";
 import InputComponent from "./custom-elements/input-dialog";
+import CarrouselComponent from "./custom-elements/carrousel-component";
 
 customElements.define("cd-movie-details", MovieDetails);
 customElements.define("cd-menubar", Menubar);
@@ -22,6 +23,7 @@ customElements.define("cd-login", Login);
 customElements.define("cd-pop-up", PopUpComponent);
 customElements.define("cd-confirm", ConfirmComponent);
 customElements.define("cd-input", InputComponent);
+customElements.define("cd-carrousel", CarrouselComponent);
 
 // main page elements refs
 const searchBar = document.getElementById("search-bar");
@@ -30,8 +32,6 @@ const bookmarkItems = document.getElementById("bookmarks");
 const movieDetails = document.getElementById("movie-details");
 const bookmarkDetails = document.getElementById("bookmark-details");
 const totalResults = document.getElementById("search-total-results");
-const next = document.querySelector(".next");
-const prev = document.querySelector(".prev");
 const zoomArea = document.querySelector("#zoom-area");
 const zoomCloseButton = document.querySelector("#zoom-area__close-button");
 const menubar = document.querySelector("cd-menubar");
@@ -75,11 +75,11 @@ searchBar.addEventListener("results-added", () => {
   movies.addMovies(results, resultsItems);
 });
 
-// scroll results on wheel event
-resultsItems.addEventListener("wheel", (event) => {
-  resultsItems.scrollLeft -= event.deltaY;
-  event.preventDefault();
-});
+// // scroll results on wheel event
+// resultsItems.addEventListener("wheel", (event) => {
+//   resultsItems.scrollLeft -= event.deltaY;
+//   event.preventDefault();
+// });
 
 // get new results when scrolling (get next page)
 resultsItems.addEventListener("scroll", () => {
@@ -97,21 +97,6 @@ movieDetails.addEventListener("bookmark-added", (e) => {
 
 movieDetails.addEventListener("bookmark-removed", (e) => {
   bookmarkService.remove(e.movieItem.imdbId);
-});
-
-// scroll by using the next & back button
-next.addEventListener("click", () => {
-  document.querySelector(".carrousel-items").scrollTo({
-    left: resultsItems.scrollLeft + 0.8 * resultsItems.offsetWidth,
-    behavior: "smooth",
-  });
-});
-
-prev.addEventListener("click", () => {
-  document.querySelector(".carrousel-items").scrollTo({
-    left: resultsItems.scrollLeft - 0.8 * resultsItems.offsetWidth,
-    behavior: "smooth",
-  });
 });
 
 zoomCloseButton.addEventListener("click", () => {
