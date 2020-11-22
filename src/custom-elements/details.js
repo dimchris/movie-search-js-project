@@ -1,10 +1,13 @@
-// Movie details component 
-class MovieDetails extends HTMLElement {
+import { Movie } from "../model/movie";
+
+// Movie details component
+export default class MovieDetails extends HTMLElement {
   constructor() {
     super();
-    this._loading = false || this.getAttribute('loading');
-    this._apiKey = this.getAttribute('api-key')
+    this._loading = false || this.getAttribute("loading");
+    this._apiKey = this.getAttribute("api-key");
     this._url = `http://www.omdbapi.com/?plot=full&apikey=${this._apiKey}`;
+    this._state = this.getAttribute("login-state") || false;
     this._movie = new Movie();
   }
 
@@ -16,7 +19,7 @@ class MovieDetails extends HTMLElement {
     // if no results
     if (!this._movie.imdbId) {
       this.innerHTML = `
-                <p>no results</p>
+               
             `;
     } else {
       // fetch results
@@ -36,7 +39,7 @@ class MovieDetails extends HTMLElement {
           this._movie.language = result.Language;
           this._movie.poster = result.Poster;
           this._renderResult();
-          this.setAttribute('loading', false)
+          this.setAttribute("loading", false);
         })
         .catch((error) => {
           // only log the error for now
@@ -46,7 +49,7 @@ class MovieDetails extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['imdbid', 'loading'];
+    return ["imdbid", "loading", "login-state"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -54,29 +57,33 @@ class MovieDetails extends HTMLElement {
       return;
     }
     switch (name) {
-      case 'imdbid':
+      case "imdbid":
         this._movie.imdbId = newValue;
         this.render();
         break;
-      case 'loading':
+      case "loading":
         this._loading = newValue;
         if (newValue === "true") {
-          this.classList.add('loading');
+          this.classList.add("loading");
         } else {
-          this.classList.remove('loading');
+          this.classList.remove("loading");
         }
-        default:
+        break;
+      case "login-state":
+        this._loginState = newValue;
+        this.render();
+        break;
+      default:
+        return;
     }
   }
 
   _getResults(imdbId) {
-    this.setAttribute('loading', true)
+    this.setAttribute("loading", true);
     return fetch(`${this._url}&i=${imdbId}`);
   }
 
   _renderResult() {
-    this._movie.render(this);
+    this._movie.render(this, this._loginState);
   }
 }
-
-customElements.define('cd-movie-details', MovieDetails);

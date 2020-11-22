@@ -1,4 +1,8 @@
-class BookmarkMockDS {
+import {
+  MovieList
+} from "../../model/movie-list";
+
+export default class BookmarkMockDS {
   constructor(movieList) {
     this._bookmarks = movieList || new MovieList();
   }

@@ -6,6 +6,7 @@
   from {
     box-shadow: 0 0 5px -5px #aef4af;
   }
+
   to {
     box-shadow: 0 0 5px 5px #aef4af;
   }
@@ -15,6 +16,7 @@
   from {
     box-shadow: 0 0 5px -5px #e7f33cbb;
   }
+
   to {
     box-shadow: 0 0 5px 5px #e7f33cbb;
   }
@@ -24,6 +26,7 @@
   from {
     box-shadow: 0 0 5px -5px #be5252;
   }
+
   to {
     box-shadow: 0 0 5px 5px #be5252;
   }
@@ -38,19 +41,22 @@ html {
   padding: 0px;
   overflow: hidden;
 }
+
 body {
   height: 100vh;
   width: 100vw;
-  background: url('../assets/imgs/background.png');
+  background: url("../imgs/background.png");
   margin: 0px;
   padding: 0px;
 }
+
 .page {
   display: flex;
   flex-direction: column;
   position: relative;
   height: 100%;
 }
+
 #search-bar {
   position: absolute;
   height: 100%;
@@ -110,7 +116,8 @@ body {
 
 .carrousel-items {
   position: relative;
-  white-space: nowrap; /*Prevents Wrapping*/
+  white-space: nowrap;
+  /*Prevents Wrapping*/
   padding: 30px;
   margin-right: auto;
   margin-left: auto;
@@ -122,24 +129,26 @@ body {
   height: 100%;
 }
 
-#results::-webkit-scrollbar {
-  width: 0px; /* Remove scrollbar space */
+.carrousel-items::-webkit-scrollbar {
+  width: 0px;
+  /* Remove scrollbar space */
   height: 0px;
-  background: transparent; /* Optional: just make scrollbar invisible */
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
 }
 
-#movie-details::-webkit-scrollbar {
+.details::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
-#movie-details::-webkit-scrollbar-track {
+.details::-webkit-scrollbar-track {
   background-color: transparent;
   border-radius: 10px;
   margin: 10px;
 }
 
-#movie-details::-webkit-scrollbar-thumb {
+.details::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.4);
   border-radius: 10px;
 }
@@ -201,7 +210,7 @@ cd-movie-result-item.selected .result-item-image {
   box-shadow: 0px 0px 20px 8px rgba(255, 255, 255, 0.55);
 }
 
-#movie-details {
+.details {
   display: flex;
   display: block;
   flex-direction: column;
@@ -215,7 +224,7 @@ cd-movie-result-item.selected .result-item-image {
   overflow: auto;
 }
 
-#movie-details > * {
+.details > * {
   margin: 10px;
 }
 
@@ -231,7 +240,7 @@ cd-movie-result-item.selected .result-item-image {
   display: none;
 }
 
-.carrousel{
+.carrousel {
   position: relative;
   height: 40%;
 }
@@ -271,7 +280,8 @@ cd-movie-result-item.selected .result-item-image {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-#total-results-block, #total-bookmarks-block {
+#total-results-block,
+#total-bookmarks-block {
   height: 80px;
   padding: 15px;
   font-size: 2rem;
@@ -280,12 +290,14 @@ cd-movie-result-item.selected .result-item-image {
   margin-top: 40px;
 }
 
-#total-results-block > * , #total-bookmarks-block > *{
+#total-results-block > *,
+#total-bookmarks-block > * {
   margin: 0;
   padding: 0;
 }
 
-#total-results-block .field, #total-bookmarks-block .field {
+#total-results-block .field,
+#total-bookmarks-block .field {
   color: grey;
   font-size: 1rem;
 }
@@ -321,7 +333,7 @@ cd-movie-result-item.selected .result-item-image {
   filter: blur(5px);
 }
 
-.empty-space{
+.empty-space {
   min-height: 90px;
   width: 100%;
 }
@@ -340,7 +352,7 @@ img {
   border-radius: 10px;
 }
 
-#zoom-area{
+#zoom-area {
   display: none;
   flex-direction: column;
   justify-content: center;
@@ -350,7 +362,7 @@ img {
   height: 100%;
   width: 100%;
   padding: 100px;
-  background-color:  rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.8);
   color: white;
   z-index: 100;
   position: absolute;
@@ -358,12 +370,12 @@ img {
   overflow-x: hidden;
 }
 
-#zoom-area__close-button{
+#zoom-area__close-button {
   margin: 10px;
   cursor: pointer;
 }
 
-.add-to-list-button{
+.add-to-list-button {
   margin: 0px 10px;
   padding: 5px;
   width: fit-content;
@@ -373,21 +385,17 @@ img {
   border-radius: 20px;
   transition: 1s ease;
 }
-.add-to-list-button:focus{
+
+.add-to-list-button:focus {
   outline: none;
 }
 
-.add-to-list-button:hover{
-  background-color:  rgb(103, 202, 103);
-  transition: 1s ease;
-}
-
-.add-to-list-button.selected{
+.add-to-list-button:hover {
   background-color: rgb(103, 202, 103);
   transition: 1s ease;
 }
-/* .add-to-list-button.selected:hover{
-  background-color: rgb(202, 104, 104);
+
+.add-to-list-button.selected {
+  background-color: rgb(103, 202, 103);
   transition: 1s ease;
-  transition-delay: 1s;
-} */
+}

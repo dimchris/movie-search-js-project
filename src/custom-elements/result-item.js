@@ -1,7 +1,11 @@
-// Result item component
-class MovieResultItem extends HTMLElement{
+import {
+    MovieItem
+} from '../model/movie-item';
 
-    constructor(){
+// Result item component
+export default class MovieResultItem extends HTMLElement {
+
+    constructor() {
         super();
         const title = this.getAttribute('title');
         const year = this.getAttribute('year');
@@ -10,7 +14,7 @@ class MovieResultItem extends HTMLElement{
         this._movieItem = new MovieItem(imdbId, title, year, poster);
     }
 
-    connectedCallback(){
+    connectedCallback() {
         this.render();
     }
 
@@ -19,10 +23,10 @@ class MovieResultItem extends HTMLElement{
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        if(oldValue == newValue){
+        if (oldValue == newValue) {
             return;
         }
-        switch(name){
+        switch (name) {
             case 'title':
                 this._movieItem.title = newValue;
                 break;
@@ -40,10 +44,8 @@ class MovieResultItem extends HTMLElement{
         this.render();
     }
 
-    render(){
+    render() {
         this._movieItem.render(this);
     }
 
 }
-
-customElements.define('cd-movie-result-item', MovieResultItem);

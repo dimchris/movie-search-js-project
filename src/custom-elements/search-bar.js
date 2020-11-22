@@ -1,6 +1,10 @@
+import {
+    MovieItem
+} from '../model/movie-item';
+
 // Search bar component
-class MovieSearchBar extends HTMLElement{
-    constructor(){
+export default class MovieSearchBar extends HTMLElement {
+    constructor() {
         super();
         this._apiKey = this.getAttribute('api-key');
         this._url = `http://www.omdbapi.com/?apikey=${this._apiKey}&type=movie`;
@@ -30,23 +34,23 @@ class MovieSearchBar extends HTMLElement{
         this._output.classList.add('search-output');
 
     }
-    
-    connectedCallback(){
+
+    connectedCallback() {
         this.appendChild(this._searchBox);
         this.appendChild(this._output);
-        
+
     }
 
-    _onNewInput(e){
+    _onNewInput(e) {
         // if not alphanumeric return
         // do not escape delete and back
         if (
-                e.which != 8 
-                && e.which != 46
-                && (e.which > 90 || e.which < 48)
-            ){
+            e.which != 8 &&
+            e.which != 46 &&
+            (e.which > 90 || e.which < 48)
+        ) {
             return;
-        }   
+        }
         this._searchBox.classList.add('searching');
         this._searchBox.classList.remove('search-error');
         this._searchBox.classList.remove('search-compconste');
@@ -59,7 +63,7 @@ class MovieSearchBar extends HTMLElement{
         input = input ? input.trim() : input;
         // set the page to 1
         this._page = 1;
-        if(input){
+        if (input) {
             this._input = input;
             // while typing clear the timeout
             clearTimeout(this._timeout);
@@ -69,11 +73,11 @@ class MovieSearchBar extends HTMLElement{
                     .then(response => response.json())
                     .then(data => {
                         // according to the api the response should be se to true if results
-                        if(data.Response === 'True'){
-                            this._results = data.Search.map( movie => new MovieItem(movie.imdbID, movie.Title, movie.Year, movie.Poster));
+                        if (data.Response === 'True') {
+                            this._results = data.Search.map(movie => new MovieItem(movie.imdbID, movie.Title, movie.Year, movie.Poster));
                             this._totalResults = data.totalResults;
                             // calc the pages
-                            this._totalPages = Math.trunc(data.totalResults/10) + (data.totalResults%10 ? 1 : 0);
+                            this._totalPages = Math.trunc(data.totalResults / 10) + (data.totalResults % 10 ? 1 : 0);
                             // introduce some latency to wait for the images to load properly
                             setTimeout(() => {
                                 this._searchBox.classList.remove('searching');
@@ -82,7 +86,7 @@ class MovieSearchBar extends HTMLElement{
                                 this._searchBox.innerHTML = '';
                                 this.classList.add('close');
                             }, 1000);
-                        }else{
+                        } else {
                             this._results = [];
                             this._totalResults = 0;
                             this._totalPages = 1;
@@ -98,8 +102,8 @@ class MovieSearchBar extends HTMLElement{
                         this._output.innerHTML = this._errorLabel;
                         this._errorHandler(error);
                     });
-                }, this._timeoutTime);
-        }else{
+            }, this._timeoutTime);
+        } else {
             this.classList.remove('close');
             this._searchBox.classList.remove('searching');
             // remove searching label
@@ -108,24 +112,24 @@ class MovieSearchBar extends HTMLElement{
             this._results = [];
         }
     }
-    _getNewResults(input, page){
+    _getNewResults(input, page) {
         page = this._page || 1;
         const url = `${this._url}&s=${input}&page=${page}`;
         return fetch(url);
     }
-    
-    _errorHandler(error){
+
+    _errorHandler(error) {
         // log the error for now
         console.log(error);
     }
 
     // this will change the page and get the new results
-    changePage(page){
+    changePage(page) {
         // if not page is passed the it will move to the next page
         this._page = page || this._page + 1;
-       
+
         // if page is out of limits return
-        if(this._totalPages && this._page > this._totalPages){
+        if (this._totalPages && this._page > this._totalPages) {
             return;
         }
 
@@ -133,9 +137,9 @@ class MovieSearchBar extends HTMLElement{
         this._getNewResults(this._input, page)
             .then(response => response.json())
             .then(data => {
-                this._results = data.Search.map( movie => new MovieItem(movie.imdbID, movie.Title, movie.Year, movie.Poster));
+                this._results = data.Search.map(movie => new MovieItem(movie.imdbID, movie.Title, movie.Year, movie.Poster));
                 this._totalResults = data.totalResults;
-                this._totalPages = Math.trunc(data.totalResults/10) + (data.totalResults%10 ? 1 : 0);
+                this._totalPages = Math.trunc(data.totalResults / 10) + (data.totalResults % 10 ? 1 : 0);
                 // emit results added event to refresh the results component
                 const event = new Event('results-added');
                 this.dispatchEvent(event);
@@ -145,6 +149,3 @@ class MovieSearchBar extends HTMLElement{
             });
     }
 }
-
-
-customElements.define('cd-movie-search-bar', MovieSearchBar);

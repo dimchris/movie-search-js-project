@@ -1,12 +1,12 @@
-class MovieItem{
-    constructor(imdbId, title, year, poster){
+export class MovieItem {
+    constructor(imdbId, title, year, poster) {
         this.imdbId = imdbId;
         this.title = title;
         this.year = year;
         this.poster = poster;
-    };
+    }
 
-    render(el){
+    render(el) {
         const zoom = `
             <div class="zoom">
                 &#128269;
@@ -26,8 +26,8 @@ class MovieItem{
             </div>
         </div>
         `;
-        if(this.poster && this.poster != 'N/A'){
-            el.querySelector('.zoom').addEventListener('click', (event) => {
+        if (this.poster && this.poster != 'N/A') {
+            el.querySelector('.zoom').addEventListener('click', () => {
                 const zoomArea = document.querySelector('#zoom-area');
                 zoomArea.style.display = 'flex';
                 zoomArea.querySelector('img').setAttribute('src', this.poster);

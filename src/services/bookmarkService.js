@@ -1,18 +1,18 @@
-class BookmarkService{
-    constructor(datasource){
+export default class BookmarkService {
+    constructor(datasource) {
         this._datasource = datasource;
     }
 
-    getAll(){
+    async getAll() {
         return this._datasource.getAll();
     }
 
-    add(bookmark){
+    async add(bookmark) {
         return this._datasource.add(bookmark);
     }
 
-    remove(imdbId){
+    async remove(imdbId) {
         return this._datasource.remove(imdbId);
     }
-    
+
 }
