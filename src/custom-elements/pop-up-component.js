@@ -51,9 +51,9 @@ export default class PopUpComponent extends HTMLElement {
             input[type=button]{
                 width:100%;
                 align-self: stretch;
-                background-color: transparent;
                 border-style: none;
                 font-size: 1.2rem;
+                background-color: #ffffff21;
             }
             input[type=button]:hover{
                 color: rgba(255, 217, 0, 0.788);

@@ -137,18 +137,18 @@ body {
   /* Optional: just make scrollbar invisible */
 }
 
-.details::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
-.details::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background-color: transparent;
   border-radius: 10px;
   margin: 10px;
 }
 
-.details::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.4);
   border-radius: 10px;
 }

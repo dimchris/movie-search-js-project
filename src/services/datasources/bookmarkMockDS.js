@@ -1,6 +1,4 @@
-import {
-  MovieList
-} from "../../model/movie-list";
+import { MovieList } from "../../model/movie-list";
 
 export default class BookmarkMockDS {
   constructor(movieList) {
@@ -9,6 +7,10 @@ export default class BookmarkMockDS {
 
   async getAll() {
     return this._bookmarks.movies;
+  }
+
+  async get(imdbId) {
+    return this._bookmarks.get(imdbId);
   }
 
   async add(newBookmark) {
@@ -26,5 +28,11 @@ export default class BookmarkMockDS {
 
   _getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  async update(imdbId, bookmark) {
+    const bmrk = this._bookmarks.get(imdbId);
+    // update only tags for now
+    bmrk.tags = [...bookmark.tags];
   }
 }

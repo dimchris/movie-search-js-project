@@ -1,14 +1,14 @@
-import { Movie } from "../model/movie";
+import { Bookmark } from "../model/bookmark";
 
-// Movie details component
-export default class MovieDetails extends HTMLElement {
+// bookmark details component
+export default class BookmarkDetailsComponent extends HTMLElement {
   constructor() {
     super();
     this._loading = false || this.getAttribute("loading");
     this._apiKey = this.getAttribute("api-key");
     this._url = `http://www.omdbapi.com/?plot=full&apikey=${this._apiKey}`;
     this._state = this.getAttribute("login-state") || false;
-    this._movie = new Movie();
+    this._bookmark = new Bookmark();
   }
 
   connectedCallback() {
@@ -17,27 +17,27 @@ export default class MovieDetails extends HTMLElement {
 
   render() {
     // if no results
-    if (!this._movie.imdbId) {
+    if (!this._bookmark.imdbId) {
       this.innerHTML = `
                
             `;
     } else {
       // fetch results
-      this._getResults(this._movie.imdbId)
+      this._getResults(this._bookmark.imdbId)
         .then((response) => response.json())
         .then((result) => {
-          this._movie.imdbId = result.imdbID;
-          this._movie.title = result.Title;
-          this._movie.rating = result.imdbRating;
-          this._movie.votes = result.imdbVotes;
-          this._movie.runtime = result.Runtime;
-          this._movie.year = result.Year;
-          this._movie.plot = result.Plot;
-          this._movie.director = result.Director;
-          this._movie.actors = result.Actors;
-          this._movie.genre = result.Genre;
-          this._movie.language = result.Language;
-          this._movie.poster = result.Poster;
+          this._bookmark.imdbId = result.imdbID;
+          this._bookmark.title = result.Title;
+          this._bookmark.rating = result.imdbRating;
+          this._bookmark.votes = result.imdbVotes;
+          this._bookmark.runtime = result.Runtime;
+          this._bookmark.year = result.Year;
+          this._bookmark.plot = result.Plot;
+          this._bookmark.director = result.Director;
+          this._bookmark.actors = result.Actors;
+          this._bookmark.genre = result.Genre;
+          this._bookmark.language = result.Language;
+          this._bookmark.poster = result.Poster;
           this._renderResult();
           this.setAttribute("loading", false);
         })
@@ -58,7 +58,7 @@ export default class MovieDetails extends HTMLElement {
     }
     switch (name) {
       case "imdbid":
-        this._movie.imdbId = newValue;
+        this._bookmark.imdbId = newValue;
         this.render();
         break;
       case "loading":
@@ -84,6 +84,11 @@ export default class MovieDetails extends HTMLElement {
   }
 
   _renderResult() {
-    this._movie.render(this, this._loginState);
+    this._bookmark.render(this, this._loginState);
+  }
+
+  set bookmark(bkmark) {
+    this._bookmark = bkmark;
+    this.render();
   }
 }

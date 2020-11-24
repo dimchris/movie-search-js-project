@@ -1,4 +1,4 @@
-export default class Account extends HTMLElement {
+export default class AccountComponent extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({

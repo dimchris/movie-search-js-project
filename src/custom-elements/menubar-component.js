@@ -1,4 +1,4 @@
-export default class Menubar extends HTMLElement {
+export default class MenubarComponent extends HTMLElement {
   constructor() {
     super();
     this._loginState = this.getAttribute("login-state") || false;

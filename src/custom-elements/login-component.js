@@ -1,6 +1,6 @@
 import { userService } from "../services/services";
 import Alert from "../utilities/alerts";
-export default class Login extends HTMLElement {
+export default class LoginComponent extends HTMLElement {
   constructor() {
     super();
     this._loginState = this.getAttribute("login-state") || false;

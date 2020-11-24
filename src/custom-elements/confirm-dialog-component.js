@@ -1,8 +1,9 @@
-export default class ConfirmComponent extends HTMLElement {
+export default class ConfirmDialogComponent extends HTMLElement {
   constructor() {
     super();
     this._title = this.getAttribute("title");
     this._message = this.getAttribute("message");
+    this._type = this.getAttribute("type") || "notification";
     this._hidden = this.getAttribute("hide") === "true" ? true : false;
     this._shadowRoot = this.attachShadow({ mode: "open" });
   }
@@ -50,9 +51,9 @@ export default class ConfirmComponent extends HTMLElement {
             input[type=button]{
                 width:100%;
                 align-self: stretch;
-                background-color: transparent;
                 border-style: none;
                 font-size: 1.2rem;
+                background-color: #ffffff21;
             }
             input[type=button]:hover{
                 color: rgba(255, 217, 0, 0.788);
@@ -65,7 +66,7 @@ export default class ConfirmComponent extends HTMLElement {
                 background-color: rgba(186, 64, 64, 0.95);
             }
             .pop-up.pop-up-warning{ 
-                background-color: rgba(186, 154, 64, 0.95);
+                background-color: rgb(255 171 0 / 78%);
             }
             .buttons{
                 display:flex;
@@ -78,7 +79,7 @@ export default class ConfirmComponent extends HTMLElement {
     this.shadowRoot.innerHTML =
       style +
       `
-      <div class="pop-up pop-up-warning">
+      <div class="pop-up pop-up-${this._type}">
         <div class="title">
            ${this._title}
         </div>

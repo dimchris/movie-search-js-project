@@ -1,29 +1,40 @@
-import MovieDetails from "./custom-elements/details";
-import Menubar from "./custom-elements/menubar";
-import Rating from "./custom-elements/rating";
-import MovieResultItem from "./custom-elements/result-item";
-import MovieSearchBar from "./custom-elements/search-bar";
-import Login from "./custom-elements/login";
-import PopUpComponent from "./custom-elements/pop-up";
-import Account from "./custom-elements/account";
+import MovieDetailsComponent from "./custom-elements/movie-details-component";
+import MenubarComponent from "./custom-elements/menubar-component";
+import RatingComponent from "./custom-elements/rating-component";
+import MovieResultItemComponent from "./custom-elements/movie-result-item-component";
+import SearchBarComponent from "./custom-elements/search-bar-component";
+import LoginComponent from "./custom-elements/login-component";
+import PopUpComponent from "./custom-elements/pop-up-component";
+import AccountComponent from "./custom-elements/account-component";
 import { Bookmark } from "./model/bookmark";
 import { MovieList } from "./model/movie-list";
-import { bookmarkService } from "./services/services";
-import ConfirmComponent from "./custom-elements/confirm-dialog";
-import InputComponent from "./custom-elements/input-dialog";
+import { bookmarkService, tagService } from "./services/services";
+import ConfirmDialogComponent from "./custom-elements/confirm-dialog-component";
+import InputDialogComponent from "./custom-elements/input-dialog-component";
 import CarrouselComponent from "./custom-elements/carrousel-component";
+import TagComponent from "./custom-elements/tag-component";
+import TagListComponent from "./custom-elements/tag-list-component";
+import { TagList } from "./model/tag-list";
+import TagSelectorComponent from "./custom-elements/tag-selector-component";
+import BookmarkDetailsComponent from "./custom-elements/bookmark-details-component";
+import BookmarkTagListComponent from "./custom-elements/bookmark-tag-list-component";
 
-customElements.define("cd-movie-details", MovieDetails);
-customElements.define("cd-menubar", Menubar);
-customElements.define("cd-rating", Rating);
-customElements.define("cd-movie-result-item", MovieResultItem);
-customElements.define("cd-movie-search-bar", MovieSearchBar);
-customElements.define("cd-account", Account);
-customElements.define("cd-login", Login);
+customElements.define("cd-movie-details", MovieDetailsComponent);
+customElements.define("cd-bookmark-details", BookmarkDetailsComponent);
+customElements.define("cd-menubar", MenubarComponent);
+customElements.define("cd-rating", RatingComponent);
+customElements.define("cd-movie-result-item", MovieResultItemComponent);
+customElements.define("cd-movie-search-bar", SearchBarComponent);
+customElements.define("cd-account", AccountComponent);
+customElements.define("cd-login", LoginComponent);
 customElements.define("cd-pop-up", PopUpComponent);
-customElements.define("cd-confirm", ConfirmComponent);
-customElements.define("cd-input", InputComponent);
+customElements.define("cd-confirm", ConfirmDialogComponent);
+customElements.define("cd-input", InputDialogComponent);
 customElements.define("cd-carrousel", CarrouselComponent);
+customElements.define("cd-tag", TagComponent);
+customElements.define("cd-tags", TagListComponent);
+customElements.define("cd-bookmark-tags", BookmarkTagListComponent);
+customElements.define("cd-tag-selector", TagSelectorComponent);
 
 // main page elements refs
 const searchBar = document.getElementById("search-bar");
@@ -41,6 +52,12 @@ const accountPage = document.getElementById("account");
 const accountComp = document.querySelector("cd-account");
 const movies = new MovieList();
 const bookmarks = new MovieList();
+
+// TODO: remove test cd-tags
+const tags = document.querySelector("cd-tags");
+tagService.getAll().then((data) => {
+  tags.tags = new TagList(data);
+});
 
 // init log in
 accountComp.addEventListener("user-logged-in", (e) => {
@@ -74,12 +91,6 @@ searchBar.addEventListener("results-added", () => {
   }
   movies.addMovies(results, resultsItems);
 });
-
-// // scroll results on wheel event
-// resultsItems.addEventListener("wheel", (event) => {
-//   resultsItems.scrollLeft -= event.deltaY;
-//   event.preventDefault();
-// });
 
 // get new results when scrolling (get next page)
 resultsItems.addEventListener("scroll", () => {
@@ -150,6 +161,7 @@ function movieListItemClickHandler(event) {
 
     const imdbId = movieItem.getAttribute("imdbId");
     movieDetails.setAttribute("imdbid", imdbId);
+    // movieDetails.setAttribute("imdbid", imdbId);
   }
 }
 // movie list click handler
@@ -166,9 +178,10 @@ function bookMarkListItemClickHandler(event) {
 
     // add select class to the selected item
     movieItem.classList.add("selected");
-
-    const imdbId = movieItem.getAttribute("imdbId");
-    bookmarkDetails.setAttribute("imdbid", imdbId);
+    const movie = movieItem.movie;
+    bookmarkDetails.bookmark = movie;
+    // const imdbId = movieItem.getAttribute("imdbId");
+    // bookmarkDetails.setAttribute("imdbid", imdbId);
   }
 }
 

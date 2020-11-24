@@ -33,13 +33,14 @@
   </div>
   <div id="watchlist" class="page">
     <div id="total-bookmarks-block">
-      <p class="label">BookMarks</p>
-      <p class="field" id="book-mark-total-results"></p>
+      <div class="label" style="white-space: nowrap;">
+        Tags<cd-tags></cd-tags>
+      </div>
     </div>
     <cd-carrousel>
       <div id="bookmarks" class="carrousel-items"></div>
     </cd-carrousel>
-    <cd-movie-details id="bookmark-details" class="details" api-key="15fb3faa"></cd-movie-details>
+    <cd-bookmark-details id="bookmark-details" class="details" api-key="15fb3faa"></cd-bookmark-details>
     <div class="empty-space"></div>
   </div>
   <div id="account" class="page">
