@@ -13,6 +13,7 @@ export default class MovieDetailsComponent extends HTMLElement {
     this._tags = new TagList();
     this._selectedTags = new TagList();
     this._showTags = this.getAttribute("show-tags") || false;
+    this.attachShadow({ mode: "open" });
   }
 
   connectedCallback() {
@@ -93,7 +94,7 @@ export default class MovieDetailsComponent extends HTMLElement {
 
   _renderResult() {
     this._movie.render(
-      this,
+      this.shadowRoot,
       this._showBookmark,
       this._showTags,
       this._tags,

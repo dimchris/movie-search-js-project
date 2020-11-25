@@ -31,20 +31,97 @@ export class Movie {
   }
 
   render(el, state, showTags, tags, selectedTags, selectedHandler) {
-    el.innerHTML = `
+    const style = `
+    <style>
+      :host > * {
+          margin: 10px;
+      }
+      :host {
+        display: flex;
+        display: block;
+        flex-direction: column;
+        flex-wrap: wrap;
+        color: white;
+        height: 100%;
+        width: 100%;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        overflow: auto;
+      }
+      .details-title {
+        font-size: 1.9rem;
+      }
+
+      .details-subtitle {
+        font-size: 1rem;
+        color: lightgrey;
+      }
+
+      .details-subtitle > span {
+        padding-right: 1rem;
+      }
+
+      .details-more .label {
+        display: inline-block;
+        font-weight: bold;
+        width: 6rem;
+        font-size: 1.1rem;
+        color: lightgrey;
+      }
+
+      .details-more .details-description {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+      }
+
+      .loading {
+        filter: blur(5px);
+      }
+      .add-to-list-button {
+        margin: 0px 10px;
+        padding: 5px;
+        width: fit-content;
+        color: white;
+        background-color: rgba(255, 255, 255, 0.055);
+        border-style: none;
+        border-radius: 20px;
+        transition: 1s ease;
+      }
+
+      .add-to-list-button:focus {
+        outline: none;
+      }
+
+      .add-to-list-button:hover {
+        background-color: rgb(103, 202, 103);
+        transition: 1s ease;
+      }
+
+      .add-to-list-button.selected {
+        background-color: rgb(103, 202, 103);
+        transition: 1s ease;
+      }
+    </style>
+    
+    `;
+    el.innerHTML =
+      style +
+      `
         <div class="details-title">
         ${this.title}${
-      state
-        ? '<button class="add-to-list-button" type="button">bookmark</button>'
-        : ""
-    }
+        state
+          ? '<button class="add-to-list-button" type="button">bookmark</button>'
+          : ""
+      }
         <span class="tags"></span>
         <cd-rating score="${this.rating}"></cd-rating>
         </div>
         <div class="details-subtitle">
             <span><b>IMDb</b> ${this.rating}(${this.votes})</span><span>${
-      this.runtime
-    }</span><span>${this.year}</span>
+        this.runtime
+      }</span><span>${this.year}</span>
         </div>
         <div class="details-more">
           <div class="details-description">${this.plot}</div>

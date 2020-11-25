@@ -11,6 +11,7 @@ export default class BookmarkDetailsComponent extends HTMLElement {
     this._state = this.getAttribute("login-state") || false;
     this._bookmark = new Bookmark();
     this._movie = new Movie();
+    this.attachShadow({ mode: "open" });
   }
 
   connectedCallback() {
@@ -85,7 +86,7 @@ export default class BookmarkDetailsComponent extends HTMLElement {
   }
 
   _renderResult() {
-    this._bookmark.render(this, this._loginState);
+    this._bookmark.render(this.shadowRoot, this._loginState);
   }
 
   set bookmark(bkmark) {

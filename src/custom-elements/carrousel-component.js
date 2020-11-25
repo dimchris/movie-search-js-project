@@ -47,7 +47,20 @@ export default class CarrouselComponent extends HTMLElement {
         .next:hover {
             background-color: rgba(0, 0, 0, 0.8);
         }
-
+      ::slotted(.carrousel-items) {
+        position: relative;
+        white-space: nowrap;
+        /*Prevents Wrapping*/
+        padding: 30px;
+        margin-right: auto;
+        margin-left: auto;
+        /* max-width: 1920px; */
+        overflow-y: hidden;
+        text-overflow: clip;
+        align-items: stretch;
+        background-color: rgba(255, 255, 255, 0.055);
+        height: 100%;
+      }
         </style>
       `;
     this.shadowRoot.innerHTML =

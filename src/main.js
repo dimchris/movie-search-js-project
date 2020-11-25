@@ -107,11 +107,11 @@ resultsItems.addEventListener("scroll", () => {
   }
 });
 
-movieDetails.addEventListener("bookmark-added", (e) => {
+movieDetails.shadowRoot.addEventListener("bookmark-added", (e) => {
   bookmarkService.add(Bookmark.fromMovieItem(e.movieItem));
 });
 
-movieDetails.addEventListener("bookmark-removed", (e) => {
+movieDetails.shadowRoot.addEventListener("bookmark-removed", (e) => {
   bookmarkService.remove(e.movieItem.imdbId);
 });
 
