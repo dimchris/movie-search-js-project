@@ -50,22 +50,22 @@ export class Bookmark extends MovieItem {
         }
 
         .result-item-details:hover > div {
-        color: white;
-        text-shadow: 2px 2px 5px #000000;
-        cursor: default;
-        transition: 1s ease;
+            color: white;
+            text-shadow: 2px 2px 5px #000000;
+            cursor: default;
+            transition: 1s ease;
         }
 
         .result-item-image {
-        display: inline-block;
-        height: 100%;
+            display: inline-block;
+            height: 100%;
         }
 
         :host {
-        display: inline-block;
-        height: 100%;
-        margin-right: 10px;
-        margin-left: 10px;
+            display: inline-block;
+            height: 100%;
+            margin-right: 10px;
+            margin-left: 10px;
         }
 
         :host(.selected) .result-item-image {

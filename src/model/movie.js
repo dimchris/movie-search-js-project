@@ -115,7 +115,7 @@ export class Movie {
           ? '<button class="add-to-list-button" type="button">bookmark</button>'
           : ""
       }
-        <span class="tags"></span>
+        <div class="tags"></div>
         <cd-rating score="${this.rating}"></cd-rating>
         </div>
         <div class="details-subtitle">

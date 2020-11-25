@@ -14,17 +14,32 @@ export default class TagComponent extends HTMLElement {
   _render() {
     const style = `
       <style>
-        :host{
-          display: inline-block;
-          border-style: solid;
-          border-radius: 15px;
-          background-color: rgb(255 195 0 / 78%);
-          color: black;
-          font-size: 1rem;
-          font-weight: normal;
-          padding: 3px;
-          cursor: default;
-        }
+          :host {
+          margin: 0px 10px;
+            padding: 5px;
+            width: fit-content;
+            background-color: rgba(255, 255, 255, 0.055);
+            border-style: none;
+            border-radius: 20px;
+            transition: 1s ease;
+            font-size: 1.0rem;
+            font-weight: normal;
+            cursor: default;
+          }
+
+          :host(:focus) {
+            outline: none;
+          }
+
+          :host(:hover) {
+            background-color: rgb(103, 202, 103);
+            transition: 1s ease;
+          }
+
+          :host(.selected){
+            background-color: rgb(103, 202, 103);
+            transition: 1s ease;
+          }
         .delete:hover{
           color: red;
         }
