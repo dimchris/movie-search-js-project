@@ -16,13 +16,11 @@ import TagComponent from "./custom-elements/tag-component";
 import TagListComponent from "./custom-elements/tag-list-component";
 import { TagList } from "./model/tag-list";
 import TagSelectorComponent from "./custom-elements/tag-selector-component";
-import BookmarkDetailsComponent from "./custom-elements/bookmark-details-component";
 import BookmarkTagListComponent from "./custom-elements/bookmark-tag-list-component";
 import BookmarkResultItemComponent from "./custom-elements/bookmark-result-item-component";
 import { BookmarkList } from "./model/bookmark-list";
 
 customElements.define("cd-movie-details", MovieDetailsComponent);
-customElements.define("cd-bookmark-details", BookmarkDetailsComponent);
 customElements.define("cd-menubar", MenubarComponent);
 customElements.define("cd-rating", RatingComponent);
 customElements.define("cd-movie-result-item", MovieResultItemComponent);
