@@ -1,6 +1,5 @@
 import { MovieItem } from "./movie-item";
 import { TagList } from "./tag-list";
-import { tagService } from "../services/services";
 
 export class Bookmark extends MovieItem {
   constructor(imdbId, title, year, poster, tags = new TagList(), id = null) {
@@ -9,32 +8,98 @@ export class Bookmark extends MovieItem {
     this._id = id; // this is the db id
   }
 
-  async render(el) {
-    el.innerHTML = `
-        <div class="details-title">
-        ${this.title}
-        <cd-rating score="${this.rating}"></cd-rating>
-        </div>
-        <div class="details-subtitle">
-            <span><b>IMDb</b> ${this.rating}(${this.votes})</span><span>${this.runtime}</span><span>${this.year}</span>
-        </div>
-        <div class="details-more">
-          <div class="details-description">${this.plot}</div>
-          <div class="details-directors"><span class="label">Directors</span> ${this.director}</div>
-          <div class="details-actors"><span class="label">Starring</span> ${this.actors}</div>
-          <div class="details-genres"><span class="label">Genres</span> ${this.genre}</div>
-          <div class="details-language"><span class="label">Language</span> ${this.language}</div>
+  render(el) {
+    const zoom = `
+            <div class="zoom">
+                &#128269;
+            </div>
+        `;
+    const style = `
+        <style>
+        .result-item-box {
+            position: relative;
+            display: inline-block;
+            height: 100%;
+        }
+
+        .result-item-details {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            transition: 1s ease;
+        }
+
+        .result-item-details:hover {
+            background-color: rgba(255, 255, 255, 0.37);
+            backdrop-filter: blur(5px);
+            transition: 1s ease;
+        }
+
+        .result-item-details > div {
+            width: 100%;
+            white-space: normal;
+            text-align: center;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0);
+            transition: 1s ease;
+        }
+
+        .result-item-details:hover > div {
+        color: white;
+        text-shadow: 2px 2px 5px #000000;
+        cursor: default;
+        transition: 1s ease;
+        }
+
+        .result-item-image {
+        display: inline-block;
+        height: 100%;
+        }
+
+        :host {
+        display: inline-block;
+        height: 100%;
+        margin-right: 10px;
+        margin-left: 10px;
+        }
+
+        :host(.selected) .result-item-image {
+            box-shadow: 0px 0px 20px 8px rgba(255, 255, 255, 0.55);
+        }
+        img {
+            width: auto;
+            height: 100%;
+        }
+        </style>
+        `;
+    el.innerHTML =
+      style +
+      `
+        <div class = 'result-item-box'>
+            <div class = 'result-item-image'>
+                <image src=${
+                  this.poster
+                } onerror="this.src='assets/imgs/imagenotfound.jpg';">
+                <div class='result-item-details'>
+                    <div>${this.title}</div>
+                    <div>${this.year}</div>
+                    ${this.poster && this.poster != "N/A" ? zoom : ""}
+                </div>
+            </div>
         </div>
         `;
-    // add tags
-    const tagList = document.createElement("cd-bookmark-tags");
-    const tags0 = await tagService.getAll();
-    tagList.selectedTags = this.tags;
-    tagList.tags = new TagList(tags0);
-    tagList.selectedHandler = function (input) {
-      this.tags = input;
-    };
-    el.querySelector(".details-title").append(tagList);
+    if (this.poster && this.poster != "N/A") {
+      el.querySelector(".zoom").addEventListener("click", () => {
+        const zoomArea = document.querySelector("#zoom-area");
+        zoomArea.style.display = "flex";
+        zoomArea.querySelector("img").setAttribute("src", this.poster);
+      });
+    }
   }
 
   set id(id) {

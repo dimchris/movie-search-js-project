@@ -10,4 +10,8 @@ export default class Tag {
     tag.setAttribute("id", this.id);
     el.append(tag);
   }
+
+  get id() {
+    return this._id;
+  }
 }

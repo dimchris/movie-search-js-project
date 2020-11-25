@@ -35,7 +35,7 @@ export default class BookmarkTagListComponent extends HTMLElement {
         }
       </style>
     `;
-    const tags = this._tags.tags.reduce((total, tag) => {
+    const tags = this._selectedTags.tags.reduce((total, tag) => {
       return (total += `<cd-tag name="${tag.name}" deletable="false"" id="${tag._id}"></cd-tag>`);
     }, "");
     this.shadowRoot.innerHTML =
@@ -51,8 +51,8 @@ export default class BookmarkTagListComponent extends HTMLElement {
         Alert.select(
           "Add new tag",
           "Input the name of the tag",
-          this.selectedHandler,
-          this.cancelHandler,
+          this._selectedHandler,
+          this._cancelHandler,
           this._tags,
           this._selectedTags
         );
@@ -66,5 +66,9 @@ export default class BookmarkTagListComponent extends HTMLElement {
   set selectedTags(tags) {
     this._selectedTags = tags;
     this._render();
+  }
+
+  set selectedHandler(handler) {
+    this._selectedHandler = handler;
   }
 }

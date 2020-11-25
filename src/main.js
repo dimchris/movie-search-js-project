@@ -18,12 +18,15 @@ import { TagList } from "./model/tag-list";
 import TagSelectorComponent from "./custom-elements/tag-selector-component";
 import BookmarkDetailsComponent from "./custom-elements/bookmark-details-component";
 import BookmarkTagListComponent from "./custom-elements/bookmark-tag-list-component";
+import BookmarkResultItemComponent from "./custom-elements/bookmark-result-item-component";
+import { BookmarkList } from "./model/bookmark-list";
 
 customElements.define("cd-movie-details", MovieDetailsComponent);
 customElements.define("cd-bookmark-details", BookmarkDetailsComponent);
 customElements.define("cd-menubar", MenubarComponent);
 customElements.define("cd-rating", RatingComponent);
 customElements.define("cd-movie-result-item", MovieResultItemComponent);
+customElements.define("cd-bookmark-result-item", BookmarkResultItemComponent);
 customElements.define("cd-movie-search-bar", SearchBarComponent);
 customElements.define("cd-account", AccountComponent);
 customElements.define("cd-login", LoginComponent);
@@ -50,8 +53,10 @@ const mainPage = document.getElementById("main");
 const watchlistPage = document.getElementById("watchlist");
 const accountPage = document.getElementById("account");
 const accountComp = document.querySelector("cd-account");
+const filterTags = document.getElementById("filter-tags");
 const movies = new MovieList();
-const bookmarks = new MovieList();
+const bookmarks = new BookmarkList();
+let bookmarkResults;
 
 // TODO: remove test cd-tags
 const tags = document.querySelector("cd-tags");
@@ -62,12 +67,12 @@ tagService.getAll().then((data) => {
 // init log in
 accountComp.addEventListener("user-logged-in", (e) => {
   menubar.setAttribute("login-state", true);
-  movieDetails.setAttribute("login-state", true);
+  movieDetails.setAttribute("show-bookmark", true);
 });
 
 accountComp.addEventListener("user-logged-out", (e) => {
   menubar.setAttribute("login-state", ""); // must be a falsy string value
-  movieDetails.setAttribute("login-state", "");
+  movieDetails.setAttribute("show-bookmark", "");
 });
 
 // update results if new search is triggered
@@ -144,6 +149,18 @@ menubar.shadowRoot.addEventListener("click", (e) => {
   }
 });
 
+filterTags.addEventListener("bookmarks-filtered", (event) => {
+  if (event.detail.length) {
+    bookmarkService.getByTags(event.detail).then((bkmarks) => {
+      bookmarks.bookmarks = bkmarks;
+    });
+  } else {
+    bookmarkService.getAll().then((bkmarks) => {
+      bookmarks.bookmarks = bkmarks;
+    });
+  }
+});
+
 // movie list click handler
 function movieListItemClickHandler(event) {
   let movieItem = event.target.closest("cd-movie-result-item");
@@ -161,32 +178,38 @@ function movieListItemClickHandler(event) {
 
     const imdbId = movieItem.getAttribute("imdbId");
     movieDetails.setAttribute("imdbid", imdbId);
-    // movieDetails.setAttribute("imdbid", imdbId);
   }
 }
 // movie list click handler
 function bookMarkListItemClickHandler(event) {
-  let movieItem = event.target.closest("cd-movie-result-item");
-  if (movieItem) {
+  let bookmarkItem = event.target.closest("cd-bookmark-result-item");
+  if (bookmarkItem) {
     // on click update the item details
     // remove select class from all items
     event.currentTarget
-      .querySelectorAll("cd-movie-result-item")
+      .querySelectorAll("cd-bookmark-result-item")
       .forEach((item) => {
         item.classList.remove("selected");
       });
 
     // add select class to the selected item
-    movieItem.classList.add("selected");
-    const movie = movieItem.movie;
-    bookmarkDetails.bookmark = movie;
-    // const imdbId = movieItem.getAttribute("imdbId");
-    // bookmarkDetails.setAttribute("imdbid", imdbId);
+    bookmarkItem.classList.add("selected");
+    const bookmark = bookmarkItem.bookmark;
+    const imdbId = bookmarkItem.getAttribute("imdbId");
+    bookmarkDetails.setAttribute("imdbid", imdbId);
+    bookmarkDetails.selectedTags = bookmark.tags;
+    bookmarkDetails.tags = tags.tags;
+    bookmarkDetails.selectedHandler = (input) => {
+      const newSelectedTags = new TagList(input.selected);
+      bookmarkDetails.selectedTags = newSelectedTags;
+      bookmark.tags = newSelectedTags;
+      bookmarkService.updateTags(imdbId, newSelectedTags);
+    };
   }
 }
 
 async function initWatchListPage() {
-  const bookmarkResults = await bookmarkService.getAll();
-  bookmarks.movies = bookmarkResults; // bookmarkItems
+  bookmarkResults = await bookmarkService.getAll();
+  bookmarks.bookmarks = bookmarkResults; // bookmarkItems
   bookmarks.render(bookmarkItems, bookMarkListItemClickHandler);
 }

@@ -1,4 +1,5 @@
 import { Movie } from "../model/movie";
+import { TagList } from "../model/tag-list";
 
 // Movie details component
 export default class MovieDetailsComponent extends HTMLElement {
@@ -7,8 +8,11 @@ export default class MovieDetailsComponent extends HTMLElement {
     this._loading = false || this.getAttribute("loading");
     this._apiKey = this.getAttribute("api-key");
     this._url = `http://www.omdbapi.com/?plot=full&apikey=${this._apiKey}`;
-    this._state = this.getAttribute("login-state") || false;
+    this._showBookmark = this.getAttribute("show-bookmark") || false;
     this._movie = new Movie();
+    this._tags = new TagList();
+    this._selectedTags = new TagList();
+    this._showTags = this.getAttribute("show-tags") || false;
   }
 
   connectedCallback() {
@@ -49,7 +53,7 @@ export default class MovieDetailsComponent extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["imdbid", "loading", "login-state"];
+    return ["imdbid", "loading", "show-bookmark", "show-tags"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -69,8 +73,12 @@ export default class MovieDetailsComponent extends HTMLElement {
           this.classList.remove("loading");
         }
         break;
-      case "login-state":
-        this._loginState = newValue;
+      case "show-bookmark":
+        this._showBookmark = newValue;
+        this.render();
+        break;
+      case "show-tags":
+        this._showTags = newValue;
         this.render();
         break;
       default:
@@ -84,10 +92,32 @@ export default class MovieDetailsComponent extends HTMLElement {
   }
 
   _renderResult() {
-    this._movie.render(this, this._loginState);
+    this._movie.render(
+      this,
+      this._showBookmark,
+      this._showTags,
+      this._tags,
+      this._selectedTags,
+      this._selectedHandler
+    );
   }
 
   set movie(movie) {
     this._movie = movie;
+    this.render();
+  }
+
+  set tags(tags) {
+    this._tags = tags;
+    this.render();
+  }
+
+  set selectedTags(tags) {
+    this._selectedTags = tags;
+    this.render();
+  }
+
+  set selectedHandler(handler) {
+    this._selectedHandler = handler;
   }
 }

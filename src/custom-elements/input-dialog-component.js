@@ -143,12 +143,12 @@ export default class InputDialogComponent extends HTMLElement {
     } else {
       inputEl = this.shadowRoot.querySelector("cd-tag-selector");
       inputEl.tags = this._tags;
+      inputEl.selectedTags = this._selectedTags;
     }
 
     this.shadowRoot.querySelector(".ok").addEventListener("click", () => {
       let input = inputEl.value;
       this.setAttribute("hide", "true");
-      console.log(input);
       if (this.onConfirmHandler) {
         this.onConfirmHandler(input);
         this.onConfirmHandler = null; // safe
@@ -199,6 +199,11 @@ export default class InputDialogComponent extends HTMLElement {
 
   set tags(tags) {
     this._tags = tags;
+    this._render();
+  }
+
+  set selectedTags(tags) {
+    this._selectedTags = tags;
     this._render();
   }
 }

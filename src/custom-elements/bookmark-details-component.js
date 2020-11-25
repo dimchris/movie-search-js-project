@@ -1,4 +1,5 @@
 import { Bookmark } from "../model/bookmark";
+import { Movie } from "../model/movie";
 
 // bookmark details component
 export default class BookmarkDetailsComponent extends HTMLElement {
@@ -9,6 +10,7 @@ export default class BookmarkDetailsComponent extends HTMLElement {
     this._url = `http://www.omdbapi.com/?plot=full&apikey=${this._apiKey}`;
     this._state = this.getAttribute("login-state") || false;
     this._bookmark = new Bookmark();
+    this._movie = new Movie();
   }
 
   connectedCallback() {
@@ -59,7 +61,6 @@ export default class BookmarkDetailsComponent extends HTMLElement {
     switch (name) {
       case "imdbid":
         this._bookmark.imdbId = newValue;
-        this.render();
         break;
       case "loading":
         this._loading = newValue;
@@ -71,11 +72,11 @@ export default class BookmarkDetailsComponent extends HTMLElement {
         break;
       case "login-state":
         this._loginState = newValue;
-        this.render();
         break;
       default:
         return;
     }
+    this.render();
   }
 
   _getResults(imdbId) {

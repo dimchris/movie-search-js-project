@@ -1,4 +1,5 @@
 import { MovieItem } from "./movie-item";
+import { TagList } from "./tag-list";
 
 export class Movie {
   constructor(
@@ -29,7 +30,7 @@ export class Movie {
     this.poster = poster;
   }
 
-  render(el, state) {
+  render(el, state, showTags, tags, selectedTags, selectedHandler) {
     el.innerHTML = `
         <div class="details-title">
         ${this.title}${
@@ -37,6 +38,7 @@ export class Movie {
         ? '<button class="add-to-list-button" type="button">bookmark</button>'
         : ""
     }
+        <span class="tags"></span>
         <cd-rating score="${this.rating}"></cd-rating>
         </div>
         <div class="details-subtitle">
@@ -77,6 +79,15 @@ export class Movie {
         e.target.classList.toggle("selected");
         el.dispatchEvent(event);
       });
+    }
+    if (showTags) {
+      const tagEl = document.createElement("cd-bookmark-tags");
+      el.querySelector(".tags").append(tagEl);
+      tagEl.selectedTags = selectedTags;
+      tagEl.tags = tags;
+      tagEl.selectedHandler = (input) => {
+        selectedHandler(input);
+      };
     }
   }
 }

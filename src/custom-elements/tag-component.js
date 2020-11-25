@@ -28,6 +28,9 @@ export default class TagComponent extends HTMLElement {
         .delete:hover{
           color: red;
         }
+        :host(.selected){
+          background-color: green;
+        }
       </style>
     `;
     this.shadowRoot.innerHTML =
@@ -48,6 +51,7 @@ export default class TagComponent extends HTMLElement {
       });
     }
     this.addEventListener("click", () => {
+      this.classList.toggle("selected");
       const event = new CustomEvent("tag-clicked", {
         detail: this._id,
         bubbles: true,
@@ -55,5 +59,9 @@ export default class TagComponent extends HTMLElement {
       });
       this.dispatchEvent(event);
     });
+  }
+
+  get id() {
+    return this._id;
   }
 }

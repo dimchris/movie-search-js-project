@@ -20,9 +20,21 @@ export default class TagListComponent extends HTMLElement {
           this._render();
         });
     });
-    this.shadowRoot.addEventListener("tag-clicked", (event) => {
-      event.stopPropagation();
-      // TODO: return results by tags selected
+    this.addEventListener("tag-clicked", (e) => {
+      console.log(e);
+      // e.stopPropagation();
+      this.classList.toggle("selected");
+      const event = new CustomEvent("bookmarks-filtered", {
+        detail: [...this.shadowRoot.querySelectorAll("cd-tag.selected")].reduce(
+          (total, item) => {
+            return [...total, item.id];
+          },
+          []
+        ),
+        bubbles: true,
+        composed: true,
+      });
+      this.dispatchEvent(event);
     });
   }
 
@@ -86,5 +98,9 @@ export default class TagListComponent extends HTMLElement {
   set tags(tags) {
     this._tags = tags;
     this._render();
+  }
+
+  get tags() {
+    return this._tags;
   }
 }

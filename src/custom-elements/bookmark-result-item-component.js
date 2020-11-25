@@ -1,14 +1,14 @@
-import { MovieItem } from "../model/movie-item";
+import { Bookmark } from "../model/bookmark";
 
 // Result item component
-export default class MovieResultItemComponent extends HTMLElement {
+export default class BookmarkResultItemComponent extends HTMLElement {
   constructor() {
     super();
     const title = this.getAttribute("title");
     const year = this.getAttribute("year");
     const imdbId = this.getAttribute("imdbId");
     const poster = this.getAttribute("poster");
-    this._movieItem = new MovieItem(imdbId, title, year, poster);
+    this._bookmarkItem = new Bookmark(imdbId, title, year, poster);
     this.attachShadow({ mode: "open" });
   }
 
@@ -26,16 +26,16 @@ export default class MovieResultItemComponent extends HTMLElement {
     }
     switch (name) {
       case "title":
-        this._movieItem.title = newValue;
+        this._bookmarkItem.title = newValue;
         break;
       case "year":
-        this._movieItem.year = newValue;
+        this._bookmarkItem.year = newValue;
         break;
       case "imdbId":
-        this._movieItem.imdbId = newValue;
+        this._bookmarkItem.imdbId = newValue;
         break;
       case "poster":
-        this._movieItem.poster = newValue;
+        this._bookmarkItem.poster = newValue;
         break;
       default:
     }
@@ -43,10 +43,18 @@ export default class MovieResultItemComponent extends HTMLElement {
   }
 
   render() {
-    this._movieItem.render(this.shadowRoot);
+    this._bookmarkItem.render(this.shadowRoot);
   }
 
   get movie() {
-    return this._movieItem;
+    return this._bookmarkItem;
+  }
+
+  set bookmark(bookmark) {
+    this._bookmarkItem = bookmark;
+  }
+
+  get bookmark() {
+    return this._bookmarkItem;
   }
 }

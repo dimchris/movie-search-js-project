@@ -7,7 +7,7 @@ export default class TagSelectorComponent extends HTMLElement {
     this.value = [];
     this._tags = [];
     this._selectedTags = [];
-    this.shadowRoot.addEventListener("click", (event) => {
+    this.addEventListener("click", (event) => {
       const tag = event.target;
       // set tag as selected
       tag.classList.toggle("selected");

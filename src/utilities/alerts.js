@@ -32,6 +32,7 @@ export default {
     input.setAttribute("message", msg);
     input.onConfirmHandler = onConfirmHandler;
     input.onCancelHandler = onCancelHandler;
+    input.setAttribute("input-type", "text-input");
     input.setAttribute("hide", "false");
   },
   select: (title, msg, onConfirmHandler, onCancelHandler, tags, selected) => {
@@ -39,8 +40,8 @@ export default {
     input.setAttribute("message", msg);
     input.onConfirmHandler = onConfirmHandler;
     input.onCancelHandler = onCancelHandler;
-    input.setAttribute("hide", "false");
     input.setAttribute("input-type", "drop-down-multi");
+    input.setAttribute("hide", "false");
     input.tags = tags;
     input.selectedTags = selected;
   },
