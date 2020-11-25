@@ -72,7 +72,7 @@ export default class TagSelectorComponent extends HTMLElement {
           return [...total, tag._id];
         }, []);
         if (selectedTagIds.includes(tag.id)) {
-          tag.classList.add("selected");
+          tag.click();
         }
       });
     }
