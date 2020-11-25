@@ -34,11 +34,124 @@ export default class SearchBarComponent extends HTMLElement {
     this._output = document.createElement("div");
     this._output.innerHTML = "";
     this._output.classList.add("search-output");
+    this.attachShadow({ mode: "open" });
   }
 
   connectedCallback() {
-    this.appendChild(this._searchBox);
-    this.appendChild(this._output);
+    const style = `
+      <style>
+
+      @keyframes glow-green {
+        from {
+          box-shadow: 0 0 5px -5px #aef4af;
+        }
+
+        to {
+          box-shadow: 0 0 5px 5px #aef4af;
+        }
+      }
+
+      @keyframes glow-yellow {
+        from {
+          box-shadow: 0 0 5px -5px #e7f33cbb;
+        }
+
+        to {
+          box-shadow: 0 0 5px 5px #e7f33cbb;
+        }
+      }
+
+      @keyframes glow-red {
+        from {
+          box-shadow: 0 0 5px -5px #be5252;
+        }
+
+        to {
+          box-shadow: 0 0 5px 5px #be5252;
+        }
+      }
+      :host {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        bottom: 0px;
+        left: 0px;
+        display: flex;
+        flex-direction: column;
+        background: var(--primary-color);
+        justify-content: center;
+        align-items: center;
+        transition: height 1s ease, background 1s ease;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        z-index: 20;
+      }
+
+      :host(.close) {
+        height: 90px;
+        background: none;
+        transition: height 1s ease, background 2s ease;
+      }
+
+      .search-box-input {
+        font-size: 1.5rem;
+        /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+        color: grey;
+        text-align: center;
+        font-style: italic;
+        height: fit-content;
+        width: 80%;
+        max-width: 400px;
+        border-radius: 20px;
+        border-style: solid;
+        outline: none;
+        margin: 10px;
+      }
+
+      .search-box-input.searching {
+        border-style: solid;
+        animation: glow-yellow 1s infinite alternate;
+      }
+
+      .search-box-input.search-compconste {
+        border-style: solid;
+        animation: glow-green 1s 4 alternate;
+      }
+
+      .search-box-input.search-error {
+        border-style: solid;
+        animation: glow-red 1s infinite alternate;
+      }
+
+      .search-box-input::placeholder {
+        border-color: var(--primary-color);
+      }
+
+      .search-output {
+        height: 30px;
+        display: block;
+        color: grey;
+        transition: color 1s ease;
+        margin: 5px;
+      }
+
+      .search-output.search-hidden {
+        display: none;
+      }
+
+      ::-webkit-search-cancel-button {
+        position: relative;
+        right: 20px;
+
+        height: 20px;
+        width: 20px;
+        border-radius: 10px;
+      }
+      </style>
+    `;
+    this.shadowRoot.innerHTML = style;
+    this.shadowRoot.appendChild(this._searchBox);
+    this.shadowRoot.appendChild(this._output);
   }
 
   _onNewInput(e) {
