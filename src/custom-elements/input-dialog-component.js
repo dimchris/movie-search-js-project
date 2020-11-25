@@ -57,8 +57,9 @@ export default class InputDialogComponent extends HTMLElement {
                 align-items: center;
                 width: 100%;
                 min-height:30%;
-                background-color: rgba(173, 173, 173, 0.95);
-                color: var(--primary-color);
+                background-color:  var(--primary-color);
+                color: white;
+                box-shadow: white 0 0px 20px;
             }
             .pop-up *{
                 margin: 10px auto;
@@ -72,8 +73,9 @@ export default class InputDialogComponent extends HTMLElement {
                 width:100%;
                 align-self: stretch;
                 border-style: none;
-                font-size: 1.2rem;
-                background-color: #ffffff21;
+                font-size: 1.5rem;
+                background-color: transparent;
+                color: white;
             }
             input[type=button]:hover{
                 color: rgba(255, 217, 0, 0.788);

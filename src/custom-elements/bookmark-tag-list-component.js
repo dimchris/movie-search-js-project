@@ -19,7 +19,6 @@ export default class BookmarkTagListComponent extends HTMLElement {
         :host{
           display: inline-block;
           white-space: nowrap;
-          margin: 0 15px;
         }
         cd-tag{
           margin: 3px;

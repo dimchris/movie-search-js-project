@@ -45,8 +45,8 @@ export default class LoginComponent extends HTMLElement {
                 }   
                 input[type=button]{
                     color: grey;
-                    background-color: rgba(255, 255, 255, 0.055);
-                    border-radius: 20px;
+                    color: white;
+                    background-color: transparent;
                 }
                 input[type=button]:hover{
                     color: rgba(255, 217, 0, 0.788);
