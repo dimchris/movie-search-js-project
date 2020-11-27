@@ -81,7 +81,7 @@ export default class SearchBarComponent extends HTMLElement {
         background: var(--primary-color);
         justify-content: center;
         align-items: center;
-        transition: height 1s ease, background 1s ease;
+        transition: height 1s ease;
         padding-top: 5px;
         padding-bottom: 5px;
         z-index: 20;
