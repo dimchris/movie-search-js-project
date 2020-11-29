@@ -1,5 +1,5 @@
+import alerts from "../utilities/alerts";
 import { MovieItem } from "./movie-item";
-import { TagList } from "./tag-list";
 
 export class Movie {
   constructor(
@@ -28,6 +28,10 @@ export class Movie {
     this.genre = genre;
     this.language = language;
     this.poster = poster;
+  }
+
+  clear() {
+    this._el.innerHTML = ``;
   }
 
   render(el, state, showTags, tags, selectedTags, selectedHandler) {
@@ -79,7 +83,7 @@ export class Movie {
       .loading {
         filter: blur(5px);
       }
-      .add-to-list-button {
+      .add-to-list-button, .remove-from-list-button {
         margin: 0px 10px;
         padding: 5px;
         width: fit-content;
@@ -89,8 +93,8 @@ export class Movie {
         border-radius: 20px;
         transition: 1s ease;
       }
-
-      .add-to-list-button:focus {
+ 
+      .add-to-list-button:focus,.remove-from-list-button:focus{
         outline: none;
       }
 
@@ -103,18 +107,29 @@ export class Movie {
         background-color: rgb(103, 202, 103);
         transition: 1s ease;
       }
+
+      .remove-from-list-button:hover {
+        background-color: rgb(228 104 104);
+        transition: 1s ease;
+      }
+
+      .remove-from-list-button.selected {
+        background-color: rgb(228 104 104);
+        transition: 1s ease;
+      }
     </style>
     
     `;
+
+    const buttons = showTags
+      ? '<button class="remove-from-list-button" type="button">remove</button>'
+      : '<button class="add-to-list-button" type="button">bookmark</button>';
+
     el.innerHTML =
       style +
       `
         <div class="details-title">
-        ${this.title}${
-        state
-          ? '<button class="add-to-list-button" type="button">bookmark</button>'
-          : ""
-      }
+        ${this.title}${state ? buttons : ""}
         <div class="tags"></div>
         <cd-rating score="${this.rating}"></cd-rating>
         </div>
@@ -139,23 +154,26 @@ export class Movie {
           }</div>
         </div>
         `;
-    if (state) {
-      el.querySelector("button").addEventListener("click", (e) => {
-        let event = null;
-        if (e.target.classList.contains("selected")) {
-          event = new CustomEvent("bookmark-removed");
-        } else {
-          event = new CustomEvent("bookmark-added");
+    if (state && !showTags) {
+      el.querySelector("button.add-to-list-button").addEventListener(
+        "click",
+        (e) => {
+          let event = null;
+          if (e.target.classList.contains("selected")) {
+            event = new CustomEvent("bookmark-removed");
+          } else {
+            event = new CustomEvent("bookmark-added");
+          }
+          event.movieItem = new MovieItem(
+            this.imdbId,
+            this.title,
+            this.year,
+            this.poster
+          );
+          e.target.classList.toggle("selected");
+          el.dispatchEvent(event);
         }
-        event.movieItem = new MovieItem(
-          this.imdbId,
-          this.title,
-          this.year,
-          this.poster
-        );
-        e.target.classList.toggle("selected");
-        el.dispatchEvent(event);
-      });
+      );
     }
     if (showTags) {
       const tagEl = document.createElement("cd-bookmark-tags");
@@ -165,6 +183,27 @@ export class Movie {
       tagEl.selectedHandler = (input) => {
         selectedHandler(input);
       };
+
+      el.querySelector("button.remove-from-list-button").addEventListener(
+        "click",
+        (e) => {
+          alerts.confirm(
+            "Remove Book Mark",
+            "You are about to remove this bookmark. Are you sure?",
+            () => {
+              const event = new CustomEvent("bookmark-removed");
+              event.movieItem = new MovieItem(
+                this.imdbId,
+                this.title,
+                this.year,
+                this.poster
+              );
+              e.target.classList.toggle("selected");
+              el.dispatchEvent(event);
+            }
+          );
+        }
+      );
     }
   }
 }

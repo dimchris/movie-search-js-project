@@ -1,3 +1,4 @@
+import _ from "lodash/core";
 export default class Tag {
   constructor(name, id) {
     this.name = name;
@@ -13,5 +14,13 @@ export default class Tag {
 
   get id() {
     return this._id;
+  }
+
+  set name(name) {
+    this._name = _.escape(name);
+  }
+
+  get name() {
+    return this._name;
   }
 }

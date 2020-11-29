@@ -113,6 +113,13 @@ movieDetails.shadowRoot.addEventListener("bookmark-removed", (e) => {
   bookmarkService.remove(e.movieItem.imdbId);
 });
 
+bookmarkDetails.shadowRoot.addEventListener("bookmark-removed", (e) => {
+  bookmarkService.remove(e.movieItem.imdbId);
+  //reset details
+  bookmarkDetails.clear();
+  initWatchListPage();
+});
+
 zoomCloseButton.addEventListener("click", () => {
   zoomArea.style.display = "none";
 });
@@ -151,6 +158,9 @@ filterTags.addEventListener("bookmarks-filtered", (event) => {
   if (event.detail.length) {
     bookmarkService.getByTags(event.detail).then((bkmarks) => {
       bookmarks.bookmarks = bkmarks;
+      if (!bookmarks.bookmarks.length) {
+        bookmarkDetails.clear();
+      }
     });
   } else {
     bookmarkService.getAll().then((bkmarks) => {

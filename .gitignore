@@ -2,3 +2,5 @@ node_modules
 package-lock.json
 .eslintrc.json
 debug.log
+assets/scripts/app.js
+assets/scripts/app.js.map

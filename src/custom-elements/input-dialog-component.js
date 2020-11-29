@@ -1,3 +1,6 @@
+import alerts from "../utilities/alerts";
+import validation from "../utilities/validation";
+
 export default class InputDialogComponent extends HTMLElement {
   constructor() {
     super();
@@ -149,8 +152,17 @@ export default class InputDialogComponent extends HTMLElement {
     }
 
     this.shadowRoot.querySelector(".ok").addEventListener("click", () => {
-      let input = inputEl.value;
+      // sanitize input
       this.setAttribute("hide", "true");
+      let input = inputEl.value;
+      if (this._inputType === "text-input") {
+        if (!validation.isAlphanumeric(input)) {
+          alerts.error(
+            "Tag name is now valid",
+            "Name can be only alphanumeric. Please try again."
+          );
+        }
+      }
       if (this.onConfirmHandler) {
         this.onConfirmHandler(input);
         this.onConfirmHandler = null; // safe

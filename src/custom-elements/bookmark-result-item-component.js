@@ -13,6 +13,7 @@ export default class BookmarkResultItemComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.draggable = true;
     this.render();
   }
 

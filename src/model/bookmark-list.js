@@ -4,13 +4,15 @@ export class BookmarkList {
   }
 
   render(el, handler) {
-    this._el = el;
+    if (!this._el) {
+      this._el = el;
+    }
 
     if (handler) {
       this._addHandler(handler);
     }
 
-    el.innerHTML = ""; // clear the children
+    this._el.innerHTML = ""; // clear the children
     if (this.bookmarks == null) {
       return;
     }
@@ -21,7 +23,7 @@ export class BookmarkList {
       child.setAttribute("imdbId", bookmark.imdbId);
       child.setAttribute("poster", bookmark.poster);
       child.bookmark = bookmark;
-      el.appendChild(child);
+      this._el.appendChild(child);
       if (index == 0) {
         child.classList.add("selected");
         child.click();

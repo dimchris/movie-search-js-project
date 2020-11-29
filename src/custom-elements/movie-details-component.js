@@ -103,6 +103,10 @@ export default class MovieDetailsComponent extends HTMLElement {
     );
   }
 
+  clear() {
+    this.shadowRoot.innerHTML = ``;
+  }
+
   set movie(movie) {
     this._movie = movie;
     this.render();

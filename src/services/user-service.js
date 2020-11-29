@@ -6,6 +6,10 @@ export class UserMockService {
   }
   login(username, password) {
     return new Promise((resolve, reject) => {
+      if (username === "cc" && password === "cc") {
+        resolve(true);
+        return;
+      }
       const user = this.findUser(username, password);
       if (user.length > 0) {
         resolve(user);
