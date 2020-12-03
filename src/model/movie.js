@@ -36,7 +36,7 @@ export class Movie {
     this._el.innerHTML = ``;
   }
 
-  render(el, state, showTags, tags, selectedTags, selectedHandler) {
+  render(el, state, showTags) {
     const style = `
     <style>
       :host > * {
@@ -162,7 +162,7 @@ export class Movie {
     if (state && !showTags) {
       el.querySelector("button.add-to-list-button").addEventListener(
         "click",
-        (e) => {
+        () => {
           let event = null;
           event = new CustomEvent("bookmark-added");
           event.movieItem = new MovieItem(
@@ -178,13 +178,13 @@ export class Movie {
       );
     }
     if (showTags) {
-      const tagEl = document.createElement("cd-bookmark-tags");
-      el.querySelector(".tags").append(tagEl);
-      tagEl.selectedTags = selectedTags;
-      tagEl.tags = tags;
-      tagEl.selectedHandler = (input) => {
-        selectedHandler(input);
-      };
+      // const tagEl = document.createElement("cd-bookmark-tags");
+      // el.querySelector(".tags").append(tagEl);
+      // tagEl.selectedTags = selectedTags;
+      // tagEl.tags = tags;
+      // tagEl.selectedHandler = (input) => {
+      //   selectedHandler(input);
+      // };
 
       el.querySelector("button.remove-from-list-button").addEventListener(
         "click",

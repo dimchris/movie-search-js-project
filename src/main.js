@@ -8,12 +8,7 @@ import PopUpComponent from "./custom-elements/pop-up-component";
 import AccountComponent from "./custom-elements/account-component";
 import FilterBarComponent from "./custom-elements/filter-bar";
 import { Bookmark } from "./model/bookmark";
-import {
-  bookmarkService,
-  directorService,
-  movieService,
-  tagService,
-} from "./services/services";
+import { bookmarkService, movieService } from "./services/services";
 import ConfirmDialogComponent from "./custom-elements/confirm-dialog-component";
 import InputDialogComponent from "./custom-elements/input-dialog-component";
 import CarrouselComponent from "./custom-elements/carrousel-component";
@@ -63,8 +58,6 @@ const mainPage = document.getElementById("main");
 const watchlistPage = document.getElementById("watchlist");
 const accountPage = document.getElementById("account");
 const accountComp = document.querySelector("cd-account");
-const filterTags = document.getElementById("filter-tags");
-const filterBar = document.querySelector("cd-filter-bar");
 let bookmarkResults;
 
 init();
@@ -78,6 +71,21 @@ function init() {
     user.token = token;
     login(user);
   }
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error.response.status === 401 && user.token) {
+        alerts.error("You have been logged out", "Please login again");
+        logout();
+      }
+      // return Promise.reject(error);
+    }
+  );
+}
+function configureAxios(user) {
+  axios.defaults.headers.common["Authorization"] = `bearer ${user.token}`;
 }
 
 function login(user) {
@@ -85,17 +93,23 @@ function login(user) {
   movieDetails.setAttribute("show-bookmark", true);
   accountComp.loginState = true;
   configureAxios(user);
+  initWatchListPage();
 }
 
-function configureAxios(user) {
-  axios.defaults.headers.common["Authorization"] = `bearer ${user.token}`;
+function logout() {
+  menubar.setAttribute("login-state", ""); // must be a falsy string value
+  movieDetails.setAttribute("show-bookmark", "");
+  // delete user details and local storage
+  user.id = null;
+  user.token = null;
+  localStorage.clear();
 }
 
 // cd-tags
-const tags = document.querySelector("cd-tags");
-tagService.getAll().then((data) => {
-  tags.tags = new TagList(data);
-});
+// const tags = document.querySelector("cd-tags");
+// tagService.getAll().then((data) => {
+//   tags.tags = new TagList(data);
+// });
 
 // init log in
 accountComp.addEventListener("user-logged-in", (e) => {
@@ -109,13 +123,8 @@ accountComp.addEventListener("user-logged-in", (e) => {
   login(user);
 });
 
-accountComp.addEventListener("user-logged-out", (e) => {
-  menubar.setAttribute("login-state", ""); // must be a falsy string value
-  movieDetails.setAttribute("show-bookmark", "");
-  // delete user details and local storage
-  user.id = null;
-  user.token = null;
-  localStorage.clear();
+accountComp.addEventListener("user-logged-out", () => {
+  logout();
 });
 
 // update results if new search is triggered
@@ -160,9 +169,9 @@ movieDetails.shadowRoot.addEventListener("bookmark-added", (e) => {
     })
     .then(() => {
       alerts.alert("Success", "Movie has been successfuly saved");
+      initWatchListPage();
     })
     .catch((error) => {
-      console.dir(error);
       alerts.error("Movie could not be saved", error.response.data.message);
     });
 });
@@ -174,8 +183,8 @@ movieDetails.shadowRoot.addEventListener("bookmark-added", (e) => {
 bookmarkDetails.shadowRoot.addEventListener("bookmark-removed", (e) => {
   bookmarkService.remove(e.movieItem._id).then(() => {
     //reset details
+    bookmarks.removeBookmark(e.movieItem._id);
     bookmarkDetails.clear();
-    initWatchListPage();
   });
 });
 
@@ -203,7 +212,6 @@ menubar.shadowRoot.addEventListener("click", (e) => {
         break;
       case "menu-item-watchlist":
         watchlistPage.style.display = "flex";
-        initWatchListPage();
         break;
       case "menu-item-account":
         accountPage.style.display = "flex";
@@ -213,47 +221,47 @@ menubar.shadowRoot.addEventListener("click", (e) => {
   }
 });
 
-filterTags.addEventListener("bookmarks-filtered", (event) => {
-  if (event.detail.length) {
-    bookmarkService.getByTags(event.detail).then((bkmarks) => {
-      bookmarks.bookmarks = bkmarks;
-      if (!bookmarks.bookmarks.length) {
-        bookmarkDetails.clear();
-      }
-    });
-  } else {
-    bookmarkService.getAll().then((bkmarks) => {
-      bookmarks.bookmarks = bkmarks;
-    });
-  }
-});
+// filterTags.addEventListener("bookmarks-filtered", (event) => {
+//   if (event.detail.length) {
+//     bookmarkService.getByTags(event.detail).then((bkmarks) => {
+//       bookmarks.bookmarks = bkmarks;
+//       if (!bookmarks.bookmarks.length) {
+//         bookmarkDetails.clear();
+//       }
+//     });
+//   } else {
+//     bookmarkService.getAll().then((bkmarks) => {
+//       bookmarks.bookmarks = bkmarks;
+//     });
+//   }
+// });
 
-filterBar.addEventListener("bookmark-filters-updated", (event) => {
-  const filters = event.detail;
-  bookmarkService.getByFilters(filters).then((bkmarks) => {
-    bookmarks.bookmarks = bkmarks;
-    if (!bookmarks.bookmarks.length) {
-      bookmarkDetails.clear();
-    }
-  });
-});
+// filterBar.addEventListener("bookmark-filters-updated", (event) => {
+//   const filters = event.detail;
+//   bookmarkService.getByFilters(filters).then((bkmarks) => {
+//     bookmarks.bookmarks = bkmarks;
+//     if (!bookmarks.bookmarks.length) {
+//       bookmarkDetails.clear();
+//     }
+//   });
+// });
 
 // switch search
-let advance_search = false;
-document
-  .querySelector("#switch-button input[type=button]")
-  .addEventListener("click", (event) => {
-    advance_search = !advance_search;
-    if (advance_search) {
-      document.querySelector("cd-filter-bar").style.display = "block";
-      document.querySelector(".tag-filters").style.display = "none";
-      event.target.value = "tag search";
-    } else {
-      document.querySelector("cd-filter-bar").style.display = "none";
-      document.querySelector(".tag-filters").style.display = "block";
-      event.target.value = "advance search";
-    }
-  });
+// let advance_search = false;
+// document
+//   .querySelector("#switch-button input[type=button]")
+//   .addEventListener("click", (event) => {
+//     advance_search = !advance_search;
+//     if (advance_search) {
+//       document.querySelector("cd-filter-bar").style.display = "block";
+//       document.querySelector(".tag-filters").style.display = "none";
+//       event.target.value = "tag search";
+//     } else {
+//       document.querySelector("cd-filter-bar").style.display = "none";
+//       document.querySelector(".tag-filters").style.display = "block";
+//       event.target.value = "advance search";
+//     }
+//   });
 
 // movie list click handler
 function movieListItemClickHandler(event) {
@@ -294,7 +302,7 @@ function bookMarkListItemClickHandler(event) {
     bookmarkDetails.setAttribute("imdbid", imdbId);
     bookmarkDetails.setAttribute("bookmark-id", bookmarkId);
     bookmarkDetails.selectedTags = bookmark.tags;
-    bookmarkDetails.tags = tags.tags;
+    // bookmarkDetails.tags = tags.tags;
     bookmarkDetails.selectedHandler = (input) => {
       const newSelectedTags = new TagList(input.selected);
       bookmarkDetails.selectedTags = newSelectedTags;

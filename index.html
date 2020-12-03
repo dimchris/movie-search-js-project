@@ -33,13 +33,21 @@
   </div>
   <div id="watchlist" class="page">
     <div id="total-bookmarks-block">
-      <div id="switch-button">
-        <input type="button" value="advance search">
+      <!--
+        <div id="switch-button">
+          <input type="button" value="advance search">
+        </div>
+        # TODO: pending backend support
+        <div class="label tag-filters" style="white-space: nowrap;">
+          Tags<cd-tags id="filter-tags"></cd-tags>
+        </div>
+      -->
+      <div class="label tag-filters">
+        Bookmarks
       </div>
-      <div class="label tag-filters" style="white-space: nowrap;">
-        Tags<cd-tags id="filter-tags"></cd-tags>
-      </div>
-      <cd-filter-bar></cd-filter-bar>
+      <!--
+        <cd-filter-bar></cd-filter-bar>
+      -->
     </div>
     <cd-carrousel>
       <div id="bookmarks" class="carrousel-items"></div>

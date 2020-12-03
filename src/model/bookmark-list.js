@@ -42,6 +42,7 @@ export class BookmarkList {
       child.setAttribute("year", bookmark.year);
       child.setAttribute("imdbId", bookmark.imdbId);
       child.setAttribute("poster", bookmark.poster);
+      child.setAttribute("bookmark-id", bookmark._id);
       this._el.appendChild(child);
     }
   }
@@ -52,10 +53,16 @@ export class BookmarkList {
     });
   }
 
-  removeBookmark(imdbId) {
-    this.bookmarks = this.bookmarks.filter(
-      (bookmark) => bookmark.imdbId !== imdbId
-    );
+  removeBookmark(id) {
+    // this.bookmarks = this.bookmarks.filter((bookmark) => bookmark._id !== id);
+    if (this._el) {
+      const el = this._el.querySelector(
+        `cd-bookmark-result-item[bookmark-id="${id}"]`
+      );
+      if (el) {
+        el.remove();
+      }
+    }
   }
 
   set bookmarks(bookmarks) {
