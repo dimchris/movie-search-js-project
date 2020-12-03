@@ -57,9 +57,8 @@ body {
   }
 }
 
-#total-results-block,
-#total-bookmarks-block {
-  height: 80px;
+#total-results-block {
+  min-height: 80px;
   padding: 15px;
   font-size: 2rem;
   font-weight: bold;
@@ -67,14 +66,26 @@ body {
   margin-top: 40px;
 }
 
+#total-bookmarks-block {
+  margin-top: 45px;
+}
+
+.tag-filters {
+  color: white;
+  min-height: 80px;
+  padding: 15px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
 #total-results-block > *,
-#total-bookmarks-block > * {
+.tag-filters > * {
   margin: 0;
   padding: 0;
 }
 
 #total-results-block .field,
-#total-bookmarks-block .field {
+.tag-filters .field {
   color: grey;
   font-size: 1rem;
 }
@@ -110,4 +121,15 @@ img {
 #zoom-area__close-button {
   margin: 10px;
   cursor: pointer;
+}
+
+#switch-button {
+  margin: 10px;
+}
+
+#switch-button input[type="button"] {
+  color: grey;
+  background-color: rgba(255, 255, 255, 0.055);
+  border-radius: 15px;
+  border-style: none;
 }

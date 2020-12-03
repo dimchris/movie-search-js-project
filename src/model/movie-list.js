@@ -20,6 +20,8 @@ export class MovieList {
       child.setAttribute("year", movie.year);
       child.setAttribute("imdbId", movie.imdbId);
       child.setAttribute("poster", movie.poster);
+      child.setAttribute("directors", movie.directors);
+      child.setAttribute("writers", movie.writers);
       el.appendChild(child);
       if (index == 0) {
         child.classList.add("selected");
@@ -36,6 +38,8 @@ export class MovieList {
       child.setAttribute("year", movie.year);
       child.setAttribute("imdbId", movie.imdbId);
       child.setAttribute("poster", movie.poster);
+      child.setAttribute("direstors", movie.directors);
+      child.setAttribute("writers", movie.writers);
       this._el.appendChild(child);
     }
   }

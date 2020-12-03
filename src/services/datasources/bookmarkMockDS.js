@@ -52,4 +52,8 @@ export default class BookmarkMockDS {
     // update only tags for now
     bmrk.tags = tags;
   }
+
+  async getByFilters(filters) {
+    return this._bookmarks.getByFilters(filters);
+  }
 }

@@ -1,6 +1,6 @@
-import axios from "./axios";
+import axios from "../axios";
 
-export class UserService {
+export default class userDS {
   async login(username, password) {
     return axios.post("/users/login", {
       email: username,

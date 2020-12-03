@@ -33,9 +33,13 @@
   </div>
   <div id="watchlist" class="page">
     <div id="total-bookmarks-block">
-      <div class="label" style="white-space: nowrap;">
+      <div id="switch-button">
+        <input type="button" value="advance search">
+      </div>
+      <div class="label tag-filters" style="white-space: nowrap;">
         Tags<cd-tags id="filter-tags"></cd-tags>
       </div>
+      <cd-filter-bar></cd-filter-bar>
     </div>
     <cd-carrousel>
       <div id="bookmarks" class="carrousel-items"></div>

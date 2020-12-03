@@ -1,9 +1,11 @@
 export class MovieItem {
-  constructor(imdbId, title, year, poster) {
+  constructor(imdbId, title, year, poster, directors, writers) {
     this.imdbId = imdbId;
     this.title = title;
     this.year = year;
     this.poster = poster;
+    this.directors = MovieItem.getArrayFromString(directors);
+    this.writers = MovieItem.getArrayFromString(writers);
   }
 
   render(el) {
@@ -98,5 +100,17 @@ export class MovieItem {
         zoomArea.querySelector("img").setAttribute("src", this.poster);
       });
     }
+  }
+
+  static getArrayFromString(string) {
+    if (!string) {
+      return null;
+    }
+    const split = string.split(",");
+    const result = [];
+    for (let item of split) {
+      result.push(item.replace(/\(.*\)$/, "").trim());
+    }
+    return result;
   }
 }

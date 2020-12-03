@@ -3,7 +3,8 @@ import Alert from "../utilities/alerts";
 export default class LoginComponent extends HTMLElement {
   constructor() {
     super();
-    this._loginState = this.getAttribute("login-state") || false;
+    this._loginState =
+      this.getAttribute("login-state") === "true" ? true : false;
     this._createAccount = this.getAttribute("create-account") || false;
     this.attachShadow({
       mode: "open",
@@ -102,7 +103,10 @@ a {
                   this.createAccount = false;
                 })
                 .catch((error) => {
-                  Alert.error("Cound not create an accout", error);
+                  Alert.error(
+                    "Cound not create an accout",
+                    error.response.data.message
+                  );
                 });
             } else {
               this._login(username, password)
@@ -174,6 +178,7 @@ a {
 
   set loginState(loginState) {
     this._loginState = loginState;
+    this.setAttribute("true");
     this._render();
   }
 }

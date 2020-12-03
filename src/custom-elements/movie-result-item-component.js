@@ -8,7 +8,16 @@ export default class MovieResultItemComponent extends HTMLElement {
     const year = this.getAttribute("year");
     const imdbId = this.getAttribute("imdbId");
     const poster = this.getAttribute("poster");
-    this._movieItem = new MovieItem(imdbId, title, year, poster);
+    const directors = this.getAttribute("directors");
+    const writers = this.getAttribute("writers");
+    this._movieItem = new MovieItem(
+      imdbId,
+      title,
+      year,
+      poster,
+      directors,
+      writers
+    );
     this.attachShadow({ mode: "open" });
   }
 

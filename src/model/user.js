@@ -1,13 +1,16 @@
 export class User {
-  constructor(username, token, id = null, password = null) {
+  constructor(username, token, id = null) {
     this._id = id;
     this._username = username;
     this._token = token;
-    this._password = password;
   }
 
   get token() {
     return this._token;
+  }
+
+  set token(token) {
+    this._token = token;
   }
 
   set id(id) {

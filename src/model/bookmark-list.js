@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 export class BookmarkList {
   constructor(bookmarks) {
     this._bookmarks = bookmarks || [];
@@ -22,6 +24,7 @@ export class BookmarkList {
       child.setAttribute("year", bookmark.year);
       child.setAttribute("imdbId", bookmark.imdbId);
       child.setAttribute("poster", bookmark.poster);
+      child.setAttribute("bookmark-id", bookmark._id);
       child.bookmark = bookmark;
       this._el.appendChild(child);
       if (index == 0) {
@@ -78,5 +81,33 @@ export class BookmarkList {
       this._handler = handler;
       this._el.addEventListener("click", handler);
     }
+  }
+
+  getByFilters(filters) {
+    return this._bookmarks.filter((bkmrk) => {
+      let result = true;
+      let char;
+      _.forEach(filters, (value, key) => {
+        if (key == "title") {
+          char = "";
+          result =
+            result &&
+            bkmrk[key] &&
+            bkmrk[key].toLowerCase().includes(value.toLowerCase());
+        } else {
+          char = ",";
+
+          result =
+            result &&
+            bkmrk[key] &&
+            value
+              .split(char)
+              .every((item) =>
+                bkmrk[key].toLowerCase().includes(item.toLowerCase())
+              );
+        }
+      });
+      return result;
+    });
   }
 }

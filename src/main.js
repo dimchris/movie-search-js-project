@@ -6,9 +6,14 @@ import SearchBarComponent from "./custom-elements/search-bar-component";
 import LoginComponent from "./custom-elements/login-component";
 import PopUpComponent from "./custom-elements/pop-up-component";
 import AccountComponent from "./custom-elements/account-component";
+import FilterBarComponent from "./custom-elements/filter-bar";
 import { Bookmark } from "./model/bookmark";
-import { MovieList } from "./model/movie-list";
-import { bookmarkService, tagService } from "./services/services";
+import {
+  bookmarkService,
+  directorService,
+  movieService,
+  tagService,
+} from "./services/services";
 import ConfirmDialogComponent from "./custom-elements/confirm-dialog-component";
 import InputDialogComponent from "./custom-elements/input-dialog-component";
 import CarrouselComponent from "./custom-elements/carrousel-component";
@@ -18,7 +23,12 @@ import { TagList } from "./model/tag-list";
 import TagSelectorComponent from "./custom-elements/tag-selector-component";
 import BookmarkTagListComponent from "./custom-elements/bookmark-tag-list-component";
 import BookmarkResultItemComponent from "./custom-elements/bookmark-result-item-component";
-import { BookmarkList } from "./model/bookmark-list";
+import FilterBarItemComponent from "./custom-elements/filter-bar-item";
+import axios from "./services/axios";
+import user from "./state/user";
+import bookmarks from "./state/bookmarks";
+import movies from "./state/movies";
+import alerts from "./utilities/alerts";
 
 customElements.define("cd-movie-details", MovieDetailsComponent);
 customElements.define("cd-menubar", MenubarComponent);
@@ -36,6 +46,8 @@ customElements.define("cd-tag", TagComponent);
 customElements.define("cd-tags", TagListComponent);
 customElements.define("cd-bookmark-tags", BookmarkTagListComponent);
 customElements.define("cd-tag-selector", TagSelectorComponent);
+customElements.define("cd-filter-bar", FilterBarComponent);
+customElements.define("cd-filter-bar-item", FilterBarItemComponent);
 
 // main page elements refs
 const searchBar = document.getElementById("search-bar");
@@ -52,11 +64,34 @@ const watchlistPage = document.getElementById("watchlist");
 const accountPage = document.getElementById("account");
 const accountComp = document.querySelector("cd-account");
 const filterTags = document.getElementById("filter-tags");
-const movies = new MovieList();
-const bookmarks = new BookmarkList();
+const filterBar = document.querySelector("cd-filter-bar");
 let bookmarkResults;
 
-// TODO: remove test cd-tags
+init();
+
+function init() {
+  // check local storage
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
+  if (userId && token) {
+    user.id = userId;
+    user.token = token;
+    login(user);
+  }
+}
+
+function login(user) {
+  menubar.setAttribute("login-state", true);
+  movieDetails.setAttribute("show-bookmark", true);
+  accountComp.loginState = true;
+  configureAxios(user);
+}
+
+function configureAxios(user) {
+  axios.defaults.headers.common["Authorization"] = `bearer ${user.token}`;
+}
+
+// cd-tags
 const tags = document.querySelector("cd-tags");
 tagService.getAll().then((data) => {
   tags.tags = new TagList(data);
@@ -64,13 +99,23 @@ tagService.getAll().then((data) => {
 
 // init log in
 accountComp.addEventListener("user-logged-in", (e) => {
-  menubar.setAttribute("login-state", true);
-  movieDetails.setAttribute("show-bookmark", true);
+  const userId = e.detail.data.userId;
+  const token = e.detail.data.token;
+  user.token = token;
+  user.id = userId;
+  // set to local storage
+  localStorage.setItem("userId", userId);
+  localStorage.setItem("token", token);
+  login(user);
 });
 
 accountComp.addEventListener("user-logged-out", (e) => {
   menubar.setAttribute("login-state", ""); // must be a falsy string value
   movieDetails.setAttribute("show-bookmark", "");
+  // delete user details and local storage
+  user.id = null;
+  user.token = null;
+  localStorage.clear();
 });
 
 // update results if new search is triggered
@@ -106,18 +151,32 @@ resultsItems.addEventListener("scroll", () => {
 });
 
 movieDetails.shadowRoot.addEventListener("bookmark-added", (e) => {
-  bookmarkService.add(Bookmark.fromMovieItem(e.movieItem));
+  const movieItem = e.movieItem;
+  // find movie id exists
+  movieService
+    .add(movieItem)
+    .then((movie) => {
+      return bookmarkService.add({ movie: movie._id, imdbId: movie.imdbId });
+    })
+    .then(() => {
+      alerts.alert("Success", "Movie has been successfuly saved");
+    })
+    .catch((error) => {
+      console.dir(error);
+      alerts.error("Movie could not be saved", error.response.data.message);
+    });
 });
 
-movieDetails.shadowRoot.addEventListener("bookmark-removed", (e) => {
-  bookmarkService.remove(e.movieItem.imdbId);
-});
+// movieDetails.shadowRoot.addEventListener("bookmark-removed", (e) => {
+//   bookmarkService.remove(e.movieItem.imdbId);
+// });
 
 bookmarkDetails.shadowRoot.addEventListener("bookmark-removed", (e) => {
-  bookmarkService.remove(e.movieItem.imdbId);
-  //reset details
-  bookmarkDetails.clear();
-  initWatchListPage();
+  bookmarkService.remove(e.movieItem._id).then(() => {
+    //reset details
+    bookmarkDetails.clear();
+    initWatchListPage();
+  });
 });
 
 zoomCloseButton.addEventListener("click", () => {
@@ -169,6 +228,33 @@ filterTags.addEventListener("bookmarks-filtered", (event) => {
   }
 });
 
+filterBar.addEventListener("bookmark-filters-updated", (event) => {
+  const filters = event.detail;
+  bookmarkService.getByFilters(filters).then((bkmarks) => {
+    bookmarks.bookmarks = bkmarks;
+    if (!bookmarks.bookmarks.length) {
+      bookmarkDetails.clear();
+    }
+  });
+});
+
+// switch search
+let advance_search = false;
+document
+  .querySelector("#switch-button input[type=button]")
+  .addEventListener("click", (event) => {
+    advance_search = !advance_search;
+    if (advance_search) {
+      document.querySelector("cd-filter-bar").style.display = "block";
+      document.querySelector(".tag-filters").style.display = "none";
+      event.target.value = "tag search";
+    } else {
+      document.querySelector("cd-filter-bar").style.display = "none";
+      document.querySelector(".tag-filters").style.display = "block";
+      event.target.value = "advance search";
+    }
+  });
+
 // movie list click handler
 function movieListItemClickHandler(event) {
   let movieItem = event.target.closest("cd-movie-result-item");
@@ -204,7 +290,9 @@ function bookMarkListItemClickHandler(event) {
     bookmarkItem.classList.add("selected");
     const bookmark = bookmarkItem.bookmark;
     const imdbId = bookmarkItem.getAttribute("imdbId");
+    const bookmarkId = bookmarkItem.getAttribute("bookmark-id");
     bookmarkDetails.setAttribute("imdbid", imdbId);
+    bookmarkDetails.setAttribute("bookmark-id", bookmarkId);
     bookmarkDetails.selectedTags = bookmark.tags;
     bookmarkDetails.tags = tags.tags;
     bookmarkDetails.selectedHandler = (input) => {
@@ -218,6 +306,19 @@ function bookMarkListItemClickHandler(event) {
 
 async function initWatchListPage() {
   bookmarkResults = await bookmarkService.getAll();
-  bookmarks.bookmarks = bookmarkResults; // bookmarkItems
+  bookmarks.bookmarks = prepareBookMarksFromResponseData(bookmarkResults.data); // bookmarkItems
   bookmarks.render(bookmarkItems, bookMarkListItemClickHandler);
+}
+
+function prepareBookMarksFromResponseData(bookmarks) {
+  return bookmarks.map((bookmark) => {
+    const bkmark = new Bookmark(
+      bookmark.movie.imdbId,
+      bookmark.movie.title,
+      bookmark.movie.year,
+      bookmark.movie.poster
+    );
+    bkmark.id = bookmark._id;
+    return bkmark;
+  });
 }

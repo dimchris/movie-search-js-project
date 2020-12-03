@@ -10,7 +10,8 @@ export class Movie {
     runtime,
     year,
     plot,
-    director,
+    writers,
+    directors,
     actors,
     genre,
     language,
@@ -23,11 +24,12 @@ export class Movie {
     this.runtime = runtime;
     this.year = year;
     this.plot = plot;
-    this.director = director;
+    this.directors = directors;
     this.actors = actors;
     this.genre = genre;
     this.language = language;
     this.poster = poster;
+    this.writers = writers;
   }
 
   clear() {
@@ -80,7 +82,7 @@ export class Movie {
         font-size: 1.2rem;
       }
 
-      .loading {
+      :host(.loading) {
         filter: blur(5px);
       }
       .add-to-list-button, .remove-from-list-button {
@@ -123,7 +125,7 @@ export class Movie {
 
     const buttons = showTags
       ? '<button class="remove-from-list-button" type="button">remove</button>'
-      : '<button class="add-to-list-button" type="button">bookmark</button>';
+      : '<button class="add-to-list-button" type="button">save</button>';
 
     el.innerHTML =
       style +
@@ -140,8 +142,11 @@ export class Movie {
         </div>
         <div class="details-more">
           <div class="details-description">${this.plot}</div>
-          <div class="details-directors"><span class="label">Directors</span> ${
-            this.director
+          <div class="details-writers"><span class="label">Writers</span> ${
+            this.writers
+          }</div>
+          <div class="details-directorss"><span class="label">Directors</span> ${
+            this.directors
           }</div>
           <div class="details-actors"><span class="label">Starring</span> ${
             this.actors
@@ -159,18 +164,15 @@ export class Movie {
         "click",
         (e) => {
           let event = null;
-          if (e.target.classList.contains("selected")) {
-            event = new CustomEvent("bookmark-removed");
-          } else {
-            event = new CustomEvent("bookmark-added");
-          }
+          event = new CustomEvent("bookmark-added");
           event.movieItem = new MovieItem(
             this.imdbId,
             this.title,
             this.year,
-            this.poster
+            this.poster,
+            this.directors,
+            this.writers
           );
-          e.target.classList.toggle("selected");
           el.dispatchEvent(event);
         }
       );
@@ -196,8 +198,11 @@ export class Movie {
                 this.imdbId,
                 this.title,
                 this.year,
-                this.poster
+                this.poster,
+                this.directors,
+                this.writers
               );
+              event.movieItem._id = this._bookmarkId;
               e.target.classList.toggle("selected");
               el.dispatchEvent(event);
             }

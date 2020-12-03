@@ -1,25 +1,63 @@
+import user from "../state/user";
+import axios from "./axios";
+
 export default class BookmarkService {
-  constructor(datasource) {
-    this._datasource = datasource;
+  async getAll() {
+    this.checkToken();
+    return axios.get(`/users/${user.id}/bookmarks`);
   }
 
-  async getAll() {
-    return this._datasource.getAll();
-  }
+  // async get(imdbId) {
+  //   return this._bookmarks.get(imdbId);
+  // }
+
+  // async getByTags(tags) {
+  //   return this._bookmarks.bookmarks.filter((bkmrk) => {
+  //     for (let tag of tags) {
+  //       const bookmarkTags = bkmrk.tags.tags.reduce((total, item) => {
+  //         return [...total, item.id];
+  //       }, []);
+  //       if (!bookmarkTags && !bookmarkTags.length) {
+  //         return false;
+  //       }
+  //       if (!bookmarkTags.includes(tag)) {
+  //         return false;
+  //       }
+  //     }
+  //     return true;
+  //   });
+  // }
 
   async add(bookmark) {
-    return this._datasource.add(bookmark);
+    // check if exist
+    let newBookmark = await axios.get(
+      `/users/${user.id}/bookmarks?imdbId=${bookmark.imdbId}`
+    );
+    if (newBookmark.data == false) {
+      newBookmark = await axios.post(`/users/${user.id}/bookmarks`, bookmark);
+    }
+
+    return newBookmark;
   }
 
-  async remove(imdbId) {
-    return this._datasource.remove(imdbId);
+  async remove(bookmarkId) {
+    return axios.delete(`/users/${user.id}/bookmarks/${bookmarkId}`);
   }
 
-  async getByTags(tags) {
-    return this._datasource.getByTags(tags);
-  }
+  // async updateTags(imdbId, tags) {
+  //   const bmrk = this._bookmarks.findBookmark(imdbId);
+  //   // update only tags for now
+  //   bmrk.tags = tags;
+  // }
 
-  async updateTags(imdb, tags) {
-    return this._datasource.updateTags(imdb, tags);
+  // async getByFilters(filters) {
+  //   return this._bookmarks.getByFilters(filters);
+  // }
+
+  checkToken() {
+    if (user && user.id && user.token) {
+      return;
+    }
+    throw new Error("token is missing");
   }
 }

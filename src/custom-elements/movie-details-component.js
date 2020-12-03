@@ -7,9 +7,10 @@ export default class MovieDetailsComponent extends HTMLElement {
     super();
     this._loading = false || this.getAttribute("loading");
     this._apiKey = this.getAttribute("api-key");
-    this._url = `http://www.omdbapi.com/?plot=full&apikey=${this._apiKey}`;
+    this._url = `https://www.omdbapi.com/?plot=full&apikey=${this._apiKey}`;
     this._showBookmark = this.getAttribute("show-bookmark") || false;
     this._movie = new Movie();
+    this._movie._bookmarkId = this.getAttribute("bookmark-id");
     this._tags = new TagList();
     this._selectedTags = new TagList();
     this._showTags = this.getAttribute("show-tags") || false;
@@ -38,11 +39,12 @@ export default class MovieDetailsComponent extends HTMLElement {
           this._movie.runtime = result.Runtime;
           this._movie.year = result.Year;
           this._movie.plot = result.Plot;
-          this._movie.director = result.Director;
+          this._movie.directors = result.Director;
           this._movie.actors = result.Actors;
           this._movie.genre = result.Genre;
           this._movie.language = result.Language;
           this._movie.poster = result.Poster;
+          this._movie.writers = result.Writer;
           this._renderResult();
           this.setAttribute("loading", false);
         })
@@ -54,7 +56,7 @@ export default class MovieDetailsComponent extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["imdbid", "loading", "show-bookmark", "show-tags"];
+    return ["imdbid", "loading", "show-bookmark", "show-tags", "bookmark-id"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -80,6 +82,10 @@ export default class MovieDetailsComponent extends HTMLElement {
         break;
       case "show-tags":
         this._showTags = newValue;
+        this.render();
+        break;
+      case "bookmark-id":
+        this._movie._bookmarkId = newValue;
         this.render();
         break;
       default:
@@ -109,6 +115,11 @@ export default class MovieDetailsComponent extends HTMLElement {
 
   set movie(movie) {
     this._movie = movie;
+    this.render();
+  }
+
+  set bookmarkId(id) {
+    this._movie._bookmarkId = id;
     this.render();
   }
 

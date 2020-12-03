@@ -8,7 +8,9 @@ export default class BookmarkResultItemComponent extends HTMLElement {
     const year = this.getAttribute("year");
     const imdbId = this.getAttribute("imdbId");
     const poster = this.getAttribute("poster");
+    const bookmarkId = this.getAttribute("bookmark-id");
     this._bookmarkItem = new Bookmark(imdbId, title, year, poster);
+    this._bookmarkItem._id = bookmarkId;
     this.attachShadow({ mode: "open" });
   }
 
@@ -18,7 +20,7 @@ export default class BookmarkResultItemComponent extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["title", "year", "imdbId", "poster"];
+    return ["title", "year", "imdbId", "poster", "bookmark-id"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -37,6 +39,9 @@ export default class BookmarkResultItemComponent extends HTMLElement {
         break;
       case "poster":
         this._bookmarkItem.poster = newValue;
+        break;
+      case "bookmark-id":
+        this._bookmarkItem._id = newValue;
         break;
       default:
     }

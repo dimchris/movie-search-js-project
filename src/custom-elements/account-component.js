@@ -1,6 +1,7 @@
 export default class AccountComponent extends HTMLElement {
   constructor() {
     super();
+    this._loginState = this.getAttribute("login-state") || false;
     this.attachShadow({
       mode: "open",
     });
@@ -26,12 +27,17 @@ export default class AccountComponent extends HTMLElement {
     this.shadowRoot.innerHTML =
       style +
       `
-            <cd-login></cd-login>
+            <cd-login login-state=${this._loginState}></cd-login>
         `;
     this._logginComp = this.shadowRoot.querySelector("cd-login");
 
     this._logginComp.addEventListener("user-logged-in", (e) => {
       this._user = e.details;
     });
+  }
+
+  set loginState(state) {
+    this._loginState = state;
+    this._render();
   }
 }

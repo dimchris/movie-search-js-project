@@ -5,7 +5,7 @@ export default class SearchBarComponent extends HTMLElement {
   constructor() {
     super();
     this._apiKey = this.getAttribute("api-key");
-    this._url = `http://www.omdbapi.com/?apikey=${this._apiKey}&type=movie`;
+    this._url = `https://www.omdbapi.com/?apikey=${this._apiKey}&type=movie`;
     this._timeout = null;
     // get the time after stop typing to start searching for results
     // default value 1500ms
@@ -189,7 +189,9 @@ export default class SearchBarComponent extends HTMLElement {
                     movie.imdbID,
                     movie.Title,
                     movie.Year,
-                    movie.Poster
+                    movie.Poster,
+                    movie.Director,
+                    movie.Writer
                   )
               );
               this._totalResults = data.totalResults;
@@ -258,7 +260,14 @@ export default class SearchBarComponent extends HTMLElement {
       .then((data) => {
         this._results = data.Search.map(
           (movie) =>
-            new MovieItem(movie.imdbID, movie.Title, movie.Year, movie.Poster)
+            new MovieItem(
+              movie.imdbID,
+              movie.Title,
+              movie.Year,
+              movie.Poster,
+              movie.Director,
+              movie.Writer
+            )
         );
         this._totalResults = data.totalResults;
         this._totalPages =
