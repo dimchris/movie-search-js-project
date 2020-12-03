@@ -1,5 +1,5 @@
-import { userService } from "../services/services";
-import Alert from "../utilities/alerts";
+import { userService } from "../../../../services/services";
+import alerts from "../../../../utilities/alerts";
 export default class LoginComponent extends HTMLElement {
   constructor() {
     super();
@@ -96,14 +96,14 @@ a {
             if (this._createAccount) {
               this._createUser(username, password)
                 .then(() => {
-                  Alert.alert(
+                  alerts.alert(
                     "Account Successfully Created",
                     "Your account has been created. Please log in to procceed."
                   );
                   this.createAccount = false;
                 })
                 .catch((error) => {
-                  Alert.error(
+                  alerts.error(
                     "Cound not create an accout",
                     error.response.data.message
                   );
@@ -121,7 +121,7 @@ a {
                   this._render();
                 })
                 .catch(() => {
-                  Alert.error(
+                  alerts.error(
                     "Can Not Login",
                     "Please check your username and password and try again."
                   );
@@ -150,7 +150,7 @@ a {
       this.shadowRoot
         .querySelector("input[type=button]")
         .addEventListener("click", () => {
-          Alert.confirm("Log out", "Are you sure?", () => {
+          alerts.confirm("Log out", "Are you sure?", () => {
             const event = new CustomEvent("user-logged-out", {
               bubbles: true,
               composed: true,

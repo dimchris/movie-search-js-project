@@ -1,19 +1,8 @@
 import { MovieItem } from "./movie-item";
-import { TagList } from "./tag-list";
 
 export class Bookmark extends MovieItem {
-  constructor(
-    imdbId,
-    title,
-    year,
-    poster,
-    directors,
-    writers,
-    tags = new TagList(),
-    id = null
-  ) {
+  constructor(imdbId, title, year, poster, directors, writers, id = null) {
     super(imdbId, title, year, poster, directors, writers);
-    this.tags = tags;
     this._id = id; // this is the db id
   }
 

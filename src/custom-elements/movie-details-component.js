@@ -1,5 +1,4 @@
 import { Movie } from "../model/movie";
-import { TagList } from "../model/tag-list";
 
 // Movie details component
 export default class MovieDetailsComponent extends HTMLElement {
@@ -11,8 +10,6 @@ export default class MovieDetailsComponent extends HTMLElement {
     this._showBookmark = this.getAttribute("show-bookmark") || false;
     this._movie = new Movie();
     this._movie._bookmarkId = this.getAttribute("bookmark-id");
-    this._tags = new TagList();
-    this._selectedTags = new TagList();
     this._showTags = this.getAttribute("show-tags") || false;
     this.attachShadow({ mode: "open" });
   }
@@ -121,19 +118,5 @@ export default class MovieDetailsComponent extends HTMLElement {
   set bookmarkId(id) {
     this._movie._bookmarkId = id;
     this.render();
-  }
-
-  set tags(tags) {
-    this._tags = tags;
-    this.render();
-  }
-
-  set selectedTags(tags) {
-    this._selectedTags = tags;
-    this.render();
-  }
-
-  set selectedHandler(handler) {
-    this._selectedHandler = handler;
   }
 }
