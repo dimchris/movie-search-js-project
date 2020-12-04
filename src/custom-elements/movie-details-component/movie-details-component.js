@@ -1,4 +1,4 @@
-import { Movie } from "../model/movie";
+import { Movie } from "../../model/movie";
 
 // Movie details component
 export default class MovieDetailsComponent extends HTMLElement {

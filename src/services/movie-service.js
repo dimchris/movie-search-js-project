@@ -12,7 +12,6 @@ export default class MovieService {
   }
 
   async add(movieItem) {
-    debugger;
     //first check if movie exist
     let movie = (await this.getByImdb(movieItem.imdbId)).data;
     //create movie

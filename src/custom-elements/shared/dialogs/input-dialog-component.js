@@ -1,5 +1,5 @@
-import alerts from "../utilities/alerts";
-import validation from "../utilities/validation";
+import alerts from "../../../utilities/alerts";
+import validation from "../../../utilities/validation";
 
 export default class InputDialogComponent extends HTMLElement {
   constructor() {

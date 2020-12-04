@@ -1,4 +1,4 @@
-import { MovieItem } from "../model/movie-item";
+import { MovieItem } from "../../model/movie-item";
 
 // Search bar component
 export default class SearchBarComponent extends HTMLElement {

@@ -1,10 +1,10 @@
-import MovieDetailsComponent from "./custom-elements/movie-details-component";
+import MovieDetailsComponent from "./custom-elements/movie-details-component/movie-details-component";
 import MenubarComponent from "./custom-elements/menu-bar-component/menubar-component";
-import RatingComponent from "./custom-elements/rating-component";
+import RatingComponent from "./custom-elements/shared/rating-component";
 import MovieResultItemComponent from "./custom-elements/result-items/movie-result-item-component";
-import SearchBarComponent from "./custom-elements/search-bar-component";
+import SearchBarComponent from "./custom-elements/search-bar-component/search-bar-component";
 import LoginComponent from "./custom-elements/menu-bar-component/account-component/login-component/login-component";
-import PopUpComponent from "./custom-elements/pop-up-component";
+import PopUpComponent from "./custom-elements/shared/dialogs/pop-up-component";
 import AccountComponent from "./custom-elements/menu-bar-component/account-component/account-component";
 import { Bookmark } from "./model/bookmark-item";
 import {
@@ -13,9 +13,9 @@ import {
   movieService,
   writerService,
 } from "./services/services";
-import ConfirmDialogComponent from "./custom-elements/confirm-dialog-component";
-import InputDialogComponent from "./custom-elements/input-dialog-component";
-import CarrouselComponent from "./custom-elements/carrousel-component";
+import ConfirmDialogComponent from "./custom-elements/shared/dialogs/confirm-dialog-component";
+import InputDialogComponent from "./custom-elements/shared/dialogs/input-dialog-component";
+import CarrouselComponent from "./custom-elements/shared/carrousel-component";
 import BookmarkResultItemComponent from "./custom-elements/result-items/bookmark-result-item-component";
 import axios from "./configuration/axios";
 import user from "./state/user";
@@ -69,10 +69,12 @@ function init() {
     },
     (error) => {
       if (error.response.status === 401 && user.token) {
-        alerts.error("You have been logged out", "Please login again");
+        alerts.error(
+          "You have been logged out",
+          "The session has been expired. Please login again"
+        );
         logout();
       }
-      // return Promise.reject(error);
     }
   );
 }
