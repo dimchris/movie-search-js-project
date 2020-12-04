@@ -5,12 +5,12 @@ export default class MovieDetailsComponent extends HTMLElement {
   constructor() {
     super();
     this._loading = false || this.getAttribute("loading");
-    this._apiKey = this.getAttribute("api-key");
-    this._url = `https://www.omdbapi.com/?plot=full&apikey=${this._apiKey}`;
-    this._showBookmark = this.getAttribute("show-bookmark") || false;
+    this._saveButton =
+      this.getAttribute("save-button") === "true" ? true : false;
+    this._removeButton =
+      this.getAttribute("remove-button") === "true" ? true : false;
     this._movie = new Movie();
     this._movie._bookmarkId = this.getAttribute("bookmark-id");
-    this._showTags = this.getAttribute("show-tags") || false;
     this.attachShadow({ mode: "open" });
   }
 
@@ -26,22 +26,9 @@ export default class MovieDetailsComponent extends HTMLElement {
             `;
     } else {
       // fetch results
-      this._getResults(this._movie.imdbId)
-        .then((response) => response.json())
-        .then((result) => {
-          this._movie.imdbId = result.imdbID;
-          this._movie.title = result.Title;
-          this._movie.rating = result.imdbRating;
-          this._movie.votes = result.imdbVotes;
-          this._movie.runtime = result.Runtime;
-          this._movie.year = result.Year;
-          this._movie.plot = result.Plot;
-          this._movie.directors = result.Director;
-          this._movie.actors = result.Actors;
-          this._movie.genre = result.Genre;
-          this._movie.language = result.Language;
-          this._movie.poster = result.Poster;
-          this._movie.writers = result.Writer;
+      this.setAttribute("loading", true);
+      this.getResults(this._movie)
+        .then(() => {
           this._renderResult();
           this.setAttribute("loading", false);
         })
@@ -53,7 +40,7 @@ export default class MovieDetailsComponent extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["imdbid", "loading", "show-bookmark", "show-tags", "bookmark-id"];
+    return ["imdbid", "loading", "save-button", "remove-button", "bookmark-id"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -73,12 +60,12 @@ export default class MovieDetailsComponent extends HTMLElement {
           this.classList.remove("loading");
         }
         break;
-      case "show-bookmark":
-        this._showBookmark = newValue;
+      case "save-button":
+        this._saveButton = newValue === "true" ? true : false;
         this.render();
         break;
-      case "show-tags":
-        this._showTags = newValue;
+      case "remove-button":
+        this._removeButton = newValue === "true" ? true : false;
         this.render();
         break;
       case "bookmark-id":
@@ -90,20 +77,8 @@ export default class MovieDetailsComponent extends HTMLElement {
     }
   }
 
-  _getResults(imdbId) {
-    this.setAttribute("loading", true);
-    return fetch(`${this._url}&i=${imdbId}`);
-  }
-
   _renderResult() {
-    this._movie.render(
-      this.shadowRoot,
-      this._showBookmark,
-      this._showTags,
-      this._tags,
-      this._selectedTags,
-      this._selectedHandler
-    );
+    this._movie.render(this.shadowRoot, this._saveButton, this._removeButton);
   }
 
   clear() {

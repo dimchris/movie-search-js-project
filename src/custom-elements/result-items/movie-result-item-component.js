@@ -1,4 +1,4 @@
-import { MovieItem } from "../model/movie-item";
+import { MovieItem } from "../../model/movie-item";
 
 // Result item component
 export default class MovieResultItemComponent extends HTMLElement {

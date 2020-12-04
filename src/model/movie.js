@@ -1,5 +1,4 @@
 import alerts from "../utilities/alerts";
-import { MovieItem } from "./movie-item";
 
 export class Movie {
   constructor(
@@ -15,7 +14,8 @@ export class Movie {
     actors,
     genre,
     language,
-    poster
+    poster,
+    id
   ) {
     this.imdbId = imdbId;
     this.title = title;
@@ -30,13 +30,14 @@ export class Movie {
     this.language = language;
     this.poster = poster;
     this.writers = writers;
+    this._bookmarkId = id;
   }
 
   clear() {
     this._el.innerHTML = ``;
   }
 
-  render(el, state, showTags) {
+  render(el, saveButton, removeButton) {
     const style = `
     <style>
       :host > * {
@@ -123,86 +124,53 @@ export class Movie {
     
     `;
 
-    const buttons = showTags
+    const buttons = removeButton
       ? '<button class="remove-from-list-button" type="button">remove</button>'
-      : '<button class="add-to-list-button" type="button">save</button>';
+      : saveButton
+      ? '<button class="add-to-list-button" type="button">save</button>'
+      : "";
 
     el.innerHTML =
       style +
       `
         <div class="details-title">
-        ${this.title}${state ? buttons : ""}
+        ${this.title}${buttons}
         <div class="tags"></div>
         <cd-rating score="${this.rating}"></cd-rating>
         </div>
         <div class="details-subtitle">
-            <span><b>IMDb</b> ${this.rating}(${this.votes})</span><span>${
-        this.runtime
-      }</span><span>${this.year}</span>
+            <span><b>IMDb</b> ${this.rating}(${this.votes})</span><span>${this.runtime}</span><span>${this.year}</span>
         </div>
         <div class="details-more">
           <div class="details-description">${this.plot}</div>
-          <div class="details-writers"><span class="label">Writers</span> ${
-            this.writers
-          }</div>
-          <div class="details-directorss"><span class="label">Directors</span> ${
-            this.directors
-          }</div>
-          <div class="details-actors"><span class="label">Starring</span> ${
-            this.actors
-          }</div>
-          <div class="details-genres"><span class="label">Genres</span> ${
-            this.genre
-          }</div>
-          <div class="details-language"><span class="label">Language</span> ${
-            this.language
-          }</div>
+          <div class="details-writers"><span class="label">Writers</span> ${this.writers}</div>
+          <div class="details-directorss"><span class="label">Directors</span> ${this.directors}</div>
+          <div class="details-actors"><span class="label">Starring</span> ${this.actors}</div>
+          <div class="details-genres"><span class="label">Genres</span> ${this.genre}</div>
+          <div class="details-language"><span class="label">Language</span> ${this.language}</div>
         </div>
         `;
-    if (state && !showTags) {
+    if (saveButton) {
       el.querySelector("button.add-to-list-button").addEventListener(
         "click",
         () => {
           let event = null;
           event = new CustomEvent("bookmark-added");
-          event.movieItem = new MovieItem(
-            this.imdbId,
-            this.title,
-            this.year,
-            this.poster,
-            this.directors,
-            this.writers
-          );
+          event.movie = this;
           el.dispatchEvent(event);
         }
       );
     }
-    if (showTags) {
-      // const tagEl = document.createElement("cd-bookmark-tags");
-      // el.querySelector(".tags").append(tagEl);
-      // tagEl.selectedTags = selectedTags;
-      // tagEl.tags = tags;
-      // tagEl.selectedHandler = (input) => {
-      //   selectedHandler(input);
-      // };
-
+    if (removeButton) {
       el.querySelector("button.remove-from-list-button").addEventListener(
         "click",
         (e) => {
           alerts.confirm(
-            "Remove Book Mark",
+            "Remove bookmark",
             "You are about to remove this bookmark. Are you sure?",
             () => {
               const event = new CustomEvent("bookmark-removed");
-              event.movieItem = new MovieItem(
-                this.imdbId,
-                this.title,
-                this.year,
-                this.poster,
-                this.directors,
-                this.writers
-              );
-              event.movieItem._id = this._bookmarkId;
+              event.movie = this;
               e.target.classList.toggle("selected");
               el.dispatchEvent(event);
             }

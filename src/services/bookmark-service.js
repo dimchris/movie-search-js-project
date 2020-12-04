@@ -1,5 +1,5 @@
 import user from "../state/user";
-import axios from "./axios";
+import axios from "../configuration/axios";
 
 export default class BookmarkService {
   async getAll() {

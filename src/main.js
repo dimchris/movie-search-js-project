@@ -1,18 +1,23 @@
 import MovieDetailsComponent from "./custom-elements/movie-details-component";
 import MenubarComponent from "./custom-elements/menu-bar-component/menubar-component";
 import RatingComponent from "./custom-elements/rating-component";
-import MovieResultItemComponent from "./custom-elements/movie-result-item-component";
+import MovieResultItemComponent from "./custom-elements/result-items/movie-result-item-component";
 import SearchBarComponent from "./custom-elements/search-bar-component";
 import LoginComponent from "./custom-elements/menu-bar-component/account-component/login-component/login-component";
 import PopUpComponent from "./custom-elements/pop-up-component";
 import AccountComponent from "./custom-elements/menu-bar-component/account-component/account-component";
-import { Bookmark } from "./model/bookmark";
-import { bookmarkService, movieService } from "./services/services";
+import { Bookmark } from "./model/bookmark-item";
+import {
+  bookmarkService,
+  directorService,
+  movieService,
+  writerService,
+} from "./services/services";
 import ConfirmDialogComponent from "./custom-elements/confirm-dialog-component";
 import InputDialogComponent from "./custom-elements/input-dialog-component";
 import CarrouselComponent from "./custom-elements/carrousel-component";
-import BookmarkResultItemComponent from "./custom-elements/bookmark-result-item-component";
-import axios from "./services/axios";
+import BookmarkResultItemComponent from "./custom-elements/result-items/bookmark-result-item-component";
+import axios from "./configuration/axios";
 import user from "./state/user";
 import bookmarks from "./state/bookmarks";
 import movies from "./state/movies";
@@ -77,7 +82,7 @@ function configureAxios(user) {
 
 function login(user) {
   menubar.setAttribute("login-state", true);
-  movieDetails.setAttribute("show-bookmark", true);
+  movieDetails.setAttribute("save-button", true);
   accountComp.loginState = true;
   configureAxios(user);
   initWatchListPage();
@@ -85,7 +90,7 @@ function login(user) {
 
 function logout() {
   menubar.setAttribute("login-state", ""); // must be a falsy string value
-  movieDetails.setAttribute("show-bookmark", "");
+  movieDetails.setAttribute("save-button", "");
   // delete user details and local storage
   user.id = null;
   user.token = null;
@@ -141,7 +146,7 @@ resultsItems.addEventListener("scroll", () => {
 });
 
 movieDetails.shadowRoot.addEventListener("bookmark-added", (e) => {
-  const movieItem = e.movieItem;
+  const movieItem = e.movie;
   // find movie id exists
   movieService
     .add(movieItem)
@@ -157,14 +162,10 @@ movieDetails.shadowRoot.addEventListener("bookmark-added", (e) => {
     });
 });
 
-// movieDetails.shadowRoot.addEventListener("bookmark-removed", (e) => {
-//   bookmarkService.remove(e.movieItem.imdbId);
-// });
-
 bookmarkDetails.shadowRoot.addEventListener("bookmark-removed", (e) => {
-  bookmarkService.remove(e.movieItem._id).then(() => {
+  bookmarkService.remove(e.movie._bookmarkId).then(() => {
     //reset details
-    bookmarks.removeBookmark(e.movieItem._id);
+    bookmarks.removeBookmark(e.movie._bookmarkId);
     bookmarkDetails.clear();
   });
 });
@@ -260,3 +261,57 @@ function prepareBookMarksFromResponseData(bookmarks) {
     return bkmark;
   });
 }
+
+bookmarkDetails.getResults = async (movie) => {
+  const result = await movieService.getByImdb(movie.imdbId);
+  const returnedMovie = result.data[0];
+  movie.imdbId = returnedMovie.imdbId;
+  movie.title = returnedMovie.title;
+  movie.rating = returnedMovie.rating;
+  movie.votes = returnedMovie.votes;
+  movie.runtime = returnedMovie.runtime;
+  movie.year = returnedMovie.year;
+  movie.plot = returnedMovie.plot;
+  movie.actors = returnedMovie.actors;
+  movie.genre = returnedMovie.genre;
+  movie.language = returnedMovie.language;
+  movie.poster = returnedMovie.poster;
+  // get directors
+  let directorArray = [];
+  for (let director of returnedMovie.directors) {
+    const name = await (await directorService.get(director)).data.name;
+    directorArray.push(name);
+  }
+  movie.directors = directorArray.join(" ,");
+  // get writers
+  let writerArray = [];
+  for (let writer of returnedMovie.writers) {
+    const name = await (await writerService.get(writer)).data.name;
+    writerArray.push(name);
+  }
+  movie.writers = writerArray.join(" ,");
+
+  return movie;
+};
+
+movieDetails.getResults = async (movie) => {
+  const url = "https://www.omdbapi.com/?plot=full&apikey=15fb3faa";
+  return fetch(`${url}&i=${movie.imdbId}`)
+    .then((response) => response.json())
+    .then((result) => {
+      movie.imdbId = result.imdbID;
+      movie.title = result.Title;
+      movie.rating = result.imdbRating;
+      movie.votes = result.imdbVotes;
+      movie.runtime = result.Runtime;
+      movie.year = result.Year;
+      movie.plot = result.Plot;
+      movie.directors = result.Director;
+      movie.actors = result.Actors;
+      movie.genre = result.Genre;
+      movie.language = result.Language;
+      movie.poster = result.Poster;
+      movie.writers = result.Writer;
+      return movie;
+    });
+};

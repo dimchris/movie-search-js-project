@@ -20,8 +20,6 @@ export class MovieList {
       child.setAttribute("year", movie.year);
       child.setAttribute("imdbId", movie.imdbId);
       child.setAttribute("poster", movie.poster);
-      child.setAttribute("directors", movie.directors);
-      child.setAttribute("writers", movie.writers);
       el.appendChild(child);
       if (index == 0) {
         child.classList.add("selected");
@@ -38,8 +36,6 @@ export class MovieList {
       child.setAttribute("year", movie.year);
       child.setAttribute("imdbId", movie.imdbId);
       child.setAttribute("poster", movie.poster);
-      child.setAttribute("direstors", movie.directors);
-      child.setAttribute("writers", movie.writers);
       this._el.appendChild(child);
     }
   }
@@ -48,10 +44,6 @@ export class MovieList {
     movies.forEach((movie) => {
       this.addMovie(movie, this.el);
     });
-  }
-
-  removeMovie(imdbId) {
-    this.movies = this.movies.filter((movie) => movie.imdbId !== imdbId);
   }
 
   set movies(movies) {
@@ -63,10 +55,6 @@ export class MovieList {
 
   get movies() {
     return this._movies;
-  }
-
-  findMovie(imdbId) {
-    return this._movies.find((movie) => movie.imdbId === imdbId);
   }
 
   _addHandler(handler) {

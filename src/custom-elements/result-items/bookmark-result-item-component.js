@@ -1,4 +1,4 @@
-import { Bookmark } from "../model/bookmark";
+import { Bookmark } from "../../model/bookmark-item";
 
 // Result item component
 export default class BookmarkResultItemComponent extends HTMLElement {
@@ -9,8 +9,7 @@ export default class BookmarkResultItemComponent extends HTMLElement {
     const imdbId = this.getAttribute("imdbId");
     const poster = this.getAttribute("poster");
     const bookmarkId = this.getAttribute("bookmark-id");
-    this._bookmarkItem = new Bookmark(imdbId, title, year, poster);
-    this._bookmarkItem._id = bookmarkId;
+    this._bookmarkItem = new Bookmark(imdbId, title, year, poster, bookmarkId);
     this.attachShadow({ mode: "open" });
   }
 
@@ -58,6 +57,7 @@ export default class BookmarkResultItemComponent extends HTMLElement {
 
   set bookmark(bookmark) {
     this._bookmarkItem = bookmark;
+    this.render();
   }
 
   get bookmark() {
