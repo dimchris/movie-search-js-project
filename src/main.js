@@ -63,21 +63,8 @@ function init() {
     user.token = token;
     login(user);
   }
-  axios.interceptors.response.use(
-    (response) => {
-      return response;
-    },
-    (error) => {
-      if (error.response.status === 401 && user.token) {
-        alerts.error(
-          "You have been logged out",
-          "The session has been expired. Please login again"
-        );
-        logout();
-      }
-    }
-  );
 }
+
 function configureAxios(user) {
   axios.defaults.headers.common["Authorization"] = `bearer ${user.token}`;
 }
@@ -93,6 +80,7 @@ function login(user) {
 function logout() {
   menubar.setAttribute("login-state", ""); // must be a falsy string value
   movieDetails.setAttribute("save-button", "");
+  bookmarkDetails.clear();
   // delete user details and local storage
   user.id = null;
   user.token = null;

@@ -91,9 +91,9 @@ export class Movie {
         padding: 5px;
         width: fit-content;
         color: white;
-        background-color: rgba(255, 255, 255, 0.055);
+        background-color: transparent;
         border-style: none;
-        border-radius: 20px;
+        font-size: 1.6rem; 
         transition: 1s ease;
       }
  
@@ -102,7 +102,7 @@ export class Movie {
       }
 
       .add-to-list-button:hover {
-        background-color: rgb(103, 202, 103);
+        color: red;
         transition: 1s ease;
       }
 
@@ -112,7 +112,7 @@ export class Movie {
       }
 
       .remove-from-list-button:hover {
-        background-color: rgb(228 104 104);
+        color: rgb(228 104 104);
         transition: 1s ease;
       }
 
@@ -125,9 +125,9 @@ export class Movie {
     `;
 
     const buttons = removeButton
-      ? '<button class="remove-from-list-button" type="button">remove</button>'
+      ? '<button class="remove-from-list-button" type="button">&#10008;</button>'
       : saveButton
-      ? '<button class="add-to-list-button" type="button">save</button>'
+      ? '<button class="add-to-list-button" type="button">&#10084;</button>'
       : "";
 
     el.innerHTML =

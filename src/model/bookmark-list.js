@@ -58,6 +58,13 @@ export class BookmarkList {
         `cd-bookmark-result-item[bookmark-id="${id}"]`
       );
       if (el) {
+        let itemEl = el.previousSibling;
+        if (!itemEl) {
+          itemEl = el.nextSibling;
+        }
+        if (itemEl) {
+          itemEl.click();
+        }
         el.remove();
       }
     }

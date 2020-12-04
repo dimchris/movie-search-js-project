@@ -69,13 +69,13 @@ a {
                 `
                 : this._createAccount
                 ? `
-                    <input type="text" placeholder="username">
+                    <input type="text" placeholder="e-mail">
                     <input type="password" placeholder="password">
                     <input type="button" value="Register">
                     <a href="#">or login</a>
                 `
                 : `
-                    <input type="text" placeholder="username">
+                    <input type="text" placeholder="e-mail">
                     <input type="password" placeholder="password">
                     <input type="button" value="Login">
                     <a href="#">or create new account</a>
@@ -104,7 +104,7 @@ a {
                 })
                 .catch((error) => {
                   alerts.error(
-                    "Cound not create an accout",
+                    "Cound not create an account",
                     error.response.data.message
                   );
                 });
