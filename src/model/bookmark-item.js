@@ -3,7 +3,7 @@ import { MovieItem } from "./movie-item";
 export class Bookmark extends MovieItem {
   constructor(imdbId, title, year, poster, id = null) {
     super(imdbId, title, year, poster);
-    // this._id = id; // this is the db id
+    this._id = id; // this is the db id
   }
 
   render(el) {
@@ -100,11 +100,11 @@ export class Bookmark extends MovieItem {
     }
   }
 
-  // set id(id) {
-  //   this._id = id;
-  // }
+  set id(id) {
+    this._id = id;
+  }
 
-  // get id() {
-  //   return this._id;
-  // }
+  get id() {
+    return this._id;
+  }
 }
