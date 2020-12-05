@@ -6,7 +6,6 @@ import SearchBarComponent from "./custom-elements/search-bar-component/search-ba
 import LoginComponent from "./custom-elements/menu-bar-component/account-component/login-component/login-component";
 import PopUpComponent from "./custom-elements/shared/dialogs/pop-up-component";
 import AccountComponent from "./custom-elements/menu-bar-component/account-component/account-component";
-import { Bookmark } from "./model/bookmark-item";
 import {
   bookmarkService,
   directorService,
@@ -16,18 +15,17 @@ import {
 import ConfirmDialogComponent from "./custom-elements/shared/dialogs/confirm-dialog-component";
 import InputDialogComponent from "./custom-elements/shared/dialogs/input-dialog-component";
 import CarrouselComponent from "./custom-elements/shared/carrousel-component";
-import BookmarkResultItemComponent from "./custom-elements/result-items/bookmark-result-item-component";
 import axios from "./configuration/axios";
 import user from "./state/user";
 import bookmarks from "./state/bookmarks";
 import movies from "./state/movies";
 import alerts from "./utilities/alerts";
+import { MovieItem } from "./model/movie-item";
 
 customElements.define("cd-movie-details", MovieDetailsComponent);
 customElements.define("cd-menubar", MenubarComponent);
 customElements.define("cd-rating", RatingComponent);
 customElements.define("cd-movie-result-item", MovieResultItemComponent);
-customElements.define("cd-bookmark-result-item", BookmarkResultItemComponent);
 customElements.define("cd-movie-search-bar", SearchBarComponent);
 customElements.define("cd-account", AccountComponent);
 customElements.define("cd-login", LoginComponent);
@@ -214,12 +212,12 @@ function movieListItemClickHandler(event) {
 }
 // movie list click handler
 function bookMarkListItemClickHandler(event) {
-  let bookmarkItem = event.target.closest("cd-bookmark-result-item");
+  let bookmarkItem = event.target.closest("cd-movie-result-item");
   if (bookmarkItem) {
     // on click update the item details
     // remove select class from all items
     event.currentTarget
-      .querySelectorAll("cd-bookmark-result-item")
+      .querySelectorAll("cd-movie-result-item")
       .forEach((item) => {
         item.classList.remove("selected");
       });
@@ -235,13 +233,13 @@ function bookMarkListItemClickHandler(event) {
 
 async function initWatchListPage() {
   bookmarkResults = await bookmarkService.getAll();
-  bookmarks.bookmarks = prepareBookMarksFromResponseData(bookmarkResults.data); // bookmarkItems
+  bookmarks.movies = prepareBookMarksFromResponseData(bookmarkResults.data); // bookmarkItems
   bookmarks.render(bookmarkItems, bookMarkListItemClickHandler);
 }
 
 function prepareBookMarksFromResponseData(bookmarks) {
   return bookmarks.map((bookmark) => {
-    const bkmark = new Bookmark(
+    const bkmark = new MovieItem(
       bookmark.movie.imdbId,
       bookmark.movie.title,
       bookmark.movie.year,

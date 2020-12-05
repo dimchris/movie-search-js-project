@@ -20,6 +20,8 @@ export class MovieList {
       child.setAttribute("year", movie.year);
       child.setAttribute("imdbId", movie.imdbId);
       child.setAttribute("poster", movie.poster);
+      child.setAttribute("bookmark-id", movie._id);
+
       el.appendChild(child);
       if (index == 0) {
         child.classList.add("selected");
@@ -36,6 +38,7 @@ export class MovieList {
       child.setAttribute("year", movie.year);
       child.setAttribute("imdbId", movie.imdbId);
       child.setAttribute("poster", movie.poster);
+      child.setAttribute("bookmark-id", movie._id);
       this._el.appendChild(child);
     }
   }
@@ -44,6 +47,25 @@ export class MovieList {
     movies.forEach((movie) => {
       this.addMovie(movie, this.el);
     });
+  }
+
+  removeBookmark(id) {
+    // this.bookmarks = this.bookmarks.filter((bookmark) => bookmark._id !== id);
+    if (this._el) {
+      const el = this._el.querySelector(
+        `cd-movie-result-item[bookmark-id="${id}"]`
+      );
+      if (el) {
+        let itemEl = el.previousSibling;
+        if (!itemEl) {
+          itemEl = el.nextSibling;
+        }
+        if (itemEl) {
+          itemEl.click();
+        }
+        el.remove();
+      }
+    }
   }
 
   set movies(movies) {

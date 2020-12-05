@@ -1,11 +1,10 @@
 export class MovieItem {
-  constructor(imdbId, title, year, poster) {
+  constructor(imdbId, title, year, poster, id = null) {
     this.imdbId = imdbId;
     this.title = title;
     this.year = year;
     this.poster = poster;
-    // this.directors = MovieItem.getArrayFromString(directors);
-    // this.writers = MovieItem.getArrayFromString(writers);
+    this._id = id;
   }
 
   render(el) {
@@ -100,5 +99,13 @@ export class MovieItem {
         zoomArea.querySelector("img").setAttribute("src", this.poster);
       });
     }
+  }
+
+  set id(id) {
+    this._id = id;
+  }
+
+  get id() {
+    return this._id;
   }
 }

@@ -1,3 +1,3 @@
-import { BookmarkList } from "../model/bookmark-list";
+import { MovieList } from "../model/movie-list";
 
-export default new BookmarkList();
+export default new MovieList();
