@@ -1,3 +1,4 @@
+import { bookmarkService } from "../services/services";
 import alerts from "../utilities/alerts";
 
 export class Movie {
@@ -107,7 +108,8 @@ export class Movie {
       }
 
       .add-to-list-button.selected {
-        background-color: rgb(103, 202, 103);
+        background-color: transparent;
+        color:red;
         transition: 1s ease;
       }
 
@@ -151,9 +153,21 @@ export class Movie {
         </div>
         `;
     if (saveButton) {
+      // check if already a bookmarl
+      bookmarkService.getBookMarkByMovieImdb(this.imdbId).then((response) => {
+        if (response.data != false) {
+          el.querySelector("button.add-to-list-button").classList.add(
+            "selected"
+          );
+        }
+      });
       el.querySelector("button.add-to-list-button").addEventListener(
         "click",
-        () => {
+        (e) => {
+          if (e.target.classList.contains("selected")) {
+            return;
+          }
+          e.target.classList.add("selected");
           let event = null;
           event = new CustomEvent("bookmark-added");
           event.movie = this;

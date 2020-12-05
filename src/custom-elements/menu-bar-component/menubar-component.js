@@ -1,7 +1,8 @@
 export default class MenubarComponent extends HTMLElement {
   constructor() {
     super();
-    this._loginState = this.getAttribute("login-state") || false;
+    this._loginState =
+      this.getAttribute("login-state") === "true" ? true : false;
     this.attachShadow({
       mode: "open",
     });
@@ -66,7 +67,7 @@ export default class MenubarComponent extends HTMLElement {
     }
     switch (name) {
       case "login-state":
-        this._loginState = newValue;
+        this._loginState = newValue === "true" ? true : false;
         this._render();
         this.shadowRoot
           .getElementById("menu-item-search")

@@ -23,6 +23,10 @@ export default class BookmarkService {
     return axios.delete(`/users/${user.id}/bookmarks/${bookmarkId}`);
   }
 
+  async getBookMarkByMovieImdb(imdbId) {
+    return axios.get(`/users/${user.id}/bookmarks?imdbId=${imdbId}`);
+  }
+
   checkToken() {
     if (user && user.id && user.token) {
       return;
