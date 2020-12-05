@@ -181,7 +181,7 @@ export class Movie {
         (e) => {
           alerts.confirm(
             "Remove bookmark",
-            "You are about to remove this bookmark. Are you sure?",
+            `You are about to remove <i>${this.title}</i> from your bookmarks. Are you sure?`,
             () => {
               const event = new CustomEvent("bookmark-removed");
               event.movie = this;

@@ -84,9 +84,17 @@ export default class App {
             imdbId: movie.imdbId,
           });
         })
-        .then(() => {
-          alerts.alert("Success", "Movie has been successfuly saved");
-          this.initWatchListPage();
+        .then((response) => {
+          // get bookmark id
+          const bookmarkId = response.data._id;
+          const bookmarkItem = new MovieItem(
+            movieItem.imdbId,
+            movieItem.title,
+            movieItem.year,
+            movieItem.poster,
+            bookmarkId
+          );
+          bookmarks.addMovie(bookmarkItem);
         })
         .catch((error) => {
           alerts.error("Movie could not be saved", error.response.data.message);
