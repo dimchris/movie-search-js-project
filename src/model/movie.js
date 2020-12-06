@@ -16,7 +16,8 @@ export class Movie {
     genre,
     language,
     poster,
-    id
+    id,
+    tags
   ) {
     this.imdbId = imdbId;
     this.title = title;
@@ -32,6 +33,7 @@ export class Movie {
     this.poster = poster;
     this.writers = writers;
     this._bookmarkId = id;
+    this.tags = tags;
   }
 
   clear() {
@@ -137,23 +139,43 @@ export class Movie {
       `
         <div class="details-title">
         ${this.title}${buttons}
-        <div class="tags"></div>
+        ${
+          this.tags
+            ? `
+        <cd-tags tags="${this.tags.join(
+          ","
+        )}" delete="true" add="true"></cd-tags>
+        `
+            : ""
+        }
         <cd-rating score="${this.rating}"></cd-rating>
         </div>
         <div class="details-subtitle">
-            <span><b>IMDb</b> ${this.rating}(${this.votes})</span><span>${this.runtime}</span><span>${this.year}</span>
+            <span><b>IMDb</b> ${this.rating}(${this.votes})</span><span>${
+        this.runtime
+      }</span><span>${this.year}</span>
         </div>
         <div class="details-more">
           <div class="details-description">${this.plot}</div>
-          <div class="details-writers"><span class="label">Writers</span> ${this.writers}</div>
-          <div class="details-directorss"><span class="label">Directors</span> ${this.directors}</div>
-          <div class="details-actors"><span class="label">Starring</span> ${this.actors}</div>
-          <div class="details-genres"><span class="label">Genres</span> ${this.genre}</div>
-          <div class="details-language"><span class="label">Language</span> ${this.language}</div>
+          <div class="details-writers"><span class="label">Writers</span> ${
+            this.writers
+          }</div>
+          <div class="details-directorss"><span class="label">Directors</span> ${
+            this.directors
+          }</div>
+          <div class="details-actors"><span class="label">Starring</span> ${
+            this.actors
+          }</div>
+          <div class="details-genres"><span class="label">Genres</span> ${
+            this.genre
+          }</div>
+          <div class="details-language"><span class="label">Language</span> ${
+            this.language
+          }</div>
         </div>
         `;
     if (saveButton) {
-      // check if already a bookmarl
+      // check if already a bookmark
       bookmarkService.getBookMarkByMovieImdb(this.imdbId).then((response) => {
         if (response.data != false) {
           el.querySelector("button.add-to-list-button").classList.add(
@@ -191,6 +213,25 @@ export class Movie {
           );
         }
       );
+    }
+
+    const tagEl = el.querySelector("cd-tags");
+    if (tagEl) {
+      tagEl.updateHandler = (tags) => {
+        return bookmarkService
+          .updateBookMarkTags(this._bookmarkId, {
+            tags,
+          })
+          .then((tags) => {
+            // send update tags event to refresh tags
+            const event = new CustomEvent("tags-updated", {
+              bubbles: true,
+              composed: true,
+            });
+            el.dispatchEvent(event);
+            return tags;
+          });
+      };
     }
   }
 }

@@ -27,6 +27,18 @@ export default class BookmarkService {
     return axios.get(`/users/${user.id}/bookmarks?imdbId=${imdbId}`);
   }
 
+  async getAllTags() {
+    return axios.get(`/users/${user.id}/bookmarks/tags`);
+  }
+
+  async getBookmarksByTags(tags) {
+    return axios.get(`/users/${user.id}/bookmarks?tags=${tags.join(",")}`);
+  }
+
+  async updateBookMarkTags(id, tags) {
+    return axios.patch(`/users/${user.id}/bookmarks/${id}`, tags);
+  }
+
   checkToken() {
     if (user && user.id && user.token) {
       return;

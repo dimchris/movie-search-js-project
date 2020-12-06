@@ -1,6 +1,7 @@
 import MovieDetailsComponent from "../custom-elements/movie-details-component/movie-details-component";
 import MenubarComponent from "../custom-elements/menu-bar-component/menubar-component";
 import RatingComponent from "../custom-elements/shared/rating-component";
+import TagsComponent from "../custom-elements/shared/tags-component";
 import MovieResultItemComponent from "../custom-elements/movie-result-item-component/movie-result-item-component";
 import SearchBarComponent from "../custom-elements/search-bar-component/search-bar-component";
 import LoginComponent from "../custom-elements/menu-bar-component/account-component/login-component/login-component";
@@ -166,8 +167,9 @@ export default class App {
     }
 
     this.bookmarkDetails.getResults = async (movie) => {
-      const result = await movieService.getByImdb(movie.imdbId);
-      const returnedMovie = result.data[0];
+      const result = await bookmarkService.getBookMarkByMovieImdb(movie.imdbId);
+      const returnedMovie = result.data[0].movie;
+      const tags = result.data[0].tags;
       movie.imdbId = returnedMovie.imdbId;
       movie.title = returnedMovie.title;
       movie.rating = returnedMovie.rating;
@@ -179,6 +181,7 @@ export default class App {
       movie.genre = returnedMovie.genre;
       movie.language = returnedMovie.language;
       movie.poster = returnedMovie.poster;
+      movie.tags = tags;
       // get directors
       let directorArray = [];
       for (let director of returnedMovie.directors) {
@@ -218,6 +221,18 @@ export default class App {
           return movie;
         });
     };
+
+    this.bookmarkDetails.addEventListener("tags-updated", (event) => {
+      // update tags
+      bookmarkService.getAllTags().then((response) => {
+        this.tagFilters.setAttribute("tags", response.data.join(","));
+      });
+      // bookmarkService.getAll().then((bookmarkResults) => {
+      //   bookmarks.movies = this.prepareBookMarksFromResponseData(
+      //     bookmarkResults.data
+      //   ); // bookmarkItems
+      // });
+    });
   }
 
   defineRefs() {
@@ -234,6 +249,7 @@ export default class App {
     this.watchlistPage = document.getElementById("watchlist");
     this.accountPage = document.getElementById("account");
     this.accountComp = document.querySelector("cd-account");
+    this.tagFilters = document.getElementById("tag-filters");
     this.bookmarkResults;
   }
 
@@ -249,6 +265,7 @@ export default class App {
     customElements.define("cd-confirm", ConfirmDialogComponent);
     customElements.define("cd-input", InputDialogComponent);
     customElements.define("cd-carrousel", CarrouselComponent);
+    customElements.define("cd-tags", TagsComponent);
   }
 
   init() {
@@ -314,14 +331,36 @@ export default class App {
 
   async initWatchListPage() {
     try {
-      this.bookmarkResults = await bookmarkService.getAll();
+      const bookmarkResults = await bookmarkService.getAll();
       bookmarks.movies = this.prepareBookMarksFromResponseData(
-        this.bookmarkResults.data
+        bookmarkResults.data
       ); // bookmarkItems
       bookmarks.render(
         this.bookmarkItems,
         this.bookMarkListItemClickHandler.bind(this)
       );
+      bookmarkService.getAllTags().then((response) => {
+        this.tagFilters.setAttribute("tags", response.data.join(","));
+      });
+      this.tagFilters.selectHandler = async (el, tags) => {
+        el.classList.toggle("selected");
+        let selectedEls = [
+          ...this.tagFilters.shadowRoot.querySelectorAll(".selected"),
+        ];
+        let selectedTags = null;
+        let bookmarkResults;
+        if (selectedEls && selectedEls.length > 0) {
+          selectedTags = selectedEls.map((item) => item.id.split("-")[1]);
+          bookmarkResults = await bookmarkService.getBookmarksByTags(
+            selectedTags
+          );
+        } else {
+          bookmarkResults = await bookmarkService.getAll();
+        }
+        bookmarks.movies = this.prepareBookMarksFromResponseData(
+          bookmarkResults.data
+        ); // bookmarkItems
+      };
     } catch (e) {
       return;
     }
