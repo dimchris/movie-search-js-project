@@ -70,7 +70,6 @@ export default class MovieDetailsComponent extends HTMLElement {
         break;
       case "bookmark-id":
         this._movie._bookmarkId = newValue;
-        this.render();
         break;
       default:
         return;
