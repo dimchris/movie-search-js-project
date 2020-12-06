@@ -350,7 +350,7 @@ export default class App {
         let selectedTags = null;
         let bookmarkResults;
         if (selectedEls && selectedEls.length > 0) {
-          selectedTags = selectedEls.map((item) => item.id.split("-")[1]);
+          selectedTags = selectedEls.map((item) => item.id.split("tag-")[1]);
           bookmarkResults = await bookmarkService.getBookmarksByTags(
             selectedTags
           );

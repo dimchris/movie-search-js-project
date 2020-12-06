@@ -32,7 +32,9 @@ export default class BookmarkService {
   }
 
   async getBookmarksByTags(tags) {
-    return axios.get(`/users/${user.id}/bookmarks?tags=${tags.join(",")}`);
+    return axios.get(
+      `/users/${user.id}/bookmarks?tags=${encodeURI(tags.join(","))}`
+    );
   }
 
   async updateBookMarkTags(id, tags) {

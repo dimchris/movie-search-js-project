@@ -158,9 +158,10 @@ export default class InputDialogComponent extends HTMLElement {
       if (this._inputType === "text-input") {
         if (!validation.isAlphanumeric(input)) {
           alerts.error(
-            "Tag name is now valid",
+            "Input is not valis",
             "Name can be only alphanumeric. Please try again."
           );
+          return;
         }
       }
       if (this.onConfirmHandler) {

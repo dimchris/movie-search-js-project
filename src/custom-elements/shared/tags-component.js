@@ -88,7 +88,7 @@ export default class TagsComponent extends HTMLElement {
       .querySelector(".tags")
       .addEventListener("click", (event) => {
         if (event.target.classList.contains("delete")) {
-          const name = event.target.parentNode.id.split("-")[1];
+          const name = event.target.parentNode.id.split("tag-")[1];
           this.removeTag(name);
         } else {
           if (this._selectHandler) {
@@ -118,23 +118,25 @@ export default class TagsComponent extends HTMLElement {
   }
 
   addTag(tag) {
-    this._tags = [...this._tags, tag];
+    const newTags = [...this._tags, tag];
     if (!this._updateHandler) {
       this._render();
       return;
     }
-    this._updateHandler(this._tags, this).then(() => {
+    this._updateHandler(newTags, this).then(() => {
+      this._tags = newTags;
       this._render();
     });
   }
 
   removeTag(tag) {
-    this._tags = this._tags.filter((item) => tag !== item);
+    const newTags = this._tags.filter((item) => tag !== item);
     if (!this._updateHandler) {
       this._render();
       return;
     }
-    this._updateHandler(this._tags, this).then(() => {
+    this._updateHandler(newTags, this).then(() => {
+      this._tags = newTags;
       this._render();
     });
   }
