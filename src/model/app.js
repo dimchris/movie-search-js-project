@@ -95,7 +95,9 @@ export default class App {
             movieItem.poster,
             bookmarkId
           );
-          bookmarks.addMovie(bookmarkItem);
+          if (!this.tagFilters.shadowRoot.querySelector(".selected")) {
+            bookmarks.addMovie(bookmarkItem);
+          }
         })
         .catch((error) => {
           alerts.error("Movie could not be saved", error.response.data.message);
@@ -227,11 +229,6 @@ export default class App {
       bookmarkService.getAllTags().then((response) => {
         this.tagFilters.setAttribute("tags", response.data.join(","));
       });
-      // bookmarkService.getAll().then((bookmarkResults) => {
-      //   bookmarks.movies = this.prepareBookMarksFromResponseData(
-      //     bookmarkResults.data
-      //   ); // bookmarkItems
-      // });
     });
   }
 
@@ -360,6 +357,9 @@ export default class App {
         bookmarks.movies = this.prepareBookMarksFromResponseData(
           bookmarkResults.data
         ); // bookmarkItems
+        if (!bookmarks.movies || !bookmarks.movies.length) {
+          this.bookmarkDetails.clear();
+        }
       };
     } catch (e) {
       return;
