@@ -21,7 +21,7 @@ import user from "../state/user";
 import bookmarks from "../state/bookmarks";
 import movies from "../state/movies";
 import alerts from "../utilities/alerts";
-import { MovieItem } from "../model/movie-item";
+import { MovieItem } from "./movie-item";
 export default class App {
   constructor() {
     this.init();

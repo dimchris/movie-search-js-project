@@ -9,11 +9,12 @@ export default class TagsComponent extends HTMLElement {
         : [];
     this._delete = this.getAttribute("delete") == "true" ? true : false;
     this._add = this.getAttribute("add") == "true" ? true : false;
+    this._select = this.getAttribute("select") == "true" ? true : false;
     this._shadowRoot = this.attachShadow({ mode: "open" });
   }
 
   static get observedAttributes() {
-    return ["tags", "delete", "add"];
+    return ["tags", "delete", "add", "select"];
   }
 
   connectedCallback() {
@@ -30,11 +31,11 @@ export default class TagsComponent extends HTMLElement {
         cursor: default;
       }
       span.tag{
-        background-color: green;
+        background-color: dimgrey;
         border-radius: 5px;
         padding: 2px 5px;
         margin: 0px 2px;
-        transition: font-size 500ms ease;
+        transition: background-color 500ms ease;
       }
       .delete:hover{
         color: red;
@@ -47,8 +48,11 @@ export default class TagsComponent extends HTMLElement {
         color: green;
         transition: color 1s ease;
       }
-      .selected{
-        font-size: 1.2rem;
+      span.tag.selected{
+        background-color: forestgreen
+      }
+      span.tag.select:hover{
+        background-color: forestgreen  
       }
       </style>
       `;
@@ -57,7 +61,9 @@ export default class TagsComponent extends HTMLElement {
       `
         <span class="tags">
         ${this._tags.reduce((total, item) => {
-          return (total += `<span class="tag" id="tag-${item}">#${item} ${
+          return (total += `<span class="tag${
+            this._select ? " select" : ""
+          }" id="tag-${item}">#${item} ${
             this._delete
               ? `<span class="delete" title="remove tag">&times;</span>`
               : ""
@@ -110,6 +116,9 @@ export default class TagsComponent extends HTMLElement {
         this._delete = newVal == "true" ? true : false;
         break;
       case "add":
+        this.add = newVal == "true" ? true : false;
+        break;
+      case "select":
         this.add = newVal == "true" ? true : false;
         break;
     }

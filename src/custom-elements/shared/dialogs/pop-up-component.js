@@ -39,7 +39,7 @@ export default class PopUpComponent extends HTMLElement {
                 min-height:30%;
                 background-color:  var(--primary-color);
                 color: white;
-                box-shadow: white 0 0px 20px;
+                box-shadow: black 10px 10px 20px;
             }
             .pop-up *{
                 margin: 10px auto;

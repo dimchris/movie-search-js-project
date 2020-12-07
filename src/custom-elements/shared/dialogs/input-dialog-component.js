@@ -62,7 +62,7 @@ export default class InputDialogComponent extends HTMLElement {
                 min-height:30%;
                 background-color:  var(--primary-color);
                 color: white;
-                box-shadow: white 0 0px 20px;
+                box-shadow: black 10px 10px 20px;
             }
             .pop-up *{
                 margin: 10px auto;
@@ -72,7 +72,7 @@ export default class InputDialogComponent extends HTMLElement {
             .pop-up div{
                 width:80%;
             }
-            input[type=button]{
+            input[type=button],input[type=submit]{
                 width:100%;
                 align-self: stretch;
                 border-style: none;
@@ -80,7 +80,7 @@ export default class InputDialogComponent extends HTMLElement {
                 background-color: transparent;
                 color: white;
             }
-            input[type=button]:hover{
+            input[type=button]:hover,input[type=submit]{
                 color: rgba(255, 217, 0, 0.788);
             }
             .title{
@@ -96,8 +96,10 @@ export default class InputDialogComponent extends HTMLElement {
             .buttons{
                 display:flex;
                 flex-direction: column;
-                justify-content: flex-end;
                 height:100%;
+            }
+            form{
+                justify-content: flex-end;
             }
             input[type=text]{
                 border-style: solid;
@@ -123,18 +125,25 @@ export default class InputDialogComponent extends HTMLElement {
       style +
       `
       <div class="pop-up pop-up-${this._type}">
-        <div class="title">
-           ${this._title}
-        </div>
-        <div class="message">${this._message}</div>
-            ${input}
-        <div class="buttons">
-            <input class="ok" type="button" value="ok">
+      <div class="title">
+      ${this._title}
+      </div>
+      <div class="message">${this._message}</div>
+      <form>
+      ${input}
+      <div class="buttons">
+            <input class="ok" type="submit" value="ok">
             <input class="cancel" type="button" value="cancel">
+            </form>
         </div>
       </div>
     `;
-
+    this.shadowRoot
+      .querySelector("form")
+      .addEventListener("submit", (event) => {
+        event.preventDefault();
+        event.target.querySelector("input[type=submit]").click();
+      });
     if (this._hidden) {
       this.style.display = "none";
     } else {

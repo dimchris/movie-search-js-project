@@ -44,49 +44,61 @@ export default class LoginComponent extends HTMLElement {
                     color: grey;
                     font-style: italic;
                 }   
-                input[type=button]{
+                input[type=submit],input[type=button]{
                     color: grey;
                     color: white;
                     background-color: transparent;
                 }
-                input[type=button]:hover{
+                input[type=submit]:hover,input[type=button]:hover{
                     color: rgba(255, 217, 0, 0.788);
                 }
-a {
-    color: orange !important;
-}
-
+                form *{
+                  width: 100%
+                }
+                a {
+                    color: orange !important;
+                }
             </style>
         `;
     this.shadowRoot.innerHTML =
       style +
-      `
-            ${
-              this._loginState
-                ? `
-                    <input type="button" value="Logout">
-
-                `
-                : this._createAccount
-                ? `
-                    <input type="text" placeholder="e-mail">
-                    <input type="password" placeholder="password">
-                    <input type="button" value="Register">
-                    <a href="#">or login</a>
-                `
-                : `
-                    <input type="text" placeholder="e-mail">
-                    <input type="password" placeholder="password">
-                    <input type="button" value="Login">
-                    <a href="#">or create new account</a>
+      `     
+      ${
+        this._loginState
+          ? `
+                <input type="button" value="Logout">
                 
                 `
-            }
+          : this._createAccount
+          ? `
+                    <form>
+                    <input type="text" placeholder="e-mail">
+                    <input type="password" placeholder="password">
+                    <input type="submit" value="Register">
+                    </form>
+                    <a href="#">or login</a>
+                `
+          : `
+                    <form>
+                    <input type="text" placeholder="e-mail">
+                    <input type="password" placeholder="password">
+                    <input type="submit" value="Login">
+                    </form>
+                    <a href="#">or create new account</a>
+                `
+      }
         `;
 
     if (!this._loginState) {
       this.shadowRoot
-        .querySelector("input[type=button]")
+        .querySelector("form")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          const button = event.target.querySelector("input[type=submit]");
+          button.click();
+        });
+      this.shadowRoot
+        .querySelector("input[type=submit]")
         .addEventListener("click", () => {
           const username = this.shadowRoot.querySelector("input[type=text]")
             .value;
