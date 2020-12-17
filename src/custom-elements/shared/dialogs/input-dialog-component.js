@@ -160,7 +160,7 @@ export default class InputDialogComponent extends HTMLElement {
       inputEl.selectedTags = this._selectedTags;
     }
 
-    this.shadowRoot.querySelector(".ok").addEventListener("click", () => {
+    this.shadowRoot.querySelector(".ok").addEventListener("click", (event) => {
       event.preventDefault();
       // sanitize input
       this.setAttribute("hide", "true");
