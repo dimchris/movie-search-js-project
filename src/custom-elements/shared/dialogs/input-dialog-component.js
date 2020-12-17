@@ -161,14 +161,15 @@ export default class InputDialogComponent extends HTMLElement {
     }
 
     this.shadowRoot.querySelector(".ok").addEventListener("click", () => {
+      event.preventDefault();
       // sanitize input
       this.setAttribute("hide", "true");
       let input = inputEl.value;
       if (this._inputType === "text-input") {
         if (!validation.isAlphanumeric(input)) {
           alerts.error(
-            "Input is not valis",
-            "Name can be only alphanumeric. Please try again."
+            "Input is not valid",
+            "Name can not include spaces or/and special characters."
           );
           return;
         }

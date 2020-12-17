@@ -72,19 +72,19 @@ export default class LoginComponent extends HTMLElement {
           : this._createAccount
           ? `
                     <form>
-                    <input type="text" placeholder="e-mail">
-                    <input type="password" placeholder="password">
-                    <input type="submit" value="Register">
+                    <input id="email" type="text" placeholder="e-mail">
+                    <input id="password" type="password" placeholder="password">
+                    <input id="register-btn" type="submit" value="Register">
                     </form>
-                    <a href="#">or login</a>
+                    <a id="switch-link" href="#">or login</a>
                 `
           : `
                     <form>
-                    <input type="text" placeholder="e-mail">
-                    <input type="password" placeholder="password">
-                    <input type="submit" value="Login">
+                    <input id="email" type="text" placeholder="e-mail">
+                    <input id="password" type="password" placeholder="password">
+                    <input id="login-btn" type="submit" value="Login">
                     </form>
-                    <a href="#">or create new account</a>
+                    <a id="switch-link" href="#">or create new account</a>
                 `
       }
         `;
@@ -99,7 +99,8 @@ export default class LoginComponent extends HTMLElement {
         });
       this.shadowRoot
         .querySelector("input[type=submit]")
-        .addEventListener("click", () => {
+        .addEventListener("click", (event) => {
+          event.preventDefault();
           const username = this.shadowRoot.querySelector("input[type=text]")
             .value;
           const password = this.shadowRoot.querySelector("input[type=password]")
