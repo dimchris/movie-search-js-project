@@ -127,6 +127,9 @@ export default class TagsComponent extends HTMLElement {
   }
 
   addTag(tag) {
+    if (!tag || !tag.length || this._tags.includes(tag)) {
+      return;
+    }
     const newTags = [...this._tags, tag];
     if (!this._updateHandler) {
       this._render();
