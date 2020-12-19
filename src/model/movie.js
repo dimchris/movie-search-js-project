@@ -1,5 +1,5 @@
-import { bookmarkService } from "../services/services";
-import alerts from "../utilities/alerts";
+import { bookmarkService } from '../services/services';
+import alerts from '../utilities/alerts';
 
 export class Movie {
   constructor(
@@ -132,7 +132,7 @@ export class Movie {
       ? '<button class="remove-from-list-button" type="button">&#10008;</button>'
       : saveButton
       ? '<button class="add-to-list-button" type="button">&#10084;</button>'
-      : "";
+      : '';
 
     el.innerHTML =
       style +
@@ -140,13 +140,13 @@ export class Movie {
         <div class="details-title">
         ${this.title}${buttons}
         ${
-          this.tags
+          this._bookmarkId
             ? `
-        <cd-tags tags="${this.tags.join(
-          ","
-        )}" delete="true" add="true"></cd-tags>
+        <cd-tags tags="${
+          this.tags ? this.tags.join(',') : ''
+        }" delete="true" add="true"></cd-tags>
         `
-            : ""
+            : ''
         }
         <cd-rating score="${this.rating}"></cd-rating>
         </div>
@@ -178,36 +178,40 @@ export class Movie {
       // check if already a bookmark
       bookmarkService.getBookMarkByMovieImdb(this.imdbId).then((response) => {
         if (response.data != false) {
-          el.querySelector("button.add-to-list-button").classList.add(
-            "selected"
+          el.querySelector('button.add-to-list-button').classList.add(
+            'selected'
           );
         }
       });
-      el.querySelector("button.add-to-list-button").addEventListener(
-        "click",
+      el.querySelector('button.add-to-list-button').addEventListener(
+        'click',
         (e) => {
-          if (e.target.classList.contains("selected")) {
+          if (e.target.classList.contains('selected')) {
             return;
           }
-          e.target.classList.add("selected");
+          e.target.classList.add('selected');
           let event = null;
-          event = new CustomEvent("bookmark-added");
-          event.movie = this;
+          event = new CustomEvent('bookmark-added');
+          event.movie = {
+            ...this,
+          };
           el.dispatchEvent(event);
         }
       );
     }
     if (removeButton) {
-      el.querySelector("button.remove-from-list-button").addEventListener(
-        "click",
+      el.querySelector('button.remove-from-list-button').addEventListener(
+        'click',
         (e) => {
           alerts.confirm(
-            "Remove bookmark",
+            'Remove bookmark',
             `You are about to remove <i>${this.title}</i> from your bookmarks. Are you sure?`,
             () => {
-              const event = new CustomEvent("bookmark-removed");
-              event.movie = this;
-              e.target.classList.toggle("selected");
+              const event = new CustomEvent('bookmark-removed');
+              event.movie = {
+                ...this,
+              };
+              e.target.classList.toggle('selected');
               el.dispatchEvent(event);
             }
           );
@@ -215,7 +219,7 @@ export class Movie {
       );
     }
 
-    const tagEl = el.querySelector("cd-tags");
+    const tagEl = el.querySelector('cd-tags');
     if (tagEl) {
       tagEl.updateHandler = (tags) => {
         return bookmarkService
@@ -224,7 +228,7 @@ export class Movie {
           })
           .then((tags) => {
             // send update tags event to refresh tags
-            const event = new CustomEvent("tags-updated", {
+            const event = new CustomEvent('tags-updated', {
               bubbles: true,
               composed: true,
             });

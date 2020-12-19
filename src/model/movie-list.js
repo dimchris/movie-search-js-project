@@ -10,21 +10,21 @@ export class MovieList {
       this._addHandler(handler);
     }
 
-    el.innerHTML = ""; // clear the children
+    el.innerHTML = ''; // clear the children
     if (this.movies == null) {
       return;
     }
     for (const [index, movie] of this.movies.entries()) {
-      const child = document.createElement("cd-movie-result-item");
-      child.setAttribute("title", movie.title);
-      child.setAttribute("year", movie.year);
-      child.setAttribute("imdbId", movie.imdbId);
-      child.setAttribute("poster", movie.poster);
-      child.setAttribute("bookmark-id", movie._id);
+      const child = document.createElement('cd-movie-result-item');
+      child.setAttribute('title', movie.title);
+      child.setAttribute('year', movie.year);
+      child.setAttribute('imdbId', movie.imdbId);
+      child.setAttribute('poster', movie.poster);
+      child.setAttribute('bookmark-id', movie._id);
 
       el.appendChild(child);
       if (index == 0) {
-        child.classList.add("selected");
+        child.classList.add('selected');
         child.click();
       }
     }
@@ -33,13 +33,14 @@ export class MovieList {
   addMovie(movie) {
     this.movies.push(movie);
     if (this._el) {
-      const child = document.createElement("cd-movie-result-item");
-      child.setAttribute("title", movie.title);
-      child.setAttribute("year", movie.year);
-      child.setAttribute("imdbId", movie.imdbId);
-      child.setAttribute("poster", movie.poster);
-      child.setAttribute("bookmark-id", movie._id);
+      const child = document.createElement('cd-movie-result-item');
+      child.setAttribute('title', movie.title);
+      child.setAttribute('year', movie.year);
+      child.setAttribute('imdbId', movie.imdbId);
+      child.setAttribute('poster', movie.poster);
+      child.setAttribute('bookmark-id', movie._id);
       this._el.appendChild(child);
+      child.click();
     }
   }
 
@@ -82,10 +83,10 @@ export class MovieList {
   _addHandler(handler) {
     if (this._el) {
       if (this._handler) {
-        this._el.removeEventListener("click", this._handler);
+        this._el.removeEventListener('click', this._handler);
       }
       this._handler = handler;
-      this._el.addEventListener("click", handler);
+      this._el.addEventListener('click', handler);
     }
   }
 }

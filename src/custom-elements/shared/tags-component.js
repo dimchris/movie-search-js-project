@@ -1,20 +1,20 @@
-import alerts from "../../utilities/alerts";
+import alerts from '../../utilities/alerts';
 
 export default class TagsComponent extends HTMLElement {
   constructor() {
     super();
     this._tags =
-      this.getAttribute("tags") && this.getAttribute("tags").length > 0
-        ? this.getAttribute("tags").split(",")
+      this.getAttribute('tags') && this.getAttribute('tags').length > 0
+        ? this.getAttribute('tags').split(',')
         : [];
-    this._delete = this.getAttribute("delete") == "true" ? true : false;
-    this._add = this.getAttribute("add") == "true" ? true : false;
-    this._select = this.getAttribute("select") == "true" ? true : false;
-    this._shadowRoot = this.attachShadow({ mode: "open" });
+    this._delete = this.getAttribute('delete') == 'true' ? true : false;
+    this._add = this.getAttribute('add') == 'true' ? true : false;
+    this._select = this.getAttribute('select') == 'true' ? true : false;
+    this._shadowRoot = this.attachShadow({ mode: 'open' });
   }
 
   static get observedAttributes() {
-    return ["tags", "delete", "add", "select"];
+    return ['tags', 'delete', 'add', 'select'];
   }
 
   connectedCallback() {
@@ -62,39 +62,39 @@ export default class TagsComponent extends HTMLElement {
         <span class="tags">
         ${this._tags.reduce((total, item) => {
           return (total += `<span class="tag${
-            this._select ? " select" : ""
+            this._select ? ' select' : ''
           }" id="tag-${item}">#${item} ${
             this._delete
               ? `<span class="delete" title="remove tag">&times;</span>`
-              : ""
+              : ''
           }</span>`);
-        }, "")}
+        }, '')}
         </span>
         ${
           this._add
             ? `
         <span class="add" title="add new tag">+</span>
         `
-            : ""
+            : ''
         }
       `;
 
     if (this._add) {
       this.shadowRoot
-        .querySelector("span.add")
-        .addEventListener("click", () => {
+        .querySelector('span.add')
+        .addEventListener('click', () => {
           alerts.input(
-            "Add a new tag",
-            "Input the name of the tag.",
+            'Add a new tag',
+            'Input the name of the tag.',
             this.addTag.bind(this)
           );
         });
     }
     this.shadowRoot
-      .querySelector(".tags")
-      .addEventListener("click", (event) => {
-        if (event.target.classList.contains("delete")) {
-          const name = event.target.parentNode.id.split("tag-")[1];
+      .querySelector('.tags')
+      .addEventListener('click', (event) => {
+        if (event.target.classList.contains('delete')) {
+          const name = event.target.parentNode.id.split('tag-')[1];
           this.removeTag(name);
         } else {
           if (this._selectHandler) {
@@ -109,17 +109,17 @@ export default class TagsComponent extends HTMLElement {
       return;
     }
     switch (name) {
-      case "tags":
-        this._tags = newVal && newVal.length > 0 ? newVal.split(",") : [];
+      case 'tags':
+        this._tags = newVal && newVal.length > 0 ? newVal.split(',') : [];
         break;
-      case "delete":
-        this._delete = newVal == "true" ? true : false;
+      case 'delete':
+        this._delete = newVal == 'true' ? true : false;
         break;
-      case "add":
-        this.add = newVal == "true" ? true : false;
+      case 'add':
+        this.add = newVal == 'true' ? true : false;
         break;
-      case "select":
-        this.add = newVal == "true" ? true : false;
+      case 'select':
+        this.add = newVal == 'true' ? true : false;
         break;
     }
 
@@ -127,9 +127,6 @@ export default class TagsComponent extends HTMLElement {
   }
 
   addTag(tag) {
-    if (!tag || !tag.length || this._tags.includes(tag)) {
-      return;
-    }
     const newTags = [...this._tags, tag];
     if (!this._updateHandler) {
       this._render();
