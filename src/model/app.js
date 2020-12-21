@@ -1,49 +1,49 @@
-import MovieDetailsComponent from "../custom-elements/movie-details-component/movie-details-component";
-import MenubarComponent from "../custom-elements/menu-bar-component/menubar-component";
-import RatingComponent from "../custom-elements/shared/rating-component";
-import TagsComponent from "../custom-elements/shared/tags-component";
-import MovieResultItemComponent from "../custom-elements/movie-result-item-component/movie-result-item-component";
-import SearchBarComponent from "../custom-elements/search-bar-component/search-bar-component";
-import LoginComponent from "../custom-elements/menu-bar-component/account-component/login-component/login-component";
-import PopUpComponent from "../custom-elements/shared/dialogs/pop-up-component";
-import AccountComponent from "../custom-elements/menu-bar-component/account-component/account-component";
+import MovieDetailsComponent from '../custom-elements/movie-details-component/movie-details-component';
+import MenubarComponent from '../custom-elements/menu-bar-component/menubar-component';
+import RatingComponent from '../custom-elements/shared/rating-component';
+import TagsComponent from '../custom-elements/shared/tags-component';
+import MovieResultItemComponent from '../custom-elements/movie-result-item-component/movie-result-item-component';
+import SearchBarComponent from '../custom-elements/search-bar-component/search-bar-component';
+import LoginComponent from '../custom-elements/menu-bar-component/account-component/login-component/login-component';
+import PopUpComponent from '../custom-elements/shared/dialogs/pop-up-component';
+import AccountComponent from '../custom-elements/menu-bar-component/account-component/account-component';
 import {
   bookmarkService,
   directorService,
   movieService,
   writerService,
-} from "../services/services";
-import ConfirmDialogComponent from "../custom-elements/shared/dialogs/confirm-dialog-component";
-import InputDialogComponent from "../custom-elements/shared/dialogs/input-dialog-component";
-import CarrouselComponent from "../custom-elements/shared/carrousel-component";
-import axios from "../configuration/axios";
-import user from "../state/user";
-import bookmarks from "../state/bookmarks";
-import movies from "../state/movies";
-import alerts from "../utilities/alerts";
-import { MovieItem } from "./movie-item";
+} from '../services/services';
+import ConfirmDialogComponent from '../custom-elements/shared/dialogs/confirm-dialog-component';
+import InputDialogComponent from '../custom-elements/shared/dialogs/input-dialog-component';
+import CarrouselComponent from '../custom-elements/shared/carrousel-component';
+import axios from '../configuration/axios';
+import user from '../state/user';
+import bookmarks from '../state/bookmarks';
+import movies from '../state/movies';
+import alerts from '../utilities/alerts';
+import { MovieItem } from './movie-item';
 export default class App {
   constructor() {
     this.init();
 
     // init log in
-    this.accountComp.addEventListener("user-logged-in", (e) => {
+    this.accountComp.addEventListener('user-logged-in', (e) => {
       const userId = e.detail.data.userId;
       const token = e.detail.data.token;
       user.token = token;
       user.id = userId;
       // set to local storage
-      localStorage.setItem("userId", userId);
-      localStorage.setItem("token", token);
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('token', token);
       this.login(user);
     });
 
-    this.accountComp.addEventListener("user-logged-out", () => {
+    this.accountComp.addEventListener('user-logged-out', () => {
       this.logout();
     });
 
     // update results if new search is triggered
-    this.searchBar.addEventListener("results-updated", () => {
+    this.searchBar.addEventListener('results-updated', () => {
       const results = this.searchBar._results;
       const total = this.searchBar._totalResults;
       const input = this.searchBar._input;
@@ -56,7 +56,7 @@ export default class App {
     });
 
     // add new results when new pages r requested
-    this.searchBar.addEventListener("results-added", () => {
+    this.searchBar.addEventListener('results-added', () => {
       const results = this.searchBar._results;
       if (!results) {
         return;
@@ -65,7 +65,7 @@ export default class App {
     });
 
     // get new results when scrolling (get next page)
-    this.resultsItems.addEventListener("scroll", () => {
+    this.resultsItems.addEventListener('scroll', () => {
       const scrollWith = this.resultsItems.scrollWidth;
       const scrollLeft = this.resultsItems.scrollLeft;
       const clientWidth = this.resultsItems.clientWidth;
@@ -74,7 +74,7 @@ export default class App {
       }
     });
 
-    this.movieDetails.shadowRoot.addEventListener("bookmark-added", (e) => {
+    this.movieDetails.shadowRoot.addEventListener('bookmark-added', (e) => {
       const movieItem = e.movie;
       // find movie id exists
       movieService
@@ -95,17 +95,17 @@ export default class App {
             movieItem.poster,
             bookmarkId
           );
-          if (!this.tagFilters.shadowRoot.querySelector(".selected")) {
-            bookmarks.addMovie(bookmarkItem);
+          if (!this.tagFilters.shadowRoot.querySelector('.selected')) {
+            bookmarks.addMovie(bookmarkItem, true);
           }
         })
         .catch((error) => {
-          alerts.error("Movie could not be saved", error.response.data.message);
+          alerts.error('Movie could not be saved', error.response.data.message);
         });
     });
 
     this.bookmarkDetails.shadowRoot.addEventListener(
-      "bookmark-removed",
+      'bookmark-removed',
       (e) => {
         bookmarkService.remove(e.movie._bookmarkId).then(() => {
           //reset details
@@ -115,33 +115,33 @@ export default class App {
       }
     );
 
-    this.zoomCloseButton.addEventListener("click", () => {
-      this.zoomArea.style.display = "none";
+    this.zoomCloseButton.addEventListener('click', () => {
+      this.zoomArea.style.display = 'none';
     });
 
-    this.menubar.shadowRoot.addEventListener("click", (e) => {
+    this.menubar.shadowRoot.addEventListener('click', (e) => {
       // select menu item
       if (
-        e.target.classList.contains("menu-item") &&
-        !e.target.classList.contains("selected")
+        e.target.classList.contains('menu-item') &&
+        !e.target.classList.contains('selected')
       ) {
-        e.currentTarget.querySelectorAll("div").forEach((item) => {
-          item.classList.remove("selected");
+        e.currentTarget.querySelectorAll('div').forEach((item) => {
+          item.classList.remove('selected');
         });
-        e.target.classList.add("selected");
+        e.target.classList.add('selected');
         // change page
         document
-          .querySelectorAll(".page")
-          .forEach((item) => (item.style.display = "none"));
+          .querySelectorAll('.page')
+          .forEach((item) => (item.style.display = 'none'));
         switch (e.target.id) {
-          case "menu-item-search":
-            this.mainPage.style.display = "flex";
+          case 'menu-item-search':
+            this.mainPage.style.display = 'flex';
             break;
-          case "menu-item-watchlist":
-            this.watchlistPage.style.display = "flex";
+          case 'menu-item-watchlist':
+            this.watchlistPage.style.display = 'flex';
             break;
-          case "menu-item-account":
-            this.accountPage.style.display = "flex";
+          case 'menu-item-account':
+            this.accountPage.style.display = 'flex';
             break;
           default:
         }
@@ -150,21 +150,21 @@ export default class App {
 
     // movie list click handler
     function movieListItemClickHandler(event) {
-      let movieItem = event.target.closest("cd-movie-result-item");
+      let movieItem = event.target.closest('cd-movie-result-item');
       if (movieItem) {
         // on click update the item details
         // remove select class from all items
         event.currentTarget
-          .querySelectorAll("cd-movie-result-item")
+          .querySelectorAll('cd-movie-result-item')
           .forEach((item) => {
-            item.classList.remove("selected");
+            item.classList.remove('selected');
           });
 
         // add select class to the selected item
-        movieItem.classList.add("selected");
+        movieItem.classList.add('selected');
 
-        const imdbId = movieItem.getAttribute("imdbId");
-        this.movieDetails.setAttribute("imdbid", imdbId);
+        const imdbId = movieItem.getAttribute('imdbId');
+        this.movieDetails.setAttribute('imdbid', imdbId);
       }
     }
 
@@ -190,20 +190,20 @@ export default class App {
         const name = await (await directorService.get(director)).data.name;
         directorArray.push(name);
       }
-      movie.directors = directorArray.join(" ,");
+      movie.directors = directorArray.join(' ,');
       // get writers
       let writerArray = [];
       for (let writer of returnedMovie.writers) {
         const name = await (await writerService.get(writer)).data.name;
         writerArray.push(name);
       }
-      movie.writers = writerArray.join(" ,");
+      movie.writers = writerArray.join(' ,');
 
       return movie;
     };
 
     this.movieDetails.getResults = async (movie) => {
-      const url = "https://www.omdbapi.com/?plot=full&apikey=15fb3faa";
+      const url = 'https://www.omdbapi.com/?plot=full&apikey=15fb3faa';
       return fetch(`${url}&i=${movie.imdbId}`)
         .then((response) => response.json())
         .then((result) => {
@@ -224,45 +224,45 @@ export default class App {
         });
     };
 
-    this.bookmarkDetails.addEventListener("tags-updated", (event) => {
+    this.bookmarkDetails.addEventListener('tags-updated', (event) => {
       // update tags
       bookmarkService.getAllTags().then((response) => {
-        this.tagFilters.setAttribute("tags", response.data.join(","));
+        this.tagFilters.setAttribute('tags', response.data.join(','));
       });
     });
   }
 
   defineRefs() {
-    this.searchBar = document.getElementById("search-bar");
-    this.resultsItems = document.getElementById("results");
-    this.bookmarkItems = document.getElementById("bookmarks");
-    this.movieDetails = document.getElementById("movie-details");
-    this.bookmarkDetails = document.getElementById("bookmark-details");
-    this.totalResults = document.getElementById("search-total-results");
-    this.zoomArea = document.querySelector("#zoom-area");
-    this.zoomCloseButton = document.querySelector("#zoom-area__close-button");
-    this.menubar = document.querySelector("cd-menubar");
-    this.mainPage = document.getElementById("main");
-    this.watchlistPage = document.getElementById("watchlist");
-    this.accountPage = document.getElementById("account");
-    this.accountComp = document.querySelector("cd-account");
-    this.tagFilters = document.getElementById("tag-filters");
+    this.searchBar = document.getElementById('search-bar');
+    this.resultsItems = document.getElementById('results');
+    this.bookmarkItems = document.getElementById('bookmarks');
+    this.movieDetails = document.getElementById('movie-details');
+    this.bookmarkDetails = document.getElementById('bookmark-details');
+    this.totalResults = document.getElementById('search-total-results');
+    this.zoomArea = document.querySelector('#zoom-area');
+    this.zoomCloseButton = document.querySelector('#zoom-area__close-button');
+    this.menubar = document.querySelector('cd-menubar');
+    this.mainPage = document.getElementById('main');
+    this.watchlistPage = document.getElementById('watchlist');
+    this.accountPage = document.getElementById('account');
+    this.accountComp = document.querySelector('cd-account');
+    this.tagFilters = document.getElementById('tag-filters');
     this.bookmarkResults;
   }
 
   defineElements() {
-    customElements.define("cd-movie-details", MovieDetailsComponent);
-    customElements.define("cd-menubar", MenubarComponent);
-    customElements.define("cd-rating", RatingComponent);
-    customElements.define("cd-movie-result-item", MovieResultItemComponent);
-    customElements.define("cd-movie-search-bar", SearchBarComponent);
-    customElements.define("cd-account", AccountComponent);
-    customElements.define("cd-login", LoginComponent);
-    customElements.define("cd-pop-up", PopUpComponent);
-    customElements.define("cd-confirm", ConfirmDialogComponent);
-    customElements.define("cd-input", InputDialogComponent);
-    customElements.define("cd-carrousel", CarrouselComponent);
-    customElements.define("cd-tags", TagsComponent);
+    customElements.define('cd-movie-details', MovieDetailsComponent);
+    customElements.define('cd-menubar', MenubarComponent);
+    customElements.define('cd-rating', RatingComponent);
+    customElements.define('cd-movie-result-item', MovieResultItemComponent);
+    customElements.define('cd-movie-search-bar', SearchBarComponent);
+    customElements.define('cd-account', AccountComponent);
+    customElements.define('cd-login', LoginComponent);
+    customElements.define('cd-pop-up', PopUpComponent);
+    customElements.define('cd-confirm', ConfirmDialogComponent);
+    customElements.define('cd-input', InputDialogComponent);
+    customElements.define('cd-carrousel', CarrouselComponent);
+    customElements.define('cd-tags', TagsComponent);
   }
 
   init() {
@@ -275,11 +275,11 @@ export default class App {
       (error) => {
         if (
           error.response.status === 401 &&
-          error.response.data.message == "invalid-token"
+          error.response.data.message == 'invalid-token'
         ) {
           alerts.error(
-            "You have been logged out",
-            "The session has been expired. Please login again"
+            'You have been logged out',
+            'The session has been expired. Please login again'
           );
           this.logout();
         } else {
@@ -294,8 +294,8 @@ export default class App {
     this.defineRefs();
 
     // check local storage to set the user
-    const userId = localStorage.getItem("userId");
-    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
     if (userId && token) {
       user.id = userId;
       user.token = token;
@@ -304,21 +304,21 @@ export default class App {
   }
 
   configureAxios(user) {
-    axios.defaults.headers.common["Authorization"] = `bearer ${user.token}`;
+    axios.defaults.headers.common['Authorization'] = `bearer ${user.token}`;
   }
 
   login(user) {
-    this.menubar.setAttribute("login-state", true);
-    this.movieDetails.setAttribute("save-button", true);
+    this.menubar.setAttribute('login-state', true);
+    this.movieDetails.setAttribute('save-button', true);
     this.accountComp.loginState = true;
     this.configureAxios(user);
     this.initWatchListPage();
   }
 
   logout() {
-    this.menubar.setAttribute("login-state", "false"); // must be a falsy string value
-    this.accountComp.setAttribute("login-state", "false");
-    this.movieDetails.setAttribute("save-button", "");
+    this.menubar.setAttribute('login-state', 'false'); // must be a falsy string value
+    this.accountComp.setAttribute('login-state', 'false');
+    this.movieDetails.setAttribute('save-button', '');
     this.bookmarkDetails.clear();
     // delete user details and local storage
     user.id = null;
@@ -337,17 +337,17 @@ export default class App {
         this.bookMarkListItemClickHandler.bind(this)
       );
       bookmarkService.getAllTags().then((response) => {
-        this.tagFilters.setAttribute("tags", response.data.join(","));
+        this.tagFilters.setAttribute('tags', response.data.join(','));
       });
       this.tagFilters.selectHandler = async (el, tags) => {
-        el.classList.toggle("selected");
+        el.classList.toggle('selected');
         let selectedEls = [
-          ...this.tagFilters.shadowRoot.querySelectorAll(".selected"),
+          ...this.tagFilters.shadowRoot.querySelectorAll('.selected'),
         ];
         let selectedTags = null;
         let bookmarkResults;
         if (selectedEls && selectedEls.length > 0) {
-          selectedTags = selectedEls.map((item) => item.id.split("tag-")[1]);
+          selectedTags = selectedEls.map((item) => item.id.split('tag-')[1]);
           bookmarkResults = await bookmarkService.getBookmarksByTags(
             selectedTags
           );
@@ -381,22 +381,22 @@ export default class App {
 
   // movie list click handler
   bookMarkListItemClickHandler(event) {
-    let bookmarkItem = event.target.closest("cd-movie-result-item");
+    let bookmarkItem = event.target.closest('cd-movie-result-item');
     if (bookmarkItem) {
       // on click update the item details
       // remove select class from all items
       event.currentTarget
-        .querySelectorAll("cd-movie-result-item")
+        .querySelectorAll('cd-movie-result-item')
         .forEach((item) => {
-          item.classList.remove("selected");
+          item.classList.remove('selected');
         });
 
       // add select class to the selected item
-      bookmarkItem.classList.add("selected");
-      const imdbId = bookmarkItem.getAttribute("imdbId");
-      const bookmarkId = bookmarkItem.getAttribute("bookmark-id");
-      this.bookmarkDetails.setAttribute("imdbid", imdbId);
-      this.bookmarkDetails.setAttribute("bookmark-id", bookmarkId);
+      bookmarkItem.classList.add('selected');
+      const imdbId = bookmarkItem.getAttribute('imdbId');
+      const bookmarkId = bookmarkItem.getAttribute('bookmark-id');
+      this.bookmarkDetails.setAttribute('imdbid', imdbId);
+      this.bookmarkDetails.setAttribute('bookmark-id', bookmarkId);
     }
   }
 }

@@ -30,7 +30,7 @@ export class MovieList {
     }
   }
 
-  addMovie(movie) {
+  addMovie(movie, click) {
     this.movies.push(movie);
     if (this._el) {
       const child = document.createElement('cd-movie-result-item');
@@ -40,7 +40,9 @@ export class MovieList {
       child.setAttribute('poster', movie.poster);
       child.setAttribute('bookmark-id', movie._id);
       this._el.appendChild(child);
-      child.click();
+      if (click) {
+        child.click();
+      }
     }
   }
 
