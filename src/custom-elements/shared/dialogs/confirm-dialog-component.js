@@ -1,15 +1,15 @@
-export default class PopUpComponent extends HTMLElement {
+export default class ConfirmDialogComponent extends HTMLElement {
   constructor() {
     super();
-    this._type = this.getAttribute("type") || "notification";
     this._title = this.getAttribute("title");
     this._message = this.getAttribute("message");
+    this._type = this.getAttribute("type") || "notification";
     this._hidden = this.getAttribute("hide") === "true" ? true : false;
     this._shadowRoot = this.attachShadow({ mode: "open" });
   }
 
   static get observedAttributes() {
-    return ["hide", "type", "title", "message"];
+    return ["hide", "title", "message"];
   }
 
   connectedCallback() {
@@ -39,7 +39,7 @@ export default class PopUpComponent extends HTMLElement {
                 min-height:30%;
                 background-color:  var(--primary-color);
                 color: white;
-                box-shadow: white 0 0px 20px;
+                box-shadow: black 10px 10px 20px;
             }
             .pop-up *{
                 margin: 10px auto;
@@ -68,7 +68,7 @@ export default class PopUpComponent extends HTMLElement {
                 background-color: rgba(186, 64, 64, 0.95);
             }
             .pop-up.pop-up-warning{ 
-                background-color: rgba(186, 154, 64, 0.95);
+                background-color: rgb(255 171 0 / 78%);
             }
             .buttons{
                 display:flex;
@@ -87,7 +87,8 @@ export default class PopUpComponent extends HTMLElement {
         </div>
         <div class="message">${this._message}</div>
         <div class="buttons">
-            <input type="button" value="ok">
+            <input class="ok" type="button" value="ok">
+            <input class="cancel" type="button" value="cancel">
         </div>
       </div>
     `;
@@ -98,11 +99,21 @@ export default class PopUpComponent extends HTMLElement {
       this.style.display = "flex";
     }
 
-    this.shadowRoot
-      .querySelector("input[type=button]")
-      .addEventListener("click", () => {
-        this.setAttribute("hide", "true");
-      });
+    this.shadowRoot.querySelector(".ok").addEventListener("click", () => {
+      this.setAttribute("hide", "true");
+      if (this.onConfirmHandler) {
+        this.onConfirmHandler();
+        this.onConfirmHandler = null; // safe
+      }
+    });
+
+    this.shadowRoot.querySelector(".cancel").addEventListener("click", () => {
+      this.setAttribute("hide", "true");
+      if (this.onCancelHandler) {
+        this.onCancelHandler();
+        this.onCancelHandler = null; // safe
+      }
+    });
   }
 
   attributeChangedCallback(name, oldVal, newVal) {

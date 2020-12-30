@@ -1,4 +1,5 @@
-import axios from "./axios";
+import axios from "../configuration/axios";
+import { getArrayFromString } from "../utilities/utils";
 import { directorService, writerService } from "./services";
 
 export default class MovieService {
@@ -21,7 +22,7 @@ export default class MovieService {
         writers: [],
       };
       // check directors
-      for (let directorName of movieItem.directors) {
+      for (let directorName of getArrayFromString(movieItem.directors)) {
         let director = (await directorService.getByName(directorName)).data;
         if (director == false) {
           // create director
@@ -32,7 +33,7 @@ export default class MovieService {
           newMovie.directors.push(director[0]._id);
         }
       }
-      for (let writerName of movieItem.writers) {
+      for (let writerName of getArrayFromString(movieItem.writers)) {
         let writer = (await writerService.getByName(writerName)).data;
         if (writer == false) {
           // create director

@@ -1,19 +1,15 @@
-import alerts from "../utilities/alerts";
-import validation from "../utilities/validation";
-
-export default class InputDialogComponent extends HTMLElement {
+export default class PopUpComponent extends HTMLElement {
   constructor() {
     super();
+    this._type = this.getAttribute("type") || "notification";
     this._title = this.getAttribute("title");
     this._message = this.getAttribute("message");
-    this._type = this.getAttribute("type") || "notification";
     this._hidden = this.getAttribute("hide") === "true" ? true : false;
-    this._inputType = this.getAttribute("input-type") || "text-input";
     this._shadowRoot = this.attachShadow({ mode: "open" });
   }
 
   static get observedAttributes() {
-    return ["hide", "title", "message", "type", "input-type"];
+    return ["hide", "type", "title", "message"];
   }
 
   connectedCallback() {
@@ -21,25 +17,6 @@ export default class InputDialogComponent extends HTMLElement {
   }
 
   _render() {
-    let input = "";
-    const textInput = `
-        <input type="text">
-    `;
-
-    const dropDownMulti = `
-      <cd-tag-selector></cd-tag-selector>
-    `;
-    switch (this._inputType) {
-      case "text-input":
-        input = textInput;
-        break;
-      case "drop-down-multi":
-        input = dropDownMulti;
-        break;
-      default:
-        input = textInput;
-    }
-
     const style = `
         <style>
             :host{
@@ -62,7 +39,7 @@ export default class InputDialogComponent extends HTMLElement {
                 min-height:30%;
                 background-color:  var(--primary-color);
                 color: white;
-                box-shadow: white 0 0px 20px;
+                box-shadow: black 10px 10px 20px;
             }
             .pop-up *{
                 margin: 10px auto;
@@ -99,24 +76,6 @@ export default class InputDialogComponent extends HTMLElement {
                 justify-content: flex-end;
                 height:100%;
             }
-            input[type=text]{
-                border-style: solid;
-                color: grey;
-                font-style: italic;
-                border-radius: 15px;
-                text-align:center;
-            }
-            select{
-                color: grey;
-                font-style: italic;
-                text-align:center;
-                max-width: 800px;
-                width: 80%;
-                height: 100%;
-                border-style: none;
-                background-color: transparent;
-                color: black;
-            }
         </style>
       `;
     this.shadowRoot.innerHTML =
@@ -127,10 +86,8 @@ export default class InputDialogComponent extends HTMLElement {
            ${this._title}
         </div>
         <div class="message">${this._message}</div>
-            ${input}
         <div class="buttons">
-            <input class="ok" type="button" value="ok">
-            <input class="cancel" type="button" value="cancel">
+            <input type="button" value="ok">
         </div>
       </div>
     `;
@@ -141,42 +98,11 @@ export default class InputDialogComponent extends HTMLElement {
       this.style.display = "flex";
     }
 
-    let inputEl = null;
-    if (this._inputType === "text-input") {
-      inputEl = this.shadowRoot.querySelector("input");
-      inputEl.focus();
-    } else {
-      inputEl = this.shadowRoot.querySelector("cd-tag-selector");
-      inputEl.tags = this._tags;
-      inputEl.selectedTags = this._selectedTags;
-    }
-
-    this.shadowRoot.querySelector(".ok").addEventListener("click", () => {
-      // sanitize input
-      this.setAttribute("hide", "true");
-      let input = inputEl.value;
-      if (this._inputType === "text-input") {
-        if (!validation.isAlphanumeric(input)) {
-          alerts.error(
-            "Tag name is now valid",
-            "Name can be only alphanumeric. Please try again."
-          );
-        }
-      }
-      if (this.onConfirmHandler) {
-        this.onConfirmHandler(input);
-        this.onConfirmHandler = null; // safe
-      }
-    });
-
-    this.shadowRoot.querySelector(".cancel").addEventListener("click", () => {
-      let input = inputEl.value;
-      this.setAttribute("hide", "true");
-      if (this.onCancelHandler) {
-        this.onCancelHandler(input);
-        this.onCancelHandler = null; // safe
-      }
-    });
+    this.shadowRoot
+      .querySelector("input[type=button]")
+      .addEventListener("click", () => {
+        this.setAttribute("hide", "true");
+      });
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
@@ -187,37 +113,19 @@ export default class InputDialogComponent extends HTMLElement {
     switch (name) {
       case "hide":
         this._hidden = newVal === "true" ? true : false;
-        this._render();
         break;
       case "type":
         this._type = newVal;
-        this._render();
         break;
       case "title":
         this._title = newVal;
-        this._render();
         break;
       case "message":
         this._message = newVal;
-        this._render();
-        break;
-      case "input-type":
-        this._inputType = newVal;
-        this._render();
         break;
       default:
         return;
     }
-    this._render();
-  }
-
-  set tags(tags) {
-    this._tags = tags;
-    this._render();
-  }
-
-  set selectedTags(tags) {
-    this._selectedTags = tags;
     this._render();
   }
 }

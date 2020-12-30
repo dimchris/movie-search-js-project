@@ -1,4 +1,4 @@
-import axios from "./axios";
+import axios from "../configuration/axios";
 
 export default class WriterService {
   async add(name) {

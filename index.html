@@ -5,9 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="assets/styles/style.css" />
-  <!-- <link rel="stylesheet" href="assets/styles/menu-bar.css" /> -->
+  <link rel='icon' href='assets/imgs/favicon.ico' type='image/x-icon'>
   <script src="assets/scripts/app.js" defer type="module"></script>
-  <title>Document</title>
+  <title>Movie Collection Manager</title>
+  <meta name="description"
+    content="This is a movie search and collection project which will help you manage your movie collections by bookmarks." />
 </head>
 
 <body>
@@ -27,32 +29,21 @@
     <cd-carrousel>
       <div id="results" class="carrousel-items"></div>
     </cd-carrousel>
-    <cd-movie-details id="movie-details" class="details" api-key="15fb3faa"></cd-movie-details>
+    <cd-movie-details id="movie-details" class="details"></cd-movie-details>
+    </cd-movie-details>
     <div class="empty-space"></div>
     <cd-movie-search-bar id="search-bar" placeholder="enter a movie title..." api-key="15fb3faa"></cd-movie-search-bar>
   </div>
   <div id="watchlist" class="page">
     <div id="total-bookmarks-block">
-      <!--
-        <div id="switch-button">
-          <input type="button" value="advance search">
-        </div>
-        # TODO: pending backend support
-        <div class="label tag-filters" style="white-space: nowrap;">
-          Tags<cd-tags id="filter-tags"></cd-tags>
-        </div>
-      -->
       <div class="label tag-filters">
-        Bookmarks
+        Bookmarks <cd-tags id="tag-filters" remove="false" add="false" select="true">
       </div>
-      <!--
-        <cd-filter-bar></cd-filter-bar>
-      -->
     </div>
     <cd-carrousel>
       <div id="bookmarks" class="carrousel-items"></div>
     </cd-carrousel>
-    <cd-movie-details id="bookmark-details" class="details" api-key="15fb3faa" show-tags="true" show-bookmark="true">
+    <cd-movie-details id="bookmark-details" class="details" remove-button="true" show-bookmark="true">
     </cd-movie-details>
   </div>
   <div id="account" class="page">

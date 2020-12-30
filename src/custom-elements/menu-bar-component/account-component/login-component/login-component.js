@@ -1,5 +1,5 @@
-import { userService } from "../services/services";
-import Alert from "../utilities/alerts";
+import { userService } from "../../../../services/services";
+import alerts from "../../../../utilities/alerts";
 export default class LoginComponent extends HTMLElement {
   constructor() {
     super();
@@ -44,50 +44,63 @@ export default class LoginComponent extends HTMLElement {
                     color: grey;
                     font-style: italic;
                 }   
-                input[type=button]{
+                input[type=submit],input[type=button]{
                     color: grey;
                     color: white;
                     background-color: transparent;
                 }
-                input[type=button]:hover{
+                input[type=submit]:hover,input[type=button]:hover{
                     color: rgba(255, 217, 0, 0.788);
                 }
-a {
-    color: orange !important;
-}
-
+                form *{
+                  width: 100%
+                }
+                a {
+                    color: orange !important;
+                }
             </style>
         `;
     this.shadowRoot.innerHTML =
       style +
-      `
-            ${
-              this._loginState
-                ? `
-                    <input type="button" value="Logout">
-
-                `
-                : this._createAccount
-                ? `
-                    <input type="text" placeholder="username">
-                    <input type="password" placeholder="password">
-                    <input type="button" value="Register">
-                    <a href="#">or login</a>
-                `
-                : `
-                    <input type="text" placeholder="username">
-                    <input type="password" placeholder="password">
-                    <input type="button" value="Login">
-                    <a href="#">or create new account</a>
+      `     
+      ${
+        this._loginState
+          ? `
+                <input type="button" value="Logout">
                 
                 `
-            }
+          : this._createAccount
+          ? `
+                    <form>
+                    <input id="email" type="text" placeholder="e-mail">
+                    <input id="password" type="password" placeholder="password">
+                    <input id="register-btn" type="submit" value="Register">
+                    </form>
+                    <a id="switch-link" href="#">or login</a>
+                `
+          : `
+                    <form>
+                    <input id="email" type="text" placeholder="e-mail">
+                    <input id="password" type="password" placeholder="password">
+                    <input id="login-btn" type="submit" value="Login">
+                    </form>
+                    <a id="switch-link" href="#">or create new account</a>
+                `
+      }
         `;
 
     if (!this._loginState) {
       this.shadowRoot
-        .querySelector("input[type=button]")
-        .addEventListener("click", () => {
+        .querySelector("form")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          const button = event.target.querySelector("input[type=submit]");
+          button.click();
+        });
+      this.shadowRoot
+        .querySelector("input[type=submit]")
+        .addEventListener("click", (event) => {
+          event.preventDefault();
           const username = this.shadowRoot.querySelector("input[type=text]")
             .value;
           const password = this.shadowRoot.querySelector("input[type=password]")
@@ -96,15 +109,15 @@ a {
             if (this._createAccount) {
               this._createUser(username, password)
                 .then(() => {
-                  Alert.alert(
+                  alerts.alert(
                     "Account Successfully Created",
                     "Your account has been created. Please log in to procceed."
                   );
                   this.createAccount = false;
                 })
                 .catch((error) => {
-                  Alert.error(
-                    "Cound not create an accout",
+                  alerts.error(
+                    "Cound not create an account",
                     error.response.data.message
                   );
                 });
@@ -121,7 +134,7 @@ a {
                   this._render();
                 })
                 .catch(() => {
-                  Alert.error(
+                  alerts.error(
                     "Can Not Login",
                     "Please check your username and password and try again."
                   );
@@ -150,7 +163,7 @@ a {
       this.shadowRoot
         .querySelector("input[type=button]")
         .addEventListener("click", () => {
-          Alert.confirm("Log out", "Are you sure?", () => {
+          alerts.confirm("Log out", "Are you sure?", () => {
             const event = new CustomEvent("user-logged-out", {
               bubbles: true,
               composed: true,

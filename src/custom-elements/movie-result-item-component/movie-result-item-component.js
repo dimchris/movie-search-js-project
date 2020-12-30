@@ -1,4 +1,4 @@
-import { MovieItem } from "../model/movie-item";
+import { MovieItem } from "../../model/movie-item";
 
 // Result item component
 export default class MovieResultItemComponent extends HTMLElement {
@@ -8,16 +8,8 @@ export default class MovieResultItemComponent extends HTMLElement {
     const year = this.getAttribute("year");
     const imdbId = this.getAttribute("imdbId");
     const poster = this.getAttribute("poster");
-    const directors = this.getAttribute("directors");
-    const writers = this.getAttribute("writers");
-    this._movieItem = new MovieItem(
-      imdbId,
-      title,
-      year,
-      poster,
-      directors,
-      writers
-    );
+    const bookmarkId = this.getAttribute("bookmark-id");
+    this._movieItem = new MovieItem(imdbId, title, year, poster, bookmarkId);
     this.attachShadow({ mode: "open" });
   }
 
@@ -26,7 +18,7 @@ export default class MovieResultItemComponent extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["title", "year", "imdbId", "poster"];
+    return ["title", "year", "imdbId", "poster", "bookmark-id"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -46,6 +38,9 @@ export default class MovieResultItemComponent extends HTMLElement {
       case "poster":
         this._movieItem.poster = newValue;
         break;
+      case "bookmark-id":
+        this._movieItem._id = newValue;
+        break;
       default:
     }
     this.render();
@@ -57,5 +52,10 @@ export default class MovieResultItemComponent extends HTMLElement {
 
   get movie() {
     return this._movieItem;
+  }
+
+  set movie(movie) {
+    this._movieItem = movie;
+    this.render();
   }
 }

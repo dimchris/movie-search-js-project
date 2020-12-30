@@ -1,5 +1,5 @@
-import alerts from "../utilities/alerts";
-import { MovieItem } from "./movie-item";
+import { bookmarkService } from '../services/services';
+import alerts from '../utilities/alerts';
 
 export class Movie {
   constructor(
@@ -15,7 +15,9 @@ export class Movie {
     actors,
     genre,
     language,
-    poster
+    poster,
+    id,
+    tags
   ) {
     this.imdbId = imdbId;
     this.title = title;
@@ -30,13 +32,15 @@ export class Movie {
     this.language = language;
     this.poster = poster;
     this.writers = writers;
+    this._bookmarkId = id;
+    this.tags = tags;
   }
 
   clear() {
     this._el.innerHTML = ``;
   }
 
-  render(el, state, showTags) {
+  render(el, saveButton, removeButton) {
     const style = `
     <style>
       :host > * {
@@ -90,9 +94,9 @@ export class Movie {
         padding: 5px;
         width: fit-content;
         color: white;
-        background-color: rgba(255, 255, 255, 0.055);
+        background-color: transparent;
         border-style: none;
-        border-radius: 20px;
+        font-size: 1.6rem; 
         transition: 1s ease;
       }
  
@@ -101,17 +105,18 @@ export class Movie {
       }
 
       .add-to-list-button:hover {
-        background-color: rgb(103, 202, 103);
+        color: red;
         transition: 1s ease;
       }
 
       .add-to-list-button.selected {
-        background-color: rgb(103, 202, 103);
+        background-color: transparent;
+        color:red;
         transition: 1s ease;
       }
 
       .remove-from-list-button:hover {
-        background-color: rgb(228 104 104);
+        color: rgb(228 104 104);
         transition: 1s ease;
       }
 
@@ -123,16 +128,26 @@ export class Movie {
     
     `;
 
-    const buttons = showTags
-      ? '<button class="remove-from-list-button" type="button">remove</button>'
-      : '<button class="add-to-list-button" type="button">save</button>';
+    const buttons = removeButton
+      ? '<button class="remove-from-list-button" type="button">&#10008;</button>'
+      : saveButton
+      ? '<button class="add-to-list-button" type="button">&#10084;</button>'
+      : '';
 
     el.innerHTML =
       style +
       `
         <div class="details-title">
-        ${this.title}${state ? buttons : ""}
-        <div class="tags"></div>
+        ${this.title}${buttons}
+        ${
+          this._bookmarkId
+            ? `
+        <cd-tags tags="${
+          this.tags ? this.tags.join(',') : ''
+        }" delete="true" add="true"></cd-tags>
+        `
+            : ''
+        }
         <cd-rating score="${this.rating}"></cd-rating>
         </div>
         <div class="details-subtitle">
@@ -159,56 +174,68 @@ export class Movie {
           }</div>
         </div>
         `;
-    if (state && !showTags) {
-      el.querySelector("button.add-to-list-button").addEventListener(
-        "click",
-        () => {
-          let event = null;
-          event = new CustomEvent("bookmark-added");
-          event.movieItem = new MovieItem(
-            this.imdbId,
-            this.title,
-            this.year,
-            this.poster,
-            this.directors,
-            this.writers
+    if (saveButton) {
+      // check if already a bookmark
+      bookmarkService.getBookMarkByMovieImdb(this.imdbId).then((response) => {
+        if (response.data != false) {
+          el.querySelector('button.add-to-list-button').classList.add(
+            'selected'
           );
+        }
+      });
+      el.querySelector('button.add-to-list-button').addEventListener(
+        'click',
+        (e) => {
+          if (e.target.classList.contains('selected')) {
+            return;
+          }
+          e.target.classList.add('selected');
+          let event = null;
+          event = new CustomEvent('bookmark-added');
+          event.movie = {
+            ...this,
+          };
           el.dispatchEvent(event);
         }
       );
     }
-    if (showTags) {
-      // const tagEl = document.createElement("cd-bookmark-tags");
-      // el.querySelector(".tags").append(tagEl);
-      // tagEl.selectedTags = selectedTags;
-      // tagEl.tags = tags;
-      // tagEl.selectedHandler = (input) => {
-      //   selectedHandler(input);
-      // };
-
-      el.querySelector("button.remove-from-list-button").addEventListener(
-        "click",
+    if (removeButton) {
+      el.querySelector('button.remove-from-list-button').addEventListener(
+        'click',
         (e) => {
           alerts.confirm(
-            "Remove Book Mark",
-            "You are about to remove this bookmark. Are you sure?",
+            'Remove bookmark',
+            `You are about to remove <i>${this.title}</i> from your bookmarks. Are you sure?`,
             () => {
-              const event = new CustomEvent("bookmark-removed");
-              event.movieItem = new MovieItem(
-                this.imdbId,
-                this.title,
-                this.year,
-                this.poster,
-                this.directors,
-                this.writers
-              );
-              event.movieItem._id = this._bookmarkId;
-              e.target.classList.toggle("selected");
+              const event = new CustomEvent('bookmark-removed');
+              event.movie = {
+                ...this,
+              };
+              e.target.classList.toggle('selected');
               el.dispatchEvent(event);
             }
           );
         }
       );
+    }
+
+    const tagEl = el.querySelector('cd-tags');
+    if (tagEl) {
+      tagEl.updateHandler = (tags) => {
+        return bookmarkService
+          .updateBookMarkTags(this._bookmarkId, {
+            tags,
+          })
+          .then((tags) => {
+            // send update tags event to refresh tags
+            const event = new CustomEvent('tags-updated', {
+              bubbles: true,
+              composed: true,
+            });
+            el.dispatchEvent(event);
+            return tags;
+          });
+      };
     }
   }
 }

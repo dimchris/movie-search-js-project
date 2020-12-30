@@ -1,11 +1,10 @@
 export class MovieItem {
-  constructor(imdbId, title, year, poster, directors, writers) {
+  constructor(imdbId, title, year, poster, id = null) {
     this.imdbId = imdbId;
     this.title = title;
     this.year = year;
     this.poster = poster;
-    this.directors = MovieItem.getArrayFromString(directors);
-    this.writers = MovieItem.getArrayFromString(writers);
+    this._id = id;
   }
 
   render(el) {
@@ -102,15 +101,11 @@ export class MovieItem {
     }
   }
 
-  static getArrayFromString(string) {
-    if (!string) {
-      return null;
-    }
-    const split = string.split(",");
-    const result = [];
-    for (let item of split) {
-      result.push(item.replace(/\(.*\)$/, "").trim());
-    }
-    return result;
+  set id(id) {
+    this._id = id;
+  }
+
+  get id() {
+    return this._id;
   }
 }

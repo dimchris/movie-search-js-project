@@ -40,4 +40,19 @@ export default class AccountComponent extends HTMLElement {
     this._loginState = state;
     this._render();
   }
+
+  static get observedAttributes() {
+    return ["login-state"];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) {
+      return;
+    }
+    switch (name) {
+      case "login-state":
+        this._loginState = newValue === "true" ? true : false;
+        this._render();
+    }
+  }
 }
